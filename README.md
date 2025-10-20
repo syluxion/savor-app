@@ -2,8 +2,36 @@
 Savor Anti-Food waste application for Comp490 senior project at Csun
 
 # How to set up local environment
-This might get more complicated as time goes on, but currently you need to:
+This might get more complicated as time goes on, but currently you need to be familiar with html, css, js, node, and firebase
 
+#Tools for editing
+#What is HTML, CSS, JS?
+
+HTML stands for Hyptertext Markup Language is can be refered to as the skeleton or strucutre of the web page.
+
+Save the following code file as "helloworld.html" and click "open with a browser":
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Web Page</title>
+  </head>
+  <body>
+    <h1>Hello, World!</h1>
+    <p>This is my first website.</p>
+  </body>
+</html>
+This will open a web browser and display hello World
+
+
+CSS stands for Cascading Style Sheets this language controls the appearance such as colors, fonts, spacing, and layout.
+
+Js is Javascript and it is used to control the behavior of the web application. These are interactions such as what clicking does, scrolling ect..
+
+All three work together to make a web application. Download test file and run the html file on the web browser. This an example of all three working together. 
+The goal is to have some base established so we can start adding components and features. 
+
+#Server Environment using Node.js and Firebase
 1. Make sure you have [Node](https://nodejs.org/en/download/releases/) installed. If you have other versions of Node on your system I'd recommend installing Node Version Manager (NVM)
 2. Once you have Node installed, (you might need to restart your computer), you should clone the `staging` branch. You can either install Git (terminal usage), GitHub Desktop (GUI), or use built in Git functions in your IDE (VSCode, or Jetbrains).
 3. Once the repository is cloned, open the project in your IDE, and open a terminal window to run: `npm install`. This will install all of the needed packages to run the frontend locally. Note: as we add new features we might have new dependincies, so re-running `npm install` might be necessary.
