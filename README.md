@@ -9,21 +9,6 @@ This might get more complicated as time goes on, but currently you need to be fa
 
 HTML stands for Hyptertext Markup Language is can be refered to as the skeleton or strucutre of the web page.
 
-Save the following code file as "helloworld.html" and click "open with a browser":
-
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>My Web Page</title>
-  </head>
-  <body>
-    <h1>Hello, World!</h1>
-    <p>This is my first website.</p>
-  </body>
-</html>
-This will open a web browser and display hello World
-
-
 CSS stands for Cascading Style Sheets this language controls the appearance such as colors, fonts, spacing, and layout.
 
 Js is Javascript and it is used to control the behavior of the web application. These are interactions such as what clicking does, scrolling ect..
