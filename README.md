@@ -13,8 +13,11 @@ CSS stands for Cascading Style Sheets this language controls the appearance such
 
 Js is Javascript and it is used to control the behavior of the web application. These are interactions such as what clicking does, scrolling ect..
 
-All three work together to make a web application. Download test file and run the html file on the web browser. This an example of all three working together. 
-The goal is to have some base established so we can start adding components and features. 
+All three work together to make a web application. 
+
+Node is a service that runs javascript code on a server (We will be using firebase) or local machine (your pc). For now we will run it on our local machines so we can work on our components, but once we have something stable, we can host it on firebase as we add more features.
+
+Firebase is a backend database service for logins such as google or email. This allows us to keep track of users and web application api calls.
 
 #Server Environment using Node.js and Firebase
 1. Make sure you have [Node](https://nodejs.org/en/download/releases/) installed. If you have other versions of Node on your system I'd recommend installing Node Version Manager (NVM)
