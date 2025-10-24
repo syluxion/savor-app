@@ -1,0 +1,27 @@
+Documentation for Code Examples:
+--------------------------------
+List example with short description and example code. Specify if it's HTML, CSS, or JavaScript for clarification.
+
+Ex #1: Conditional Logic (Hide/Show image example) - Code starts with a hidden image and shows/hides when a button is clicked.
+
+HTML Context:
+<button id="toggleImageBtn">Show Image</button>
+
+<img id="myImage" src="https://via.placeholder.com/200" 
+     alt="Example Image" style="display: none; margin-top: 10px;">
+
+<script src="script.js"></script>
+
+JS Code:
+const btn = document.getElementById('toggleImageBtn');
+const img = document.getElementById('myImage');
+
+btn.addEventListener('click', () => {
+  if (img.style.display === 'none') {
+    img.style.display = 'block';
+    btn.textContent = 'Hide Image';
+  } else {
+    img.style.display = 'none';
+    btn.textContent = 'Show Image';
+  }
+});
