@@ -1,0 +1,428 @@
+
+
+
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+
+
+
+<head>
+
+
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+
+  <title>Nearby Restaurants Finder</title>
+
+
+
+
+
+
+
+  <style>
+
+	    //isnterted
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background: url("S4.png") no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Arial Rounded MT Bold', sans-serif;
+  overflow: hidden;
+}
+
+
+.overlay {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+
+.title {
+  font-size: 125px; 
+  color: #0a5a2e;
+  font-weight: 900;
+  letter-spacing: 3px;
+  position: relative;
+  text-align: center;
+  margin-bottom: 30px; 
+  text-shadow:
+    0 3px 0 #c8e1c8,
+    0 6px 0 #a8d1a8,
+    0 9px 10px rgba(0, 0, 0, 0.25);
+  animation: pulse 4s ease-in-out infinite;
+  overflow: hidden;
+}
+
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+
+.title::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  transform: skewX(-20deg);
+  animation: shine 6s infinite;
+}
+
+@keyframes shine {
+  0% { left: -75%; }
+  50% { left: 125%; }
+  100% { left: 125%; }
+}
+
+
+
+.login-btn {
+  position: fixed;
+  top: 100px;          
+  right: -420px;       
+  
+  background-color: #0a5a2e;
+  color: #fff;
+  border: none;
+  padding: 20px 70px;
+  border-radius: 40px;
+  font-size: 30px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.login-btn:hover {
+  transform: scale(1.08);
+  background-color: #118f54;
+  box-shadow: 0 0 25px rgba(16, 128, 64, 0.7);
+}
+
+.login-btn:active {
+  transform: scale(0.95);
+  background-color: #0d7f40;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -55%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+
+
+  </style>
+
+
+</head>
+
+
+<body>
+
+
+
+  <div class="app">
+
+
+    <header>
+      <div class="title">🍽️ Savor App</div>
+      <div class="controls">
+        <button id="locBtn" class="btn">📍 Use My Location</button>
+        <button id="demoBtn" class="btn sec">🧪 Demo (Times Square)</button>
+      </div>
+
+
+    </header>
+    <div class="card">
+      <div class="searchbar">
+        <input id="addr" class="input" placeholder="Or type a place (e.g., '1600 Amphitheatre Pkwy, Mountain View')" />
+        <button id="addrBtn" class="btn">🔎 Search</button>
+        <select id="radius" class="input" style="max-width:160px">
+          <option value="800">Radius: 0.5 mi</option>
+          <option value="1500" selected>Radius: 1 mi</option>
+          <option value="3000">Radius: 2 mi</option>
+          <option value="5000">Radius: 3 mi</option>
+        </select>
+      </div>
+      <div id="status" class="status">Ready. Click <strong>Use My Location</strong> to find restaurants around you.</div>
+    </div>
+
+    <div id="results" class="grid" aria-live="polite"></div>
+
+    <footer>
+      Data from OpenStreetMap via Overpass API • distances are approximate • no API key required
+    </footer>
+  </div>
+
+  <script>
+
+
+    //--------- ---- Helpers ------------------
+
+
+
+
+    const qs = s => document.querySelector(s);
+    const statusEl = qs('#status');
+    const resultsEl = qs('#results');
+    const addrInp = qs('#addr');
+
+
+
+    function kmToMiles(km){return km*0.621371}
+
+
+
+    function haversine(lat1, lon1, lat2, lon2){
+      const R = 6371; // km
+      const dLat = (lat2 - lat1) * Math.PI/180;
+      const dLon = (lon2 - lon1) * Math.PI/180;
+      const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2)**2;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c; // km
+    }
+
+
+
+
+    function setStatus(msg){ statusEl.textContent = msg; }
+
+
+
+
+    function escapeHtml(str){ return (str||'').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[s])); }
+
+
+
+
+
+
+
+    function render(results, origin){
+      resultsEl.innerHTML = '';
+      if(!results.length){
+        setStatus('No restaurants found in this area. Try increasing the radius or moving the map.');
+        return;
+      }
+
+
+
+
+      const frag = document.createDocumentFragment();
+      for(const r of results){
+        const div = document.createElement('div');
+        div.className = 'item';
+        const name = escapeHtml(r.tags.name || 'Unnamed Restaurant');
+        const cuisines = (r.tags.cuisine||'').split(';').filter(Boolean).slice(0,3);
+        const addrParts = ['addr:housenumber','addr:street','addr:city'].map(k=>r.tags[k]).filter(Boolean);
+        const distKm = haversine(origin.lat, origin.lon, r.lat, r.lon);
+        div.innerHTML = `
+          <div style="display:flex; gap:8px; align-items:center;">
+            <h3>${name}</h3>
+            <span class="dist">${distKm<1? (Math.round(distKm*1000))+' m' : kmToMiles(distKm).toFixed(1)+' mi'}</span>
+          </div>
+          <div class="meta">${addrParts.map(escapeHtml).join(', ') || 'Address not listed'}</div>
+          <div class="chips">${cuisines.map(c=>`<span class="chip">${escapeHtml(c)}</span>`).join('')}</div>
+          <div class="links">
+            <a class="link" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}&query_place_id=&query=${r.lat},${r.lon}" target="_blank" rel="noopener">Open in Maps</a>
+            <a class="link" href="https://www.openstreetmap.org/node/${r.id}" target="_blank" rel="noopener">OpenStreetMap</a>
+          </div>
+        `;
+        frag.appendChild(div);
+      }
+      resultsEl.appendChild(frag);
+      setStatus(`Found ${results.length} restaurants. Sorted by distance.`);
+    }
+
+
+
+
+
+    async function geocodeAddress(addr){
+      // Nominatim for geocoding (no key). Respect usage policy in real apps.
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addr)}`;
+      const res = await fetch(url, {headers:{'Accept':'application/json','User-Agent':'Nearby-Restaurants-Demo'}});
+      if(!res.ok) throw new Error('Geocoding failed');
+      const data = await res.json();
+      if(!data.length) throw new Error('Location not found');
+      return {lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon)};
+    }
+
+
+
+
+    async function fetchRestaurants(origin, radiusMeters){
+      // Overpass API query for restaurants near origin
+      const query = `
+        [out:json][timeout:25];
+        node(around:${radiusMeters},${origin.lat},${origin.lon})["amenity"="restaurant"];
+        out body;
+      `;
+      const res = await fetch('https://overpass-api.de/api/interpreter', {
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
+        body: new URLSearchParams({data: query}).toString()
+      });
+
+
+      if(!res.ok) throw new Error('Overpass request failed');
+      const data = await res.json();
+      return (data.elements||[])
+        .filter(e=>e.type==='node')
+        .map(e=>({id:e.id, lat:e.lat, lon:e.lon, tags:e.tags||{}}));
+    }
+
+
+
+
+
+    function sortByDistance(list, origin){
+      return list.sort((a,b)=>{
+        const da = haversine(origin.lat, origin.lon, a.lat, a.lon);
+        const db = haversine(origin.lat, origin.lon, b.lat, b.lon);
+        return da - db;
+      });
+    }
+
+
+
+
+
+    async function runSearch(origin){
+      const rad = parseInt(qs('#radius').value,10);
+      setStatus('Searching for restaurants nearby…');
+      resultsEl.innerHTML = '';
+      try{
+        const items = await fetchRestaurants(origin, rad);
+        const sorted = sortByDistance(items, origin).slice(0, 60);
+        render(sorted, origin);
+      }catch(err){
+        console.error(err);
+        setStatus('Error fetching restaurants. Try again or reduce radius.');
+      }
+    }
+
+
+
+
+
+    // ---- Events ----
+
+
+
+
+    qs('#locBtn').addEventListener('click', () => {
+      if(!('geolocation' in navigator)){
+        setStatus('Geolocation not supported in this browser. Type an address instead.');
+        return;
+      }
+
+
+
+
+
+      setStatus('Requesting your location…');
+
+
+
+      navigator.geolocation.getCurrentPosition(async pos => {
+        const origin = {lat: pos.coords.latitude, lon: pos.coords.longitude};
+        setStatus(`Location acquired. lat ${origin.lat.toFixed(4)}, lon ${origin.lon.toFixed(4)}. Searching…`);
+        runSearch(origin);
+      }, err => {
+        setStatus('Location permission denied. Type an address above and click Search.');
+      }, {enableHighAccuracy:false, timeout:12000, maximumAge:60000});
+    });
+
+
+
+
+    qs('#addrBtn').addEventListener('click', async () => {
+      const txt = addrInp.value.trim();
+      if(!txt){ setStatus('Please type an address or city.'); return; }
+      setStatus('Geocoding…');
+      try{
+        const origin = await geocodeAddress(txt);
+        setStatus(`Searching near ${txt}…`);
+        runSearch(origin);
+      }catch(e){ setStatus('Could not find that place. Try a more specific address.'); }
+    });
+
+
+
+
+
+
+    qs('#radius').addEventListener('change', () => {
+      // Re-run with last known location if available from a prior run
+      const marker = window.__lastOrigin;
+      if(marker){ runSearch(marker); }
+    });
+
+
+
+    // Keep the last origin used so we can re-run on radius change
+    const _oldRun = runSearch;
+    runSearch = async function(origin){
+      window.__lastOrigin = origin; return _oldRun(origin);
+    }
+
+
+
+    // Demo button: Times Square, NYC
+    qs('#demoBtn').addEventListener('click', () => {
+      const origin = {lat: 40.7580, lon: -73.9855};
+      setStatus('Demo mode: Times Square, NYC. Searching…');
+      runSearch(origin);
+    });
+
+
+
+
+  </script>
+
+
+
+
+
+
+
+
+
+
+</body>
+
+
+
+
+
+
+
+
+
+</html>
+
