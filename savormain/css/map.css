@@ -1,0 +1,162 @@
+
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background: url("../img/S5.png") no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Arial Rounded MT Bold', sans-serif;
+  overflow: hidden;
+}
+
+
+.sidebar {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  width: 260px;
+  height: calc(100vh - 40px);
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 25px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.25);
+  overflow-y: auto;
+  z-index: 9999;
+}
+
+
+.sidebar h2 {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #0a5a2e;
+  font-weight: bold;
+}
+
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+
+.sidebar ul li {
+  padding: 12px;
+  background: rgba(183, 242, 176, 0.6);
+  border-radius: 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  color: #0a5a2e;
+  transition: 0.2s;
+}
+
+.sidebar ul li:hover {
+  background: rgba(198, 255, 198, 0.9);
+  transform: scale(1.02);
+}
+
+
+.search-container {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  gap: 15px;
+}
+
+
+.search-box {
+  width: 350px;
+  padding: 12px 20px;
+  font-size: 18px;
+  border-radius: 30px;
+  border: none;
+  outline: none;
+  background: white;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+}
+
+.search-btn {
+  padding: 12px 28px;
+  background: #0a5a2e;
+  color: white;
+  border: none;
+  border-radius: 28px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.2s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+}
+
+.search-btn:hover {
+  background: #118f54;
+  transform: scale(1.05);
+}
+
+.login-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 12px 30px;
+  background: #0a5a2e;
+  color: white;
+  border: none;
+  border-radius: 28px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+  z-index: 9999;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.25);
+  transition: .25s;
+}
+
+.login-btn:hover {
+  background: #118f54;
+  transform: scale(1.06);
+}
+
+
+#map {
+  height: 100vh;
+  width: 100vw;
+}
+
+
+.sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.3);
+  border-radius: 8px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #0a5a2e;
+  border-radius: 8px;
+}
+
+
+.leaflet-popup-content-wrapper {
+  background-color: #b7f2b0;
+  border-radius: 15px;
+}
+
+.leaflet-popup-content {
+  margin: 8px 12px;
+  color: #0a5a2e;
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+}
+
+.leaflet-popup-tip {
+  background: #b7f2b0;
+}
