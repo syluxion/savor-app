@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account - S4VOR</title>
+  <link rel="stylesheet" href="../css/create_acc.css">
+</head>
+<body>
+  <h1 class="title">Savor</h1>
+  <div class="login-overlay">
+    <div class="login-box">
+      <input type="text" class="login-input" id="username" placeholder="Username">
+      <input type="text" class="login-input" id="firstName" placeholder="First Name">
+      <input type="text" class="login-input" id="lastName" placeholder="Last Name">
+      <input type="date" class="login-input" id="birthDate" placeholder="Birthdate">
+      <input type="email" class="login-input" id="email" placeholder="Email">
+      <input type="password" class="login-input" id="password" placeholder="Password">
+      <input type="password" class="login-input" id="confirmPassword" placeholder="Re-enter Password">
+
+      <select class="login-input" id="accountType">
+        <option value="" disabled selected>Select Account Type</option>
+        <option value="user">User</option>
+        <option value="business">Business</option>
+      </select>
+
+      <button class="login-submit" onclick="createAccount()">CREATE ACCOUNT</button>
+
+      <div class="login-links">
+        <a href="login.html">Back to Login</a>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="../js/script.js"></script>
+</body>
+</html>
