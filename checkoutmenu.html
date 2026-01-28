@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Restaurant Menu + Checkout</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e2e8f0;
+      --accent:#111827;
+      --accentText:#ffffff;
+      --shadow: 0 8px 24px rgba(15,23,42,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:var(--bg);
+    }
+    .wrap{
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 28px 16px 40px;
+    }
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
+      margin-bottom: 18px;
+    }
+    h1{
+      margin:0;
+      font-size: 30px;
+      letter-spacing: -0.02em;
+    }
+    .sub{
+      margin-top:6px;
+      color:var(--muted);
+      font-size: 14px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 12px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.6);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 13px;
+      white-space:nowrap;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+    @media (min-width: 980px){
+      .grid{
+        grid-template-columns: 1fr 380px;
+        align-items:start;
+      }
+      .sticky{
+        position: sticky;
+        top: 18px;
+      }
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .hd{
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .card .bd{
+      padding: 16px;
+    }
+    .row{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+    }
+    .title{
+      font-weight: 700;
+      font-size: 18px;
+      margin:0;
+    }
+    .desc{
+      margin:6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .tags{
+      margin-top:10px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .tag{
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      color: #334155;
+    }
+    .priceCol{
+      text-align:right;
+      min-width: 90px;
+    }
+    .from{
+      font-size:12px;
+      color: var(--muted);
+    }
+    .basePrice{
+      font-weight: 800;
+      font-size: 16px;
+      margin-top:2px;
+    }
+    .opts{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 720px){
+      .opts{
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .optGroup .lbl{
+      font-size: 13px;
+      font-weight: 650;
+      margin-bottom: 7px;
+    }
+    select, input[type="number"]{
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 10px;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+    }
+    input[type="number"]{
+      padding: 9px 10px;
+    }
+    select:focus, input[type="number"]:focus{
+      box-shadow: 0 0 0 3px rgba(15,23,42,.08);
+      border-color: #cbd5e1;
+    }
+
+    .addon{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding: 10px 10px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+      font-size: 13px;
+      margin-top:8px;
+    }
+    .addon:first-of-type{ margin-top:0 }
+    .addonLeft{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width: 0;
+    }
+    .addonLeft label{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      cursor:pointer;
+      user-select:none;
+      min-width: 0;
+    }
+    .addonRight{
+      color: var(--muted);
+      white-space:nowrap;
+    }
+
+    .sep{
+      height:1px;
+      background: var(--border);
+      margin: 14px 0;
+    }
+
+    .qtyAdd{
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+    @media (min-width: 560px){
+      .qtyAdd{
+        flex-direction: row;
+        align-items:center;
+        justify-content:space-between;
+      }
+    }
+    .qtyBox{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+    .qtyBox .lbl{
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .qtyBox input{
+      width: 92px;
+    }
+    .yourPrice{
+      text-align:right;
+    }
+    .yourPrice .muted{ font-size: 12px; color: var(--muted); }
+    .yourPrice .big{ font-size: 18px; font-weight: 800; margin-top: 2px; }
+
+    .btn{
+      appearance:none;
+      border:none;
+      border-radius: 16px;
+      padding: 10px 14px;
+      font-weight: 650;
+      cursor:pointer;
+    }
+    .btn.primary{
+      background: var(--accent);
+      color: var(--accentText);
+    }
+    .btn.primary:hover{ filter: brightness(1.05); }
+    .btn.ghost{
+      background: transparent;
+      border: 1px solid var(--border);
+      color: #334155;
+    }
+    .btn.ghost:hover{ background: #f8fafc; }
+    .btn.block{
+      width:100%;
+      padding: 14px 16px;
+      border-radius: 18px;
+      font-size: 15px;
+    }
+
+    /* Checkout */
+    .checkoutEmpty{
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius: 18px;
+      padding: 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .cartLines{ display:flex; flex-direction:column; gap: 12px; }
+    .line{
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius: 18px;
+      padding: 12px;
+    }
+    .lineTop{
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      align-items:flex-start;
+    }
+    .lineName{ font-weight: 700; font-size: 14px; margin:0; }
+    .lineMeta{
+      margin-top:6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .trash{
+      border:none;
+      background: transparent;
+      cursor:pointer;
+      padding: 6px;
+      border-radius: 12px;
+      color: #64748b;
+    }
+    .trash:hover{ background: #f1f5f9; color:#0f172a; }
+    .lineBottom{
+      margin-top: 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .lineQty{
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .lineQty input{
+      width: 76px;
+      height: 36px;
+      border-radius: 14px;
+    }
+    .lineNums{
+      display:flex;
+      gap: 16px;
+      align-items:flex-end;
+    }
+    .numBox{
+      text-align:right;
+      min-width: 70px;
+    }
+    .numBox .muted{ font-size: 11px; color: var(--muted); }
+    .numBox .val{ font-size: 13px; font-weight: 750; margin-top: 2px; }
+    .numBox .val.strong{ font-size: 14px; font-weight: 850; }
+
+    .totals{ font-size: 13px; }
+    .totals .trow{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-top: 8px;
+      color:#0f172a;
+    }
+    .totals .trow span:first-child{ color: var(--muted); }
+    .totals .trow strong{ font-weight: 850; }
+    .help{
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height:1.35;
+    }
+
+    .miniCard{
+      margin-top: 14px;
+      border-radius: var(--radius);
+      border:1px solid var(--border);
+      background:#fff;
+      box-shadow: var(--shadow);
+      padding: 14px 16px;
+    }
+    .miniCard .mtitle{ font-weight: 750; font-size: 13px; }
+    .miniCard ul{ margin: 8px 0 0; padding-left: 18px; color: var(--muted); font-size: 13px; }
+    .miniCard li{ margin: 6px 0; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Savor Bistro</h1>
+        <div class="sub">Pick options, add to cart, and checkout on the right.</div>
+      </div>
+      <div class="pill" id="cartPill">🛒 <span id="cartCount">0</span> items</div>
+    </header>
+
+    <div class="grid">
+      <!-- LEFT: MENU -->
+      <main id="menuCol" class="menu"></main>
+
+      <!-- RIGHT: CHECKOUT -->
+      <aside class="sticky">
+        <section class="card">
+          <div class="hd">
+            <div class="row">
+              <div class="title">Checkout</div>
+              <button class="btn ghost" id="clearBtn" type="button" style="display:none">Clear</button>
+            </div>
+          </div>
+          <div class="bd">
+            <div id="cartArea"></div>
+
+            <div class="sep"></div>
+
+            <div class="totals">
+              <div class="trow"><span>Subtotal</span><strong id="subTotal">$0.00</strong></div>
+              <div class="trow"><span>Tax (<span id="taxRateText"></span>)</span><strong id="taxAmt">$0.00</strong></div>
+              <div class="trow" style="font-size:15px"><span style="color:#0f172a;font-weight:850">Total</span><strong id="totalAmt">$0.00</strong></div>
+            </div>
+
+            <div style="margin-top:14px">
+              <button class="btn primary block" id="placeOrderBtn" type="button">Place order</button>
+              <div class="help">Demo checkout only. Hook this up to your backend/payment flow.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="miniCard">
+          <div class="mtitle">Tips to customize</div>
+          <ul>
+            <li>Edit the <code>MENU</code> array in JS to match your restaurant.</li>
+            <li>Add images by including an <code>imageUrl</code> and rendering it in each card.</li>
+            <li>Adjust tax rate, currency, and add delivery fees if needed.</li>
+            <li>Persist cart in <code>localStorage</code> for a nicer UX.</li>
+          </ul>
+        </section>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    // ===== Data =====
+    const MENU = [
+      {
+        id: "burger",
+        name: "Classic Burger",
+        desc: "Beef patty, lettuce, tomato, onion, house sauce.",
+        base: 10.0,
+        tags: ["Popular"],
+        options: {
+          size: {
+            label: "Size",
+            type: "single",
+            choices: [
+              { key: "regular", label: "Regular", delta: 0 },
+              { key: "double", label: "Double", delta: 3 }
+            ]
+          },
+          addons: {
+            label: "Add-ons",
+            type: "multi",
+            choices: [
+              { key: "cheese", label: "Cheese", delta: 1 },
+              { key: "bacon", label: "Bacon", delta: 2 },
+              { key: "avocado", label: "Avocado", delta: 2 }
+            ]
+          }
+        },
+        defaults: { size: "regular", addons: [] }
+      },
+      {
+        id: "pizza",
+        name: "Margherita Pizza",
+        desc: "Tomato, mozzarella, basil.",
+        base: 12.0,
+        tags: ["Vegetarian"],
+        options: {
+          size: {
+            label: "Size",
+            type: "single",
+            choices: [
+              { key: "10", label: "10-inch", delta: 0 },
+              { key: "14", label: "14-inch", delta: 4 }
+            ]
+          },
+          crust: {
+            label: "Crust",
+            type: "single",
+            choices: [
+              { key: "thin", label: "Thin", delta: 0 },
+              { key: "hand", label: "Hand-tossed", delta: 1 },
+              { key: "gf", label: "Gluten-free", delta: 2 }
+            ]
+          },
+          addons: {
+            label: "Extras",
+            type: "multi",
+            choices: [
+              { key: "pepperoni", label: "Pepperoni", delta: 2 },
+              { key: "mushrooms", label: "Mushrooms", delta: 1 },
+              { key: "olives", label: "Olives", delta: 1 }
+            ]
+          }
+        },
+        defaults: { size: "10", crust: "thin", addons: [] }
+      },
+      {
+        id: "salad",
+        name: "Chicken Caesar Salad",
+        desc: "Romaine, parmesan, croutons, Caesar dressing.",
+        base: 9.5,
+        tags: ["Fresh"],
+        options: {
+          protein: {
+            label: "Protein",
+            type: "single",
+            choices: [
+              { key: "chicken", label: "Chicken", delta: 0 },
+              { key: "shrimp", label: "Shrimp", delta: 3 },
+              { key: "none", label: "No protein", delta: -1 }
+            ]
+          },
+          dressing: {
+            label: "Dressing",
+            type: "single",
+            choices: [
+              { key: "caesar", label: "Caesar", delta: 0 },
+              { key: "light", label: "Light Caesar", delta: 0 },
+              { key: "onSide", label: "On the side", delta: 0 }
+            ]
+          },
+          addons: {
+            label: "Add-ons",
+            type: "multi",
+            choices: [
+              { key: "extraParm", label: "Extra parmesan", delta: 1 },
+              { key: "extraCroutons", label: "Extra croutons", delta: 0.5 }
+            ]
+          }
+        },
+        defaults: { protein: "chicken", dressing: "caesar", addons: [] }
+      }
+    ];
+
+    const TAX_RATE = 0.0875;
+
+    // ===== State =====
+    const state = {
+      drafts: {},   // per item: { selections, qty }
+      cart: []      // lines: { lineId, itemId, name, selections, unitPrice, qty }
+    };
+
+    // ===== Helpers =====
+    const $ = (sel) => document.querySelector(sel);
+
+    function money(n){
+      return n.toLocaleString(undefined, { style: "currency", currency: "USD" });
+    }
+
+    function stableLineId(itemId, selections){
+      const parts = Object.entries(selections)
+        .map(([k,v]) => Array.isArray(v) ? `${k}=[${v.slice().sort().join(",")}]` : `${k}=${v}`)
+        .sort();
+      return `${itemId}::${parts.join("|")}`;
+    }
+
+    function calcUnitPrice(item, selections){
+      let p = item.base;
+      for (const [groupKey, group] of Object.entries(item.options || {})){
+        const val = selections[groupKey];
+        if (val == null) continue;
+
+        if (Array.isArray(val)){
+          for (const key of val){
+            const found = group.choices.find(c => c.key === key);
+            if (found) p += found.delta;
+          }
+        } else {
+          const found = group.choices.find(c => c.key === val);
+          if (found) p += found.delta;
+        }
+      }
+      return Math.max(0, p);
+    }
+
+    function formatSelections(item, selections){
+      const rows = [];
+      for (const [groupKey, group] of Object.entries(item.options || {})){
+        const val = selections[groupKey];
+        if (val == null) continue;
+
+        if (Array.isArray(val)){
+          if (!val.length) continue;
+          const labels = val.map(k => (group.choices.find(c=>c.key===k)||{}).label).filter(Boolean);
+          if (labels.length) rows.push(`${group.label}: ${labels.join(", ")}`);
+        } else {
+          const label = (group.choices.find(c=>c.key===val)||{}).label;
+          if (label) rows.push(`${group.label}: ${label}`);
+        }
+      }
+      return rows;
+    }
+
+    function cartCount(){
+      return state.cart.reduce((s,l)=>s + l.qty, 0);
+    }
+
+    function totals(){
+      const subtotal = state.cart.reduce((s,l)=>s + l.unitPrice*l.qty, 0);
+      const tax = subtotal * TAX_RATE;
+      return { subtotal, tax, total: subtotal + tax };
+    }
+
+    // ===== Rendering =====
+    function initDrafts(){
+      MENU.forEach(item => {
+        state.drafts[item.id] = {
+          selections: structuredClone(item.defaults || {}),
+          qty: 1
+        };
+      });
+    }
+
+    function renderMenu(){
+      const root = $("#menuCol");
+      root.innerHTML = "";
+
+      MENU.forEach(item => {
+        const draft = state.drafts[item.id];
+        const unit = calcUnitPrice(item, draft.selections);
+
+        const card = document.createElement("section");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="hd">
+            <div class="row">
+              <div>
+                <div class="title">${item.name}</div>
+                <div class="desc">${item.desc}</div>
+                <div class="tags">
+                  ${(item.tags||[]).map(t=>`<span class="tag">${t}</span>`).join("")}
+                </div>
+              </div>
+              <div class="priceCol">
+                <div class="from">From</div>
+                <div class="basePrice">${money(item.base)}</div>
+              </div>
+            </div>
+          </div>
+          <div class="bd">
+            <div class="opts" id="opts-${item.id}"></div>
+
+            <div class="sep"></div>
+
+            <div class="qtyAdd">
+              <div class="qtyBox">
+                <div class="lbl">Quantity</div>
+                <input type="number" min="1" value="${draft.qty}" id="qty-${item.id}" />
+              </div>
+
+              <div class="row" style="align-items:center">
+                <div class="yourPrice">
+                  <div class="muted">Your price</div>
+                  <div class="big" id="your-${item.id}">${money(unit)}</div>
+                </div>
+                <button class="btn primary" type="button" id="add-${item.id}">Add to cart</button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        root.appendChild(card);
+
+        const optsWrap = card.querySelector(`#opts-${item.id}`);
+
+        // Options UI
+        for (const [groupKey, group] of Object.entries(item.options || {})){
+          const g = document.createElement("div");
+          g.className = "optGroup";
+
+          if (group.type === "multi"){
+            g.innerHTML = `<div class="lbl">${group.label}</div>`;
+            group.choices.forEach(choice => {
+              const checked = (draft.selections[groupKey] || []).includes(choice.key);
+              const row = document.createElement("div");
+              row.className = "addon";
+              row.innerHTML = `
+                <div class="addonLeft">
+                  <label>
+                    <input type="checkbox" ${checked ? "checked" : ""} data-item="${item.id}" data-group="${groupKey}" data-key="${choice.key}" />
+                    <span title="${choice.label}">${choice.label}</span>
+                  </label>
+                </div>
+                <div class="addonRight">${choice.delta === 0 ? "+$0" : `+${money(choice.delta)}`}</div>
+              `;
+              g.appendChild(row);
+            });
+          } else {
+            const current = draft.selections[groupKey] ?? group.choices[0]?.key;
+            g.innerHTML = `
+              <div class="lbl">${group.label}</div>
+              <select data-item="${item.id}" data-group="${groupKey}">
+                ${group.choices.map(c => {
+                  const extra = c.delta ? ` (${c.delta>0?"+":""}${money(c.delta)})` : "";
+                  return `<option value="${c.key}" ${String(c.key)===String(current)?"selected":""}>${c.label}${extra}</option>`;
+                }).join("")}
+              </select>
+            `;
+          }
+
+          optsWrap.appendChild(g);
+        }
+
+        // Wire events for qty + add
+        card.querySelector(`#qty-${item.id}`).addEventListener("input", (e) => {
+          const v = Math.max(1, Number(e.target.value || 1));
+          state.drafts[item.id].qty = v;
+          e.target.value = v;
+        });
+
+        card.querySelector(`#add-${item.id}`).addEventListener("click", () => addToCart(item.id));
+
+        // Wire events for options
+        card.querySelectorAll("select[data-item]").forEach(sel => {
+          sel.addEventListener("change", (e) => {
+            const itemId = e.target.dataset.item;
+            const groupKey = e.target.dataset.group;
+            state.drafts[itemId].selections[groupKey] = e.target.value;
+            rerenderPrice(itemId);
+          });
+        });
+
+        card.querySelectorAll("input[type=checkbox][data-item]").forEach(cb => {
+          cb.addEventListener("change", (e) => {
+            const itemId = e.target.dataset.item;
+            const groupKey = e.target.dataset.group;
+            const key = e.target.dataset.key;
+            const arr = state.drafts[itemId].selections[groupKey] || [];
+            if (e.target.checked){
+              state.drafts[itemId].selections[groupKey] = Array.from(new Set([...arr, key]));
+            } else {
+              state.drafts[itemId].selections[groupKey] = arr.filter(k => k !== key);
+            }
+            rerenderPrice(itemId);
+          });
+        });
+      });
+    }
+
+    function rerenderPrice(itemId){
+      const item = MENU.find(m => m.id === itemId);
+      const draft = state.drafts[itemId];
+      const unit = calcUnitPrice(item, draft.selections);
+      const el = document.getElementById(`your-${itemId}`);
+      if (el) el.textContent = money(unit);
+    }
+
+    function renderCart(){
+      const cartArea = $("#cartArea");
+      const clearBtn = $("#clearBtn");
+
+      if (!state.cart.length){
+        cartArea.innerHTML = `<div class="checkoutEmpty">Your cart is empty. Add items from the menu.</div>`;
+        clearBtn.style.display = "none";
+      } else {
+        clearBtn.style.display = "inline-flex";
+
+        const wrap = document.createElement("div");
+        wrap.className = "cartLines";
+
+        state.cart.forEach(line => {
+          const item = MENU.find(m => m.id === line.itemId);
+          const meta = item ? formatSelections(item, line.selections) : [];
+
+          const div = document.createElement("div");
+          div.className = "line";
+          div.innerHTML = `
+            <div class="lineTop">
+              <div style="min-width:0">
+                <p class="lineName">${line.name}</p>
+                ${meta.length ? `<div class="lineMeta">${meta.map(s=>escapeHtml(s)).join("<br/>")}</div>` : ""}
+              </div>
+              <button class="trash" type="button" title="Remove">🗑️</button>
+            </div>
+
+            <div class="lineBottom">
+              <div class="lineQty">
+                <span>Qty</span>
+                <input type="number" min="1" value="${line.qty}" />
+              </div>
+
+              <div class="lineNums">
+                <div class="numBox">
+                  <div class="muted">Unit</div>
+                  <div class="val">${money(line.unitPrice)}</div>
+                </div>
+                <div class="numBox">
+                  <div class="muted">Line</div>
+                  <div class="val strong">${money(line.unitPrice * line.qty)}</div>
+                </div>
+              </div>
+            </div>
+          `;
+
+          // remove
+          div.querySelector(".trash").addEventListener("click", () => {
+            state.cart = state.cart.filter(l => l.lineId !== line.lineId);
+            syncUI();
+          });
+
+          // qty edit
+          div.querySelector("input[type=number]").addEventListener("input", (e) => {
+            const v = Math.max(1, Number(e.target.value || 1));
+            e.target.value = v;
+            state.cart = state.cart.map(l => l.lineId === line.lineId ? { ...l, qty: v } : l);
+            syncUI(); // keeps totals updated
+          });
+
+          wrap.appendChild(div);
+        });
+
+        cartArea.innerHTML = "";
+        cartArea.appendChild(wrap);
+      }
+
+      const { subtotal, tax, total } = totals();
+      $("#subTotal").textContent = money(subtotal);
+      $("#taxAmt").textContent = money(tax);
+      $("#totalAmt").textContent = money(total);
+      $("#taxRateText").textContent = (TAX_RATE * 100).toFixed(2) + "%";
+
+      $("#cartCount").textContent = cartCount();
+    }
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    // ===== Actions =====
+    function addToCart(itemId){
+      const item = MENU.find(m => m.id === itemId);
+      const draft = state.drafts[itemId];
+      const selections = structuredClone(draft.selections);
+      const qty = Math.max(1, Number(draft.qty || 1));
+      const unitPrice = calcUnitPrice(item, selections);
+      const lineId = stableLineId(itemId, selections);
+
+      const idx = state.cart.findIndex(l => l.lineId === lineId);
+      if (idx >= 0){
+        state.cart[idx].qty += qty;
+      } else {
+        state.cart.push({ lineId, itemId, name: item.name, selections, unitPrice, qty });
+      }
+      syncUI();
+    }
+
+    function clearCart(){
+      state.cart = [];
+      syncUI();
+    }
+
+    function placeOrder(){
+      const { total } = totals();
+      if (!state.cart.length){
+        alert("Your cart is empty.");
+        return;
+      }
+      alert(`Order placed! Total: ${money(total)}\n\n(Replace this with your payment flow.)`);
+    }
+
+    function syncUI(){
+      // only need to re-render checkout + header counts/totals (menu stays as-is)
+      renderCart();
+    }
+
+    // ===== Boot =====
+    initDrafts();
+    renderMenu();
+    renderCart();
+
+    $("#clearBtn").addEventListener("click", clearCart);
+    $("#placeOrderBtn").addEventListener("click", placeOrder);
+  </script>
+</body>
+</html>
+
