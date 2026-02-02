@@ -1,9 +1,30 @@
 # README
 Savor Anti-Food waste application for Comp490 senior project at Csun
 
+kyleBranch03
+# How to set up local environment
+This might get more complicated as time goes on, but currently you need to be familiar with html, css, js, node, and firebase
+=======
 # ----- How to set up local environment ------ 
 This might get more complicated as time goes on, but currently you need to:
+ main
 
+#Tools for editing
+#What is HTML, CSS, JS?
+
+HTML stands for Hyptertext Markup Language is can be refered to as the skeleton or strucutre of the web page.
+
+CSS stands for Cascading Style Sheets this language controls the appearance such as colors, fonts, spacing, and layout.
+
+Js is Javascript and it is used to control the behavior of the web application. These are interactions such as what clicking does, scrolling ect..
+
+All three work together to make a web application. 
+
+Node is a service that runs javascript code on a server (We will be using firebase) or local machine (your pc). For now we will run it on our local machines so we can work on our components, but once we have something stable, we can host it on firebase as we add more features.
+
+Firebase is a backend database service for logins such as google or email. This allows us to keep track of users and web application api calls.
+
+#Server Environment using Node.js and Firebase
 1. Make sure you have [Node](https://nodejs.org/en/download/releases/) installed. If you have other versions of Node on your system I'd recommend installing Node Version Manager (NVM)
 2. Once you have Node installed, (you might need to restart your computer), you should clone the `staging` branch. You can either install Git (terminal usage), GitHub Desktop (GUI), or use built in Git functions in your IDE (VSCode, or Jetbrains).
 3. Once the repository is cloned, open the project in your IDE, and open a terminal window to run: `npm install`. This will install all of the needed packages to run the frontend locally. Note: as we add new features we might have new dependincies, so re-running `npm install` might be necessary.
