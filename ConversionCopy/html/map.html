@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>S4VOR Map</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+  <style>
+    body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background: url("../img/S5.png") no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Arial Rounded MT Bold', sans-serif;
+  overflow: hidden;
+}
+
+#map {
+  height: 100vh;
+  width: 100vw;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  width: 260px;
+  height: calc(100vh - 40px);
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 25px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.25);
+  overflow-y: auto;
+  z-index: 9998;
+}
+
+#info-address {
+  text-align: center;
+  font-size: 15px;
+  color: #333;
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+.sidebar h2 {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #0a5a2e;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar ul li {
+  padding: 12px;
+  background: rgba(183, 242, 176, 0.6);
+  border-radius: 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  color: #0a5a2e;
+  transition: 0.2s;
+}
+
+.sidebar ul li:hover {
+  background: rgba(198, 255, 198, 0.9);
+  transform: scale(1.02);
+}
+
+/* ================= SEARCH ================= */
+.search-container {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 15px;
+  z-index: 9999;
+}
+
+.search-box {
+  width: 350px;
+  padding: 12px 20px;
+  font-size: 18px;
+  border-radius: 30px;
+  border: none;
+  outline: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+}
+
+.search-btn {
+  padding: 12px 28px;
+  background: #0a5a2e;
+  color: white;
+  border: none;
+  border-radius: 28px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.search-btn:hover {
+  background: #118f54;
+  transform: scale(1.05);
+}
+
+/* ================= LOGIN ================= */
+.login-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 12px 30px;
+  background: #0a5a2e;
+  color: white;
+  border: none;
+  border-radius: 28px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+  z-index: 9999;
+  transition: .25s;
+}
+
+.login-btn:hover {
+  background: #118f54;
+  transform: scale(1.06);
+}
+
+/* ================= ROUTING ================= */
+.leaflet-routing-container {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-radius: 25px !important;
+  box-shadow: 0px 8px 25px rgba(0,0,0,0.25) !important;
+  width: 290px !important;
+  overflow: hidden !important;
+  border: none !important;
+  z-index: 999999 !important;
+}
+
+.leaflet-routing-alt,
+.leaflet-routing-geocoders,
+.leaflet-routing-add-waypoint,
+.leaflet-routing-error {
+  display: none !important;
+}
+
+/* ================= INFO CARD ================= */
+#restaurant-info-box {
+  position: absolute;
+  top: 95px;
+  right: 28px;
+  width: 260px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 25px;
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(6px);
+  display: none;
+  z-index: 999999;
+}
+
+#restaurant-info-box img {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 15px;
+  margin-bottom: 10px;
+}
+
+#restaurant-info-box h3 {
+  margin: 6px 0;
+  color: #0a5a2e;
+  font-size: 20px;
+  text-align: center;
+}
+
+#info-rating {
+  text-align: center;
+  font-size: 20px;
+  color: #ffb400;
+}
+
+#info-hours {
+  text-align: center;
+  font-size: 16px;
+  color: #0a5a2e;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+#order-btn {
+  width: 100%;
+  padding: 12px;
+  background: #0a5a2e;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#order-btn:hover {
+  background: #118f54;
+  transform: scale(1.05);
+}
+  </style>
+</head>
+<body>
+
+  <button class="login-btn" onclick=loginPress()>LOGIN</button>
+
+  <div class="sidebar">
+    <h2>Restaurants</h2>
+    <ul id="restaurantList"></ul>
+  </div>
+
+  <div class="search-container">
+    <input id="searchInput" class="search-box" placeholder="Search restaurants…" />
+    <button id="searchBtn" class="search-btn">SEARCH</button>
+  </div>
+
+  <div id="map"></div>
+
+  <!-- INFO CARD -->
+  <div id="restaurant-info-box">
+    <img id="info-img">
+    <h3 id="info-name"></h3>
+    <div id="info-rating"></div>
+    <p id="info-hours"></p>
+    <p id="info-address">Loading address…</p>
+    <button id="order-btn">ORDER</button>
+  </div>
+  
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getDatabase, ref, set, get, } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+console.log("map.js loaded");
+const firebaseConfig = {
+  databaseURL: "https://savordatabase-default-rtdb.firebaseio.com"
+};
+const app = initializeApp(firebaseConfig);
+const savorDB = getDatabase(app);
+
+const map = L.map("map").setView([34.241461, -118.529286], 15);
+const dateRef = new Date().toLocaleString('en-us', { weekday: 'long' });
+
+window.loginPress = function() {
+  window.location.href = 'login.html';
+}
+
+window.resPage = function()
+{
+  window.location.href = 'checkoutmenu.html';
+}
+
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+}).addTo(map);
+
+let markers = [];
+let restaurantData = [];
+let routingControl = null;
+let userLocation = null;
+
+function formatRatingStars(rating) {
+  const rounded = Math.round(rating);
+  return "★".repeat(rounded) + "☆".repeat(5 - rounded);
+}
+
+async function fetchAddress(lat, lng) {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
+      {
+        headers: {
+          "User-Agent": "S4VOR-Student-Project"
+        }
+      }
+    );
+    const data = await res.json();
+    return data.display_name || "Address not available";
+  } catch (err) {
+    console.error("Address lookup failed", err);
+    return "Address not available";
+  }
+}
+
+
+
+async function loadRestaurants() {
+  const res = await get(ref(savorDB, `rest/`));
+  const data = res.val();
+
+  if (!data) return;
+
+  // convert object → array
+  restaurantData = Object.values(data);
+  restaurantData = Object.entries(data).map(([id, r]) => ({id,...r}));
+
+  populateSidebar(restaurantData);
+  addRestaurantsToMap(restaurantData);
+
+  queryFromURL();
+}
+loadRestaurants();
+
+
+navigator.geolocation?.getCurrentPosition(
+  pos => userLocation = [pos.coords.latitude, pos.coords.longitude],
+  () => userLocation = [34.241461, -118.529286]
+);
+
+function addRestaurantsToMap(restaurants) {
+  markers.forEach(m => map.removeLayer(m));
+  markers = [];
+
+  const icon = L.icon({
+    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41]
+  });
+  //test piece 
+
+
+  restaurants.forEach(r => {
+    const marker = L.marker([r.lat, r.lng], { icon }).addTo(map);
+    marker.bindPopup(`<b style="color:#0a5a2e">${r.name}</b>`);
+
+    marker.on("click", () => {
+      updateInfoBox(r);
+      startRouting(r);
+    });
+
+    markers.push(marker);
+  });
+}
+
+function startRouting(r) {
+  if (!userLocation) return;
+
+  routingControl && map.removeControl(routingControl);
+
+  routingControl = L.Routing.control({
+    waypoints: [
+      L.latLng(userLocation),
+      L.latLng(r.lat, r.lng)
+    ],
+    addWaypoints: false,
+    draggableWaypoints: false
+  }).addTo(map);
+}
+
+function populateSidebar(restaurants) {
+  const list = document.getElementById("restaurantList");
+  list.innerHTML = "";
+
+  restaurants.forEach(r => {
+    const li = document.createElement("li");
+    li.textContent = r.id;
+
+    li.onclick = () => {
+      map.setView([r.lat, r.lng], 15);
+      updateInfoBox(r);
+      startRouting(r);
+    };
+
+    list.appendChild(li);
+  });
+}
+
+function updateInfoBox(r) {
+//Sanity check logs
+  console.log("Today:", dateRef);
+console.log("Hours object:", r.hours);
+
+  document.getElementById("restaurant-info-box").style.display = "block";
+
+  document.getElementById("info-img").src =r.image;
+
+  document.getElementById("info-name").innerText = r.id;
+
+  document.getElementById("info-rating").innerText =
+    `${formatRatingStars(r.rating)} (${r.rating.toFixed(1)})`;
+
+  document.getElementById("info-hours").innerText =r.hours?.[dateRef] ?? "Hours not available";
+
+  // show loading state
+  const addressEl = document.getElementById("info-address");
+  addressEl.innerText = "Loading address…";
+
+  // fetch real address from coordinates
+  fetchAddress(r.lat, r.lng).then(address => {
+    addressEl.innerText = address;
+  });
+
+  document.getElementById("order-btn").onclick = () => {
+    //localStorage.setItem("selectedRestaurant", r.id);
+    resPage();
+  };
+}
+
+
+/* SEARCH */
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
+
+function filter(query) {
+  const q = query.toLowerCase().trim();
+
+  if (!q) {
+    populateSidebar(restaurantData);
+    addRestaurantsToMap(restaurantData);
+    return;
+  }
+
+  const filtered = restaurantData.filter(r => {
+    const nameMatch = r.id?.toLowerCase().includes(q);
+    const typeMatch = r.type?.toLowerCase().includes(q);
+    return nameMatch || typeMatch;
+  });
+
+  populateSidebar(filtered);
+  addRestaurantsToMap(filtered);
+}
+
+function queryFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const query = params.get("query");
+
+  if (!query) return;
+
+  searchInput.value = query;   // populate search bar
+  filter(query);               // apply filter
+}
+
+
+
+
+searchInput.oninput = e => filter(e.target.value);
+searchBtn.onclick = () => filter(searchInput.value);
+
+  </script>
+</body>
+</html>

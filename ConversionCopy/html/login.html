@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S4VOR Login</title>
+  <style>
+    /*Login Css*/
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background: url("../img/S5.png") no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Arial Rounded MT Bold', sans-serif;
+  }
+  
+  
+  .login-overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding-top: 40px; 
+  }
+  
+  .login-box {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 25px;
+    padding: 70px 90px;
+    box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: 420px;
+  }
+
+  
+.login-title {
+    font-size: 110px; 
+    color: #0a5a2e;
+    margin-bottom: 60px; 
+    font-weight: 900;
+    letter-spacing: 3px;
+    position: relative;
+    animation: pulse 4s ease-in-out infinite;
+    text-shadow:
+      0 3px 0 #c8e1c8,
+      0 6px 0 #a8d1a8,
+      0 9px 10px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+  }
+  
+  
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.03);
+    }
+  }
+  
+  .login-title::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.6) 50%,
+      rgba(255, 255, 255, 0.1) 100%
+    );
+    transform: skewX(-20deg);
+    animation: shine 6s infinite;
+  }
+  
+  @keyframes shine {
+    0% { left: -75%; }
+    50% { left: 125%; }
+    100% { left: 125%; }
+  }
+  
+  .login-input {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 35px;
+    border: none;
+    border-radius: 10px;
+    font-size: 20px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  
+  .login-submit {
+    background-color: #0a5a2e;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 18px 55px;
+    font-size: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 15px;
+  }
+  
+  .login-submit:hover {
+    background-color: #118f54;
+    transform: scale(1.05);
+  }
+  
+  
+  .login-links {
+    margin-top: 40px;
+    font-size: 22px;
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+  }
+  
+  .login-links a {
+    color: #0a5a2e;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  
+  .login-links a:hover {
+    text-decoration: underline;
+    color: #118f54;
+  }
+
+  </style>>
+</head>
+<body>
+  <div class="login-overlay">
+    <div class="login-box">
+      <h1 class="login-title">S4VOR</h1>
+
+      <input type="text" id = "username" class="login-input" placeholder="Username">
+      <input type="password" id = "password" class="login-input" placeholder="Password">
+
+      <button class="login-submit" onclick="submitLogin()">LOGIN</button>
+
+      <div class="login-links">
+        <a href="#" onclick="forgotAcc()">Forgot Username/Password?</a>
+        <br>
+        <a href="#" onclick="createAcc()">Create Account!</a>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getDatabase, ref, set, get, } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+  console.log("Script loaded");
+//Consts and Vars
+
+const firebaseConfig = {
+  databaseURL: "https://savordatabase-default-rtdb.firebaseio.com"
+};
+const app = initializeApp(firebaseConfig);
+const savorDB = getDatabase(app);
+
+window.submitLogin = function() {
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value.trim();
+  if (!username || !password) {
+    alert('Please enter both username and password.');
+    return;
+  }
+  console.log ("Username:", username);
+  console.log ("Password:", password);
+
+  const passRef = ref(savorDB, `user/${username}/password`);
+
+  //Fetch stored password from DB to compare with typed password
+  get(passRef)
+      .then(snapshot => {
+        if (snapshot.exists()) {
+          const storedPassword = snapshot.val();
+          console.log('Stored password for', username, ':', storedPassword);
+          // compare with the typed password
+          if (storedPassword === password) {
+            console.log('Passwords match — login OK');
+            localStorage.setItem("loggedInUser", username);
+            window.location.href = "../html/index2.html";
+          } else {
+            console.log('Passwords do not match');
+            alert('Incorrect password');
+          }
+        } else {
+          console.log('No user found with username:', username);
+          alert('No such user');
+        }
+      })
+      .catch(err => {
+        console.error('Error reading password:', err);
+      });
+    } 
+
+
+window.createAcc = function() {
+  window.location.href = "../html/create_acc.html";
+}
+
+window.forgotAcc = function(){
+  window.location.href = "../html/forgot_acc.html";
+}
+  </script>
+</body>
+</html>

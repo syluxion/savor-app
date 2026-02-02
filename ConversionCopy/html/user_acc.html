@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile-settings - Savor</title>
+  <style>
+    /*User Account Css*/
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background: url("../img/S6.png") no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Arial Rounded MT Bold', sans-serif;
+}
+
+.settings-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 24px;
+    height: 100vh;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.settings-nav {
+    background: rgba(255, 255, 255, 0.93);
+    border-radius: 25px;
+    padding: 24px;
+    box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow: auto;
+    height: auto;
+    max-height: none;
+    /* max-height: calc(100vh - 48px); */
+}
+
+.settings-nav .app-title {
+    margin: 0 0 8px 0;
+    color: #0a5a2e;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+}
+
+.nav-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 12px 14px;
+    background: #fff;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0,0,0,0.08);
+    transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+.nav-item:hover { transform: translateX(2px); }
+.nav-item.is-active {
+    background: #e7f5ee;
+    box-shadow: 0 0 0 2px rgba(17, 143, 84, 0.25) inset;
+}
+
+.settings-content {
+    background: rgba(255, 255, 255, 0.93);
+    border-radius: 25px;
+    padding: 28px 32px;
+    box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    max-height: calc(100vh - 48px);
+}
+
+.profile-avatar {
+    display: flex;
+    justify-content: center;
+    margin: 6px 0 8px;
+}
+
+.avatar-large {
+    width: 96px;
+    height: 96px;   
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #0a5a2e;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    background-color: #f2f2f2;
+}
+
+.settings-header {
+    text-align: center;
+    margin-bottom: 18px;
+}
+.settings-subtitle {
+    color: #444;
+    margin: 6px 0 0;
+    font-size: 14px;
+}
+
+/* .panel { display: none; }
+.panel.is-visible { display: block;} --> */
+
+.card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 18px 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.form-grid { max-width: 720px; margin: 0 auto; }
+.field { margin-bottom: 16px; text-align: left; }
+.field label { display: block; margin-bottom: 6px; font-weight: 600; }
+
+.actions {display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.status { font-size: 14px; color: #0a5a2e; }
+
+.login-input {
+  display: block;
+  width: 100%;
+  padding: 13px; 
+  margin-bottom: 22px; 
+  border: none; /* ✅ removes black outline */
+  border-radius: 10px;
+  font-size: 17px; 
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.25s ease;
+}
+
+.login-input:focus {
+  outline: none; /* removes browser default blue outline */
+  box-shadow: 0 0 10px rgba(17, 143, 84, 0.4); /* ✅ smooth green glow */
+}
+
+select.login-input {
+  cursor: pointer;
+  background-color: #fefefe;
+}
+
+.login-submit {
+  background-color: #0a5a2e;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 15px 50px; 
+  font-size: 22px;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 10px; 
+}
+
+.login-submit:hover {
+  background-color: #118f54;
+  transform: scale(1.05);
+}
+
+.login-links {
+  margin-top: 30px; 
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.login-links a {
+  color: #0a5a2e;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.login-links a:hover {
+  text-decoration: underline;
+  color: #118f54;
+}
+
+@media (max-width: 900px) {
+  .settings-layout { grid-template-columns: 1fr; padding: 16px; }
+  .setting-nav, .settings-content { max-height: none; }
+}
+
+@media (max-width: 500px) {
+    .settings-content { padding: 20px; }
+    .login-input { padding: 12px; font-size: 16px; }
+    .login-submit { width: 100%; padding: 14px; font-size: 20px; }
+}
+
+/* --- Smooth fade animation for settings panels --- */
+
+/* Start hidden panels fully transparent */
+.panel {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  display: none; /* ensure hidden ones don't take space */
+}
+
+/* When a panel becomes visible */
+.panel.is-visible {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+  </style>>
+</head>
+<body>
+  <div class ="settings-layout">
+    <aside class="settings-nav" aria-label="Settings sections">
+      <h1 class="app-title">S4VOR</h1>
+      <nav role="tablist" aria-orientation="vertical">
+        <button type="button" class="nav-item is-active" role="tab" aria-selected="true" aria-controls="panel-profile" id="tab-profile">Personal Info</button>
+        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-security" id="tab-security">Security</button>
+        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-subscription" id="tab-subscription">Subscription</button>
+        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-payment" id="tab-payment">Payment Info</button>
+        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-locations" id="tab-locations">Saved Locations</button>
+        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-logout" id="tab-logout">Logout</button>
+      </nav>
+    </aside>
+
+    <main class="settings-content">
+      <div class="profile-avatar">
+        <img src="../img/user_icon.png" alt="User Avatar" class="avatar-large"/>
+      </div>
+
+      <header class="settings-header">
+        <h2 id="panel-title">Profile Settings</h2>
+        <p class="settings-subtitle">Manage your info and settings here.</p>
+      </header>
+
+      <section id="panel-profile" class="panel is-visible" role="tabpanel" aria-labelledby="tab-profile">
+        <section class="card" aria-labelledby="profile-basics-heading">
+        <h3 id="profile-basics-heading">Personal Info</h3>
+        <form id="profileBasicsForm" class="form-grid" autocomplete="on">
+          <div class="field">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" class="login-input"/>
+          </div>
+          <div class="field">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" class="login-input"/>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" class="login-input"/>
+          </div>
+          <div class="field">
+            <label for="birthdate">Birthdate</label>
+            <input type="date" id="birthdate" name="birthdate" class="login-input"/>
+          </div>
+          <div class="field">
+            <label for="phoneNumber">Phone Number</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" class="login-input"/>
+          </div>
+          <!--add account type in the future-->
+          <div class="actions">
+            <button type="submit" class="login-submit" onclick="saveAccountChanges1(event)">Save Changes</button>
+            <div id="profileBasicsStatus" class="status" aria-live="polite"></div>
+          </div>
+        </form>
+        </section>
+      </section> 
+
+      <section id="panel-security" class="panel" role="tabpanel" aria-labelledby="tab-security" hidden>
+        <section class="card" aria-labelledby="security-heading">
+          <h3 id="security-heading">Security</h3>
+          <form id="securityForm" class="form-grid" autocomplete="off">
+            <div class="field">
+              <label for="currentPassword">Current Password</label>
+              <input type="password" id="currentPassword" name="currentPassword" class="login-input"/>
+            </div>
+            <div class="field">
+              <label for="newPassword">New Password</label>
+              <input type="password" id="newPassword" name="newPassword" class="login-input"/>
+            </div>
+            <div class="field">
+              <label for="confirmPassword">Confirm New Password</label>
+              <input type="password" id="confirmPassword" name="confirmPassword" class="login-input"/>
+            </div>
+            <div class="actions">
+              <button type="submit" class="login-submit" onclick="updatePass(event)">Update Password</button>
+              <div id="securityStatus" class="status" aria-live="polite"></div>
+            </div>
+          </form>
+        </section>
+      </section>
+
+      <section id="panel-subscription" class="panel" role="tabpanel" aria-labelledby="tab-subscription" hidden>
+        <section class="card" aria-labelledby="subscription-heading">
+          <h3 id="subscription-heading">Subscription</h3>
+          <form id="subscriptionForm" class="form-grid" autocomplete="off">
+            <div class="field">
+              <label>Coming Soon</label>
+            </div>
+          </form>
+        </section>
+      </section>
+
+      <section id="panel-payment" class="panel" role="tabpanel" aria-labelledby="tab-payment" hidden>
+        <section class="card" aria-labelledby="payment-heading">
+          <h3 id="payment-heading">Payment Info</h3>
+          <form id="paymentForm" class="form-grid" autocomplete="off">
+            <div class="field">
+              <label>Coming Soon</label>
+            </div>
+          </form>
+        </section>
+      </section>
+
+      <section id="panel-locations" class="panel" role="tabpanel" aria-labelledby="tab-locations" hidden>
+        <section class="card" aria-labelledby="locations-heading">
+          <h3 id="locations-heading">Saved Locations</h3>
+          <form id="locationsForm" class="form-grid" autocomplete="off">
+            <div class="field">
+              <label>Coming Soon</label>
+            </div>
+          </form>
+        </section>
+      </section>
+
+      <section id="panel-logout" class="panel" role="tabpanel" aria-labelledby="tab-logout" hidden>
+      </section>
+      
+    </main>
+  </div>
+
+  <script type ="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getDatabase, ref, set, get, } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+  console.log("Script loaded");
+//Consts and Vars
+
+const firebaseConfig = {
+  databaseURL: "https://savordatabase-default-rtdb.firebaseio.com"
+};
+const app = initializeApp(firebaseConfig);
+const savorDB = getDatabase(app);
+window.saveAccountChanges1 = function (event) {
+  event.preventDefault(); // STOP form from reloading the page
+
+  const email = document.getElementById('email').value.trim();
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
+  const birthDate = document.getElementById('birthdate').value.trim(); // ID is birthdate
+
+  const loggedUser = localStorage.getItem("loggedInUser");
+
+  if (!loggedUser) {
+    alert("No logged in user!");
+    return;
+  }
+
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/;
+  if (!emailPattern.test(email)) {
+    alert("Please enter a valid email.");
+    return;
+  }
+
+  const userRef = ref(savorDB, `user/${loggedUser}`);
+
+  update(userRef, {
+    email,
+    firstName,
+    lastName,
+    birthDate   // correct property name
+  })
+    .then(() => alert("Account updated successfully!"))
+    .catch(err => {
+      console.error(err);
+      alert("Error saving account.");
+    });
+};
+window.logoutUser = function() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "index.html";
+}
+
+document.getElementById("tab-logout").addEventListener("click", logoutUser);
+
+//Updates password
+window.updatePass = function(event) {
+  event.preventDefault();
+  const loggedUser = localStorage.getItem("loggedInUser");
+  const currentPassword = document.getElementById('currentPassword').value.trim();
+  const newPassword = document.getElementById('newPassword').value.trim();
+  const confirmPassword = document.getElementById('confirmPassword').value.trim();
+  const passRef = ref(savorDB, `user/${loggedUser}/password`);
+
+  if (newPassword!==confirmPassword) {
+        alert("Passwords do not match. Please re-enter them.");
+        return;
+      }
+  else{
+    
+    set(passRef, newPassword)
+    .then(() => {
+      alert("Password updated successfully!");
+    })
+    .catch(err => {
+      console.error("Error updating password:", err);
+      alert("Failed to update password.");
+    });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Only run on pages that have the settings layout
+  const nav = document.querySelector('.settings-nav');
+  const content = document.querySelector('.settings-content');
+  if (!nav || !content) return;
+
+  const tabs = Array.from(nav.querySelectorAll('[role="tab"]'));
+  const panels = Array.from(document.querySelectorAll('.panel'));
+
+  // Helper: show the panel controlled by a tab
+  function showPanel(tabEl) {
+    // Update tab states
+    tabs.forEach(btn => {
+      const isActive = btn === tabEl;
+      btn.classList.toggle('is-active', isActive);
+      btn.setAttribute('aria-selected', String(isActive));
+      btn.setAttribute('tabindex', isActive ? '0' : '-1');
+      // Ensure nav buttons never submit forms
+      if (!btn.getAttribute('type')) btn.setAttribute('type', 'button');
+    });
+
+    // Hide all panels
+    panels.forEach(panel => {
+      panel.hidden = true;
+      panel.classList.remove('is-visible');
+    });
+
+    // Show target panel
+    const targetId = tabEl.getAttribute('aria-controls');
+    const target = document.getElementById(targetId);
+    if (target) {
+      target.hidden = false;
+      target.classList.add('is-visible');
+
+      // Move focus to first heading for accessibility
+      const heading = target.querySelector('h1, h2, h3, h4, [role="heading"]');
+      if (heading) {
+        // Make sure it can receive focus momentarily
+        if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
+        heading.focus();
+      }
+    }
+  }
+
+  // Wire click + keyboard navigation
+  tabs.forEach((btn, index) => {
+    btn.addEventListener('click', () => showPanel(btn));
+
+    btn.addEventListener('keydown', e => {
+      const prevKeys = ['ArrowUp', 'ArrowLeft'];
+      const nextKeys = ['ArrowDown', 'ArrowRight'];
+
+      if (prevKeys.includes(e.key)) {
+        e.preventDefault();
+        const prev = tabs[(index - 1 + tabs.length) % tabs.length];
+        prev.focus();
+        showPanel(prev);
+      } else if (nextKeys.includes(e.key)) {
+        e.preventDefault();
+        const next = tabs[(index + 1) % tabs.length];
+        next.focus();
+        showPanel(next);
+      }
+    });
+  });
+
+  // Initialize: use the one marked .is-active, or fall back to the first
+  const initial = tabs.find(t => t.classList.contains('is-active')) || tabs[0];
+  if (initial) showPanel(initial);
+});
+
+  </script> 
+</body>
+</html>

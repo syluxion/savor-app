@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S4VOR Restaurant Finder</title>
+  <style>
+    /*Index Css*/
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background: url("../img/S4.png") no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Arial Rounded MT Bold', sans-serif;
+  overflow: hidden;
+}
+
+.overlay {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.title {
+  font-size: 125px; 
+  color: #0a5a2e;
+  font-weight: 900;
+  letter-spacing: 3px;
+  position: relative;
+  text-align: center;
+  margin-bottom: 30px; 
+  text-shadow:
+    0 3px 0 #c8e1c8,
+    0 6px 0 #a8d1a8,
+    0 9px 10px rgba(0, 0, 0, 0.25);
+  animation: pulse 4s ease-in-out infinite;
+  overflow: hidden;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+.title::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  transform: skewX(-20deg);
+  animation: shine 6s infinite;
+}
+
+@keyframes shine {
+  0% { left: -75%; }
+  50% { left: 125%; }
+  100% { left: 125%; }
+}
+
+.login-btn {
+  position: fixed;
+  top: 100px;          
+  right: -420px;       
+  background-color: #0a5a2e;
+  color: #fff;
+  border: none;
+  padding: 20px 70px;
+  border-radius: 40px;
+  font-size: 30px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.login-btn:hover {
+  transform: scale(1.08);
+  background-color: #118f54;
+  box-shadow: 0 0 25px rgba(16, 128, 64, 0.7);
+}
+
+.login-btn:active {
+  transform: scale(0.95);
+  background-color: #0d7f40;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -55%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+/* --- Centered Search Bar --- */
+.search-container {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.search-box {
+  width: 500px;
+  padding: 20px 30px;
+  border-radius: 40px;
+  border: none;
+  font-size: 24px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.2s ease;
+}
+
+.search-box:focus {
+  box-shadow: 0px 0px 25px rgba(16, 128, 64, 0.7);
+}
+
+.search-btn {
+  background-color: #0a5a2e;
+  color: white;
+  border: none;
+  padding: 20px 50px;
+  border-radius: 40px;
+  font-size: 22px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.search-btn:hover {
+  transform: scale(1.05);
+  background-color: #118f54;
+  box-shadow: 0 0 25px rgba(16, 128, 64, 0.7);
+}
+  </style>>
+</head>
+<body>
+  <div class="overlay">
+    <h1 class="title">SAVOR</h1>
+    <button class="login-btn" onclick="handleLogin()">LOGIN</button>
+  </div>
+
+  <!-- Centered Search Bar -->
+  <div class="search-container">
+    <input
+      type="text"
+      id="searchInput"
+      class="search-box"
+      placeholder="Search restaurants or food (e.g. pizza, sushi)..."
+    />
+    <button class="search-btn" onclick="searchRestaurants()">SEARCH</button>
+  </div>
+
+  <script type="module">
+
+    window.handleLogin = function(){
+  window.location.href = "../html/login.html";
+}
+window.searchRestaurants = function () {
+  const query = document.getElementById("searchInput").value.trim();
+
+  if (query) {
+    
+    window.location.href = `map.html?query=${encodeURIComponent(query)}`;
+  } else {
+    
+    window.location.href = "map.html";
+  }
+};
+document.addEventListener('keydown', (event) => { 
+    const currentPath = window.location.pathname;
+    const currentFileName = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+    if(currentFileName === "index.html" && event.key === "Enter") {
+        searchRestaurants();
+    }
+    
+    });
+
+  
+  </script>
+</body>
+</html>
