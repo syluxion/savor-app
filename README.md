@@ -1,8 +1,13 @@
 # README
 Savor Anti-Food waste application for Comp490 senior project at Csun
 
+kyleBranch03
 # How to set up local environment
 This might get more complicated as time goes on, but currently you need to be familiar with html, css, js, node, and firebase
+=======
+# ----- How to set up local environment ------ 
+This might get more complicated as time goes on, but currently you need to:
+ main
 
 #Tools for editing
 #What is HTML, CSS, JS?
@@ -28,15 +33,15 @@ Firebase is a backend database service for logins such as google or email. This 
 4. From the same terminal run: `npm start`, this should start up the frontend, and the local emulator of firestore.
 5. Success!
 
-# Important
+# -------- Important --------
 Before you make any code changes, MAKE A NEW BRANCH! This is to ensure we do not overwrite code that may be important, accidentally. You will make a new, different branch for every task assigned to you, and once you are finished with the task you will submit a Pull Request (PR). 
 
 Please do not work on, or push to the master branch, and when you make a PR for your branch, please assign me as a reviewer. All of our work will be done to the staging branch before merging to master. This is so I can run your code on my computer to double check everything works, and does not conflict with any existing code.
 
-# Notes
+# -------- Notes --------
 1. By default the frontend loads on `localhost:3000`
 2. When running locally, firebase will set up an emulator run firestore so that it doesn't interfere with our production data. You can view the UI on `localhost:4000`
 
-# Useful Commands
+# -------- Useful Commands ---------
 `net stop winnat`
 `net start winnat`
