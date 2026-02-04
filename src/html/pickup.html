@@ -3,13 +3,17 @@
 <head> 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Create Account - S4VOR</title>
+  <title>Order Pickup - SAVOR</title>
   <link rel="stylesheet" href="../css/pickup.css">
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+
 </head>
 <body>
     <div class="title-bar">
         <a href="" class= "title-link"> <!--Add link to home-->
-            <h1 class="title-pickup">S4vor</h1>
+            <h1 class="title-pickup">SAVOR</h1>
         </a>
 
         <a href="../html/user_acc.html" class="settings-btn">
@@ -19,6 +23,8 @@
   <div class="login-overlay">
     <div class="login-box">
       <h2 class="pickup">Order Pickup</h2>
+      <div id="pickup-map"></div>
+      <br>
         <div class="info-bubble">
             <div class="bubble-content">
                 <div class="bubble-label">Restaurant: /Add Restuarant Name/</div>
@@ -40,7 +46,9 @@
     </div>
   </div>
   <script type="module" src="../js/script.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
+  <script type="module" src="../js/pickup-map.js"></script>
+
 </body>
 </html>
-
-<!-- Testing update-->

@@ -194,3 +194,12 @@ select.login-input {
   }
 }
 
+#pickup-map {
+  width: 100%;
+  height: 300px;          /* small map height */
+  border-radius: 18px;
+  overflow: hidden;
+  margin-top: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+

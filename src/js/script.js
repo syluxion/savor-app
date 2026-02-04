@@ -13,7 +13,6 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const savorDB = getDatabase(app);
-
 //Page Change Functions
 
 window.accountPage = function(){ 
@@ -31,8 +30,7 @@ window.handleLogin = function(){
   window.location.href = "../html/login.html";
 }
 
-
-//Send Email Function - forgot_acc.html
+//Send email function -Not Functional Yet
 window.sendEmail = async function() {
   const username = localStorage.getItem("loggedInUser");
   if (!username) {
@@ -57,14 +55,14 @@ window.sendEmail = async function() {
   }
 }
 
-//Save Account Changes Function - user_acc.html 
+//Save Account Changes Function (1)
 window.saveAccountChanges1 = function (event) {
-  event.preventDefault(); // Stop form from reloading the page
+  event.preventDefault(); // STOP form from reloading the page
 
   const email = document.getElementById('email').value.trim();
   const firstName = document.getElementById('firstName').value.trim();
   const lastName = document.getElementById('lastName').value.trim();
-  const birthDate = document.getElementById('birthdate').value.trim();
+  const birthDate = document.getElementById('birthdate').value.trim(); // ID is birthdate
 
   const loggedUser = localStorage.getItem("loggedInUser");
 
@@ -85,7 +83,7 @@ window.saveAccountChanges1 = function (event) {
     email,
     firstName,
     lastName,
-    birthDate
+    birthDate   // correct property name
   })
     .then(() => alert("Account updated successfully!"))
     .catch(err => {
@@ -93,8 +91,7 @@ window.saveAccountChanges1 = function (event) {
       alert("Error saving account.");
     });
 };
-
-//Updates password - user_acc.html
+//Updates password
 window.updatePass = function(event) {
   event.preventDefault();
   const loggedUser = localStorage.getItem("loggedInUser");
@@ -119,7 +116,7 @@ window.updatePass = function(event) {
     });
   }
 }
-//Searches Restaurants -index.html
+//Searches Restaurants needs to be worked /////////////////////////////////////////////////
 window.searchRestaurants = function () {
   const query = document.getElementById("searchInput").value.trim();
 
@@ -132,7 +129,11 @@ window.searchRestaurants = function () {
   }
 };
 
-//Login Function for Login Button - login.html 
+
+
+
+
+//Login Function for Login Button 
 window.submitLogin = function() {
   const username = document.getElementById('username').value.trim();
   const password = document.getElementById('password').value.trim();
@@ -151,6 +152,7 @@ window.submitLogin = function() {
         if (snapshot.exists()) {
           const storedPassword = snapshot.val();
           console.log('Stored password for', username, ':', storedPassword);
+          // compare with the typed password
           if (storedPassword === password) {
             console.log('Passwords match — login OK');
             localStorage.setItem("loggedInUser", username);
@@ -169,33 +171,7 @@ window.submitLogin = function() {
       });
     } 
 
-//Reset Password Function - recovery.html
-
-window.resetPass = function() {
-  const username = document.getElementById('username').value.trim();
-  const password = document.getElementById('password').value.trim();
-  const confirmPassword = document.getElementById('confirmPassword').value.trim();
-
-  const userRef = ref(savorDB, `user/${username}`);
-
-  if (password !== confirmPassword) {
-    alert("Passwords do not match. Please re-enter them.");
-    return;
-  }
-  else {
-    update(userRef, { password })
-      .then(() => {
-        alert(`Password for "${username}" reset successfully!`);
-        window.location.href = "../html/login.html";
-      })
-      .catch(err => {
-        console.error("Error resetting password:", err);
-        alert("Failed to reset password.");
-      });
-  }
-}
-
-//Create Account Function - create_acc.html
+//create account page script from gabriel 
 window.createAccount = function () {
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value.trim();
@@ -222,7 +198,9 @@ window.createAccount = function () {
       if (!accountType) {
         alert("Please select an account type.");
         return;
-      } 
+      }
+
+      //My Section 
 
       const userRef = ref(savorDB, `user/${username}`);
 
@@ -260,22 +238,14 @@ document.addEventListener('keydown', (event) => {
         createAccount();
     }
     else if(currentFileName === "index2.html" && event.key === "Enter") {
-        searchRestaurants();
-    }
-    else if(currentFileName === "map.html" && event.key === "Enter") {
-      searchOnMap();
-    }
-    else if(currentFileName === "forgot_acc.html" && event.key === "Enter") {
-      sendEmail();
-    }
-    else if(currentFileName === "recovery.html" && event.key === "Enter") {
-      resetPass();
+      //Need next function for index2.html
     }
     
     });
 
 
 // --- Settings page: tab switching ---
+
 document.addEventListener('DOMContentLoaded', () => {
   // Only run on pages that have the settings layout
   const nav = document.querySelector('.settings-nav');
@@ -347,15 +317,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (initial) showPanel(initial);
 });
 }
-
+//Needs to be put at the top of code on each page that requires user to be logged in, the if statement can be used
+//kick people to login page if not logged in.
 /*
-
-IMPORTANT COMMENTS
-----------------------
-
-Needs to be put at the top of code on each page that requires user to be logged in, the if statement can be used
-kick people to login page if not logged in.
-
 const user = localStorage.getItem("loggedInUser"); <-- Get logged in user from local storage
 
 if (!user) {
