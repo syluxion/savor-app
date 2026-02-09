@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout - Savor</title>
+
+  <style> /*Restaurant Account Css*/
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background: url("../img/S6.png") no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Arial Rounded MT Bold', sans-serif;
+}
+
+.settings-layout {
+    display: grid;
+    gap: 24px;
+    height: 100vh;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.settings-nav {
+    background: rgba(255, 255, 255, 0.93);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: auto;
+    height: 20vh;
+    max-height: none;
+    /* max-height: calc(100vh - 48px); */
+}
+
+.settings-nav .app-title {
+    margin: 0 0 8px 0;
+    color: #0a5a2e;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+}
+
+.nav-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 12px 14px;
+    background: #fff;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0,0,0,0.08);
+    transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+.nav-item:hover { transform: translateX(2px); }
+.nav-item.is-active {
+    background: #e7f5ee;
+    box-shadow: 0 0 0 2px rgba(17, 143, 84, 0.25) inset;
+}
+
+.settings-content {
+    background: rgba(255, 255, 255, 0.93);
+    box-sizing: border-box;
+    border-radius: 25px;
+    padding: 28px 32px;
+    box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    max-height: calc(100vh - 48px);
+}
+
+.profile-avatar {
+    display: flex;
+    justify-content: center;
+    margin: 6px 0 8px;
+}
+
+.avatar-large {
+    width: 96px;
+    height: 96px;   
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #0a5a2e;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    background-color: #f2f2f2;
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    padding: 0 10px;
+}
+
+.header-left {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #0a5a2e;
+    margin: 0;
+}
+
+.header-center {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #0a5a2e;
+    margin: 0;
+}
+
+.header-right {
+    font-size: 0.95rem;
+    color: #444;
+    margin: 0;
+}
+
+.settings-subtitle {
+    color: #444;
+    margin: 6px 0 0;
+    font-size: 14px;
+}
+
+/* .panel { display: none; }
+.panel.is-visible { display: block;} --> */
+
+.card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 18px 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.info-bubbles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.info-bubble {
+    flex: 1 1 150px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: #f4faf6;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    border: 1px solid rgba(17, 143, 84, 0.15);
+}
+
+.bubble-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.bubble-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0a5a2e;
+}
+
+.form-grid { max-width: 720px; margin: 0 auto; }
+.field { margin-bottom: 16px; text-align: left; }
+.field label { display: block; margin-bottom: 6px; font-weight: 600; }
+
+.actions {display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.status { font-size: 14px; color: #0a5a2e; }
+
+.login-input {
+  display: block;
+  width: 100%;
+  padding: 13px; 
+  margin-bottom: 22px; 
+  border: none; /* ✅ removes black outline */
+  border-radius: 10px;
+  font-size: 17px; 
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.25s ease;
+}
+
+.login-input:focus {
+  outline: none; /* removes browser default blue outline */
+  box-shadow: 0 0 10px rgba(17, 143, 84, 0.4); /* ✅ smooth green glow */
+}
+
+select.login-input {
+  cursor: pointer;
+  background-color: #fefefe;
+}
+
+.login-submit {
+  background-color: #0a5a2e;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 15px 50px; 
+  font-size: 22px;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 10px; 
+}
+
+.login-submit:hover {
+  background-color: #118f54;
+  transform: scale(1.05);
+}
+
+.login-links {
+  margin-top: 30px; 
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.login-links a {
+  color: #0a5a2e;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.login-links a:hover {
+  text-decoration: underline;
+  color: #118f54;
+}
+
+@media (max-width: 900px) {
+  .settings-layout { grid-template-columns: 1fr; padding: 16px; }
+  .setting-nav, .settings-content { max-height: none; }
+}
+
+@media (max-width: 500px) {
+    .settings-content { padding: 20px; }
+    .login-input { padding: 12px; font-size: 16px; }
+    .login-submit { width: 100%; padding: 14px; font-size: 20px; }
+}
+
+/* --- Smooth fade animation for settings panels --- */
+
+/* Start hidden panels fully transparent */
+.panel {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  display: none; /* ensure hidden ones don't take space */
+}
+
+/* When a panel becomes visible */
+.panel.is-visible {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  background: #f4faf6;
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.delete-btn {
+  background: #c0392b;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.delete-btn:hover {
+  background: #e74c3c;
+  transform: scale(1.1);
+}
+
+.cart-total {
+  margin-top: 16px;
+  font-size: 1.1rem;
+  text-align: right;
+  color: #0a5a2e;
+}
+</style>
+</head>
+<body>
+
+  <div class="settings-layout">
+
+    <!-- Main Checkout Content -->
+    <main class="settings-content">
+
+      <header class="settings-header">
+        <button class="header-left" onclick="indexReturn()">←</button>
+        <p class="header-center">Checkout</p>
+        <p class="header-right">Review & Pay</p>
+      </header>
+
+      <!-- CART -->
+      <section class="card">
+        <h3>Your Cart</h3>
+
+        <div id="cart-items"></div>
+
+        <div class="cart-total">
+          <strong>Total:</strong> $<span id="cart-total">0.00</span>
+        </div>
+      </section>
+
+      <!-- PAYMENT -->
+      <section class="card" style="margin-top: 24px;">
+        <h3>Payment Information</h3>
+
+        <form class="form-grid">
+
+          <div class="field">
+            <label for="cardName">Cardholder Name</label>
+            <input type="text" id="cardName" class="login-input" placeholder="John Doe" />
+          </div>
+
+          <div class="field">
+            <label for="cardNumber">Card Number</label>
+            <input type="text" id="cardNumber" class="login-input" placeholder="1234 5678 9012 3456" />
+          </div>
+
+          <div class="field">
+            <label for="expiry">Expiration Date</label>
+            <input type="month" id="expiry" class="login-input" />
+          </div>
+
+          <div class="field">
+            <label for="cvv">CVV</label>
+            <input type="password" id="cvv" class="login-input" placeholder="123" />
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="login-submit">Place Order</button>
+          </div>
+
+        </form>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Optional JS for delete buttons -->
+  <script type = "module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getDatabase, ref, set, get, } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { remove } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+
+{
+  console.log("Script loaded");
+//Consts and Vars
+
+const firebaseConfig = {
+  databaseURL: "https://savordatabase-default-rtdb.firebaseio.com"
+};
+const app = initializeApp(firebaseConfig);
+const savorDB = getDatabase(app);
+//Page Change Functions
+
+//Checkout functions
+
+window.loadOrder = async function () {
+  const itemRef = ref(savorDB, "order/0001/items");
+  const snapshot = await get(itemRef);
+
+  if (!snapshot.exists()) return [];
+
+  const itemsArr = [];
+  snapshot.forEach(child => {
+    itemsArr.push({
+      id: child.key,      // Firebase item key
+      ...child.val()
+    });
+  });
+
+  return itemsArr;
+};
+
+// --- Render cart items to the DOM ---
+async function renderCart() {
+  const cartItemsEl = document.getElementById("cart-items");
+  const totalEl = document.getElementById("cart-total");
+
+  // Guard: checkout page only
+  if (!cartItemsEl || !totalEl) return;
+
+  const items = await loadOrder();
+
+  cartItemsEl.innerHTML = "";
+  let total = 0;
+
+  if (items.length === 0) {
+    cartItemsEl.innerHTML = `<p class="empty-cart">Your cart is empty</p>`;
+    totalEl.textContent = "0.00";
+    return;
+  }
+
+  items.forEach(item => {
+    total += Number(item.price) || 0;
+
+    const cartItem = document.createElement("div");
+    cartItem.className = "cart-item";
+
+    cartItem.innerHTML = `
+      <div>
+        <strong>${item.name}</strong><br />
+        <small>$${Number(item.price).toFixed(2)}</small>
+      </div>
+      <button
+        type="button"
+        class="delete-btn"
+        data-id="${item.id}"
+        aria-label="Remove ${item.name}">
+        ✕
+      </button>
+    `;
+
+    cartItemsEl.appendChild(cartItem);
+  });
+
+  totalEl.textContent = total.toFixed(2);
+}
+
+renderCart();
+
+
+//Events
+
+document.addEventListener("click", async (e) => {
+  if (!e.target.classList.contains("delete-btn")) return;
+
+  const itemId = e.target.dataset.id;
+  if (!itemId) return;
+
+  console.log("Delete clicked:", itemId);
+
+  await remove(ref(savorDB, `order/0001/items/${itemId}`));
+  renderCart();
+});
+
+// --- Initialize cart on checkout page ---
+document.addEventListener("DOMContentLoaded", () => {
+  renderCart();
+});
+
+
+
+}
+</script>
+
+</body>
+</html>
