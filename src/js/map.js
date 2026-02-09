@@ -1,234 +1,152 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
-
-
-const firebaseConfig = {
-  databaseURL: "https://savordatabase-default-rtdb.firebaseio.com"
-};
-const app = initializeApp(firebaseConfig);
-const savorDB = getDatabase(app);
-const restRef = ref(savorDB, 'rest');
-
 console.log("map.js loaded");
 
-//map used in and when location fails it automatically uses jacaranda hall as the center of location
-// since we wont be anywhere else otherwise
-const map = L.map("map").setView([34.241461, -118.529286], 15); 
+const map = L.map("map").setView([34.241461, -118.529286], 15);
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
 }).addTo(map);
 
-
 let markers = [];
 let restaurantData = [];
 let routingControl = null;
-let userLocation = null; // store user's location
+let userLocation = null;
 
+const restaurantsUrl = "../data/restaurants.json";
 
-function getQueryFromURL() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("query")?.toLowerCase() || "";
+function formatRatingStars(rating) {
+  const rounded = Math.round(rating);
+  return "★".repeat(rounded) + "☆".repeat(5 - rounded);
 }
 
-const initialQuery = getQueryFromURL();
-
-//Creates restaurant data array from database
-async function configureArray()
-{
-  try{
-    const snapshot = await get(restRef);
-    if(!snapshot.exists()){
-      console.log("No data available");
-      return;
-    }
-    snapshot.forEach(child => {
-      const data = child.val();
-      restaurantData.push({
-      name: child.key,
-      type: data.type,
-      menu: data.menu,
-      price: data.price,
-      lat: data.lat,
-      lng: data.lng,
-  });
-});
-    console.log(restaurantData);
-    return restaurantData;
-  }catch(error){
-    console.error("Error fetching data:", error);
-    return [];
-  }
-}
-
-//Uses restsaurant data to add markers and populate sidebar
-async function loadRestaurants() { 
-
-
-  await configureArray();
-
-  
-  let filteredData = restaurantData;
-  if (initialQuery) {
-    filteredData = restaurantData.filter(r =>
-      r.name.toLowerCase().includes(initialQuery) ||
-      r.type.toLowerCase().includes(initialQuery)
-    );
-
-    
-    const searchInput = document.getElementById("searchInput");
-    if (searchInput) searchInput.value = initialQuery;
-  }
-
-  addRestaurantsToMap(filteredData);
-  populateSidebar(filteredData);
-}
-
-loadRestaurants();
-
-//Gets user initial location
-function initUserLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        userLocation = [position.coords.latitude, position.coords.longitude];
-      },
-      (err) => {
-        console.warn("Geolocation permission denied or unavailable. Using fallback location.");
-        userLocation = [34.241461, -118.529286]; // Jacaranda Hall fallback
+async function fetchAddress(lat, lng) {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
+      {
+        headers: {
+          "User-Agent": "S4VOR-Student-Project"
+        }
       }
     );
-  } else {
-    console.warn("Geolocation not supported. Using fallback location.");
-    userLocation = [34.241461, -118.529286]; // Jacaranda Hall fallback
+    const data = await res.json();
+    return data.display_name || "Address not available";
+  } catch (err) {
+    console.error("Address lookup failed", err);
+    return "Address not available";
   }
 }
 
-initUserLocation();
 
-//Adds markers to the map for each restaurant 
+async function loadRestaurants() {
+  const res = await fetch(restaurantsUrl);
+  restaurantData = await res.json();
+  populateSidebar(restaurantData);
+  addRestaurantsToMap(restaurantData);
+}
+loadRestaurants();
+
+navigator.geolocation?.getCurrentPosition(
+  pos => userLocation = [pos.coords.latitude, pos.coords.longitude],
+  () => userLocation = [34.241461, -118.529286]
+);
+
 function addRestaurantsToMap(restaurants) {
-  markers.forEach((m) => map.removeLayer(m));
+  markers.forEach(m => map.removeLayer(m));
   markers = [];
 
-  const darkGreenIcon = L.icon({
+  const icon = L.icon({
     iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
     iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [0, -35],
-    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
-    shadowSize: [41, 41]
+    iconAnchor: [12, 41]
   });
 
-  restaurants.forEach((r) => {
-    const marker = L.marker([r.lat, r.lng], { icon: darkGreenIcon }).addTo(map);
-  
-    const popupContent = document.createElement("div");
-    popupContent.innerHTML = `<b>${r.name}</b>`; 
-    popupContent.style.background = "#b7f2b0";
-    popupContent.style.padding = "8px 15px";
-    popupContent.style.borderRadius = "12px";
-    popupContent.style.cursor = "pointer";
-    popupContent.style.fontWeight = "bold";
-    popupContent.style.color = "#0a5a2e";
-    popupContent.style.textAlign = "center";
-  
-    popupContent.onclick = () => startRouting(r);
-  
-    marker.bindPopup(popupContent);
+  restaurants.forEach(r => {
+    const marker = L.marker([r.lat, r.lng], { icon }).addTo(map);
+    marker.bindPopup(`<b style="color:#0a5a2e">${r.name}</b>`);
+
+    marker.on("click", () => {
+      updateInfoBox(r);
+      startRouting(r);
+    });
+
     markers.push(marker);
   });
-  
 }
 
-//Shows routes from the current location
 function startRouting(r) {
-  if (!userLocation) {
-    console.error("User location not set yet. Try again in a moment.");
-    return;
-  }
+  if (!userLocation) return;
 
-  if (routingControl) {
-    map.removeControl(routingControl);
-  }
+  routingControl && map.removeControl(routingControl);
 
   routingControl = L.Routing.control({
-    waypoints: [L.latLng(userLocation[0], userLocation[1]), L.latLng(r.lat, r.lng)],
-    routeWhileDragging: false,
-    draggableWaypoints: false,
+    waypoints: [
+      L.latLng(userLocation),
+      L.latLng(r.lat, r.lng)
+    ],
     addWaypoints: false,
-    collapsible: true
+    draggableWaypoints: false
   }).addTo(map);
-
-  const routingEl = document.querySelector(".leaflet-routing-container");
-  if (routingEl) {
-    routingEl.style.top = "80px";
-    routingEl.style.right = "20px";
-    routingEl.style.left = "auto";
-    routingEl.style.borderRadius = "20px";
-    routingEl.style.boxShadow = "0px 8px 25px rgba(0,0,0,0.25)";
-    routingEl.style.background = "rgba(255,255,255,0.95)";
-    routingEl.style.width = "280px";
-  }
 }
 
-//Generates Options in Sidebar 
 function populateSidebar(restaurants) {
   const list = document.getElementById("restaurantList");
   list.innerHTML = "";
 
-  restaurants.forEach((r) => {
+  restaurants.forEach(r => {
     const li = document.createElement("li");
     li.textContent = r.name;
-    li.style.background = "#d6f7d6";
-    li.style.padding = "10px";
-    li.style.borderRadius = "12px";
-    li.style.marginBottom = "8px";
-    li.style.cursor = "pointer";
-    li.style.fontWeight = "bold";
-    li.style.color = "#0a5a2e";
-    li.style.transition = "0.2s";
 
     li.onclick = () => {
       map.setView([r.lat, r.lng], 15);
-      const marker = markers.find((m) => {
-        const pos = m.getLatLng();
-        return pos.lat === r.lat && pos.lng === r.lng;
-      });
-
-      if (marker) {
-        marker.openPopup();
-        startRouting(r);
-      }
-    };
-
-    li.onmouseover = () => {
-      li.style.transform = "scale(1.02)";
-      li.style.background = "#b7f2b0";
-    };
-    li.onmouseout = () => {
-      li.style.transform = "scale(1)";
-      li.style.background = "#d6f7d6";
+      updateInfoBox(r);
+      startRouting(r);
     };
 
     list.appendChild(li);
   });
 }
 
+function updateInfoBox(r) {
+  document.getElementById("restaurant-info-box").style.display = "block";
 
+  document.getElementById("info-img").src =
+    r.image || "https://picsum.photos/400/300";
+
+  document.getElementById("info-name").innerText = r.name;
+
+  document.getElementById("info-rating").innerText =
+    `${formatRatingStars(r.rating)} (${r.rating.toFixed(1)})`;
+
+  document.getElementById("info-hours").innerText =
+    r.hours || "10:00 AM – 10:00 PM";
+
+  // show loading state
+  const addressEl = document.getElementById("info-address");
+  addressEl.innerText = "Loading address…";
+
+  // fetch real address from coordinates
+  fetchAddress(r.lat, r.lng).then(address => {
+    addressEl.innerText = address;
+  });
+
+  document.getElementById("order-btn").onclick = () => {
+    alert(`Ordering from ${r.name}`);
+  };
+}
+
+
+/* SEARCH */
 const searchInput = document.getElementById("searchInput");
-searchInput.addEventListener("input", () => {
-  const query = searchInput.value.toLowerCase().trim();
+const searchBtn = document.getElementById("searchBtn");
 
-  const filtered = query === "" 
-    ? restaurantData 
-    : restaurantData.filter(r => r.name.toLowerCase().includes(query) || r.type.toLowerCase().includes(query));
-
+function filter(query) {
+  const q = query.toLowerCase();
+  const filtered = restaurantData.filter(r =>
+    r.name.toLowerCase().includes(q)
+  );
   populateSidebar(filtered);
   addRestaurantsToMap(filtered);
-});
+}
 
-//login button sends you to vcreate account or login
-document.querySelector(".login-btn").onclick = () => {
-  window.location.href = "login.html";
-};
+searchInput.oninput = e => filter(e.target.value);
+searchBtn.onclick = () => filter(searchInput.value);

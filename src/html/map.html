@@ -1,43 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>S4VOR Map</title>
 
-  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
-  <!-- Leaflet Routing Machine CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
-
-  <link rel="stylesheet" href="../css/map.css">
+  <link rel="stylesheet" href="../css/map.css" />
 </head>
 <body>
 
   <button class="login-btn" onclick="window.location.href='login.html'">LOGIN</button>
 
-  
-  <div class="sidebar" id="sidebar">
+  <div class="sidebar">
     <h2>Restaurants</h2>
     <ul id="restaurantList"></ul>
   </div>
 
   <div class="search-container">
-    <input id="searchInput" type="text" class="search-box" placeholder="Search restaurants…">
-    <button onclick="searchOnMap()" class="search-btn">SEARCH</button>
+    <input id="searchInput" class="search-box" placeholder="Search restaurants…" />
+    <button id="searchBtn" class="search-btn">SEARCH</button>
   </div>
-
 
   <div id="map"></div>
 
-  <!-- Leaflet JS -->
+  <!-- INFO CARD -->
+  <div id="restaurant-info-box">
+    <img id="info-img">
+    <h3 id="info-name"></h3>
+    <div id="info-rating"></div>
+    <p id="info-hours"></p>
+    <p id="info-address">Loading address…</p>
+    <button id="order-btn">ORDER</button>
+  </div>
+  
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-  <!-- Leaflet Routing Machine JS -->
   <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
-
-  <!-- Custom JS -->
-  <script type = "module" src="../js/map.js"></script>
+  <script src="../js/map.js"></script>
 </body>
 </html>
