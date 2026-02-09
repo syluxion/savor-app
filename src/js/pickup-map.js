@@ -1,3 +1,7 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getDatabase, ref, set, get, } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
 // pickup-map.js
 const map = L.map("pickup-map", {
   zoomControl: false,        // optional: cleaner small map
