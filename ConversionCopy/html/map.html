@@ -412,7 +412,7 @@ console.log("Hours object:", r.hours);
   });
 
   document.getElementById("order-btn").onclick = () => {
-    //localStorage.setItem("selectedRestaurant", r.id);
+    localStorage.setItem("currRest", r.id);
     resPage();
   };
 }

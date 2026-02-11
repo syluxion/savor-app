@@ -303,7 +303,7 @@ select.login-input {
     <main class="settings-content">
 
       <header class="settings-header">
-        <button class="header-left" onclick="indexReturn()">←</button>
+        <button class="header-left" id ="backButton">←</button>
         <p class="header-center">Checkout</p>
         <p class="header-right">Review & Pay</p>
       </header>
@@ -346,7 +346,7 @@ select.login-input {
           </div>
 
           <div class="actions">
-            <button type="submit" class="login-submit">Place Order</button>
+            <button type="submit" class="login-submit" id = "placeOrder">Place Order</button>
           </div>
 
         </form>
@@ -375,8 +375,13 @@ const savorDB = getDatabase(app);
 
 //Checkout functions
 
+window.finishOrder = function() {
+  window.location.href = "../html/pickup.html";
+}
+
 window.loadOrder = async function () {
-  const itemRef = ref(savorDB, "order/0001/items");
+  const x = localStorage.getItem("currOrder");
+  const itemRef = ref(savorDB, `order/${x}/items`);
   const snapshot = await get(itemRef);
 
   if (!snapshot.exists()) return [];
@@ -412,7 +417,7 @@ async function renderCart() {
   }
 
   items.forEach(item => {
-    total += Number(item.price) || 0;
+    total += Number(item.unitPrice) || 0;
 
     const cartItem = document.createElement("div");
     cartItem.className = "cart-item";
@@ -420,7 +425,7 @@ async function renderCart() {
     cartItem.innerHTML = `
       <div>
         <strong>${item.name}</strong><br />
-        <small>$${Number(item.price).toFixed(2)}</small>
+        <small>$${Number(item.unitPrice).toFixed(2)}</small>
       </div>
       <button
         type="button"
@@ -434,7 +439,8 @@ async function renderCart() {
     cartItemsEl.appendChild(cartItem);
   });
 
-  totalEl.textContent = total.toFixed(2);
+  
+  totalEl.textContent = (total+total*localStorage.getItem("taxRate")).toFixed(2);
 }
 
 renderCart();
@@ -459,6 +465,17 @@ document.addEventListener("DOMContentLoaded", () => {
   renderCart();
 });
 
+document.addEventListener("click", async (e) => {
+  const target = e.target;
+
+  if (target.id === "backButton") {
+    window.location.href = "checkoutmenu.html";
+  }
+
+  if (target.id === "placeOrder") {
+    finishOrder();
+  }
+});
 
 
 }

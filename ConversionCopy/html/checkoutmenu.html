@@ -21,7 +21,8 @@
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       color:var(--text);
-      background:var(--bg);
+      background: url("../img/S4.png") no-repeat center center fixed;
+      background-size: cover;
     }
     .wrap{
       max-width: 1160px;
@@ -361,7 +362,7 @@
   <div class="wrap">
     <header>
       <div>
-        <h1>Savor Bistro</h1>
+        <h1 id="restName" ></h1>
         <div class="sub">Pick options, add to cart, and checkout on the right.</div>
       </div>
       <div class="pill" id="cartPill">🛒 <span id="cartCount">0</span> items</div>
@@ -397,472 +398,285 @@
             </div>
           </div>
         </section>
-
-        <section class="miniCard">
-          <div class="mtitle">Tips to customize</div>
-          <ul>
-            <li>Edit the <code>MENU</code> array in JS to match your restaurant.</li>
-            <li>Add images by including an <code>imageUrl</code> and rendering it in each card.</li>
-            <li>Adjust tax rate, currency, and add delivery fees if needed.</li>
-            <li>Persist cart in <code>localStorage</code> for a nicer UX.</li>
-          </ul>
-        </section>
       </aside>
     </div>
   </div>
 
-  <script>
+  <script type ="module">
+    //====Imports=====//
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getDatabase, ref, set, get, } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+console.log("map.js loaded");
+const firebaseConfig = {
+  databaseURL: "https://savordatabase-default-rtdb.firebaseio.com"
+};
+const app = initializeApp(firebaseConfig);
+const savorDB = getDatabase(app);
     // ===== Data =====
-    const MENU = [
-      {
-        id: "burger",
-        name: "Classic Burger",
-        desc: "Beef patty, lettuce, tomato, onion, house sauce.",
-        base: 10.0,
-        tags: ["Popular"],
-        options: {
-          size: {
-            label: "Size",
-            type: "single",
-            choices: [
-              { key: "regular", label: "Regular", delta: 0 },
-              { key: "double", label: "Double", delta: 3 }
-            ]
-          },
-          addons: {
-            label: "Add-ons",
-            type: "multi",
-            choices: [
-              { key: "cheese", label: "Cheese", delta: 1 },
-              { key: "bacon", label: "Bacon", delta: 2 },
-              { key: "avocado", label: "Avocado", delta: 2 }
-            ]
-          }
-        },
-        defaults: { size: "regular", addons: [] }
-      },
-      {
-        id: "pizza",
-        name: "Margherita Pizza",
-        desc: "Tomato, mozzarella, basil.",
-        base: 12.0,
-        tags: ["Vegetarian"],
-        options: {
-          size: {
-            label: "Size",
-            type: "single",
-            choices: [
-              { key: "10", label: "10-inch", delta: 0 },
-              { key: "14", label: "14-inch", delta: 4 }
-            ]
-          },
-          crust: {
-            label: "Crust",
-            type: "single",
-            choices: [
-              { key: "thin", label: "Thin", delta: 0 },
-              { key: "hand", label: "Hand-tossed", delta: 1 },
-              { key: "gf", label: "Gluten-free", delta: 2 }
-            ]
-          },
-          addons: {
-            label: "Extras",
-            type: "multi",
-            choices: [
-              { key: "pepperoni", label: "Pepperoni", delta: 2 },
-              { key: "mushrooms", label: "Mushrooms", delta: 1 },
-              { key: "olives", label: "Olives", delta: 1 }
-            ]
-          }
-        },
-        defaults: { size: "10", crust: "thin", addons: [] }
-      },
-      {
-        id: "salad",
-        name: "Chicken Caesar Salad",
-        desc: "Romaine, parmesan, croutons, Caesar dressing.",
-        base: 9.5,
-        tags: ["Fresh"],
-        options: {
-          protein: {
-            label: "Protein",
-            type: "single",
-            choices: [
-              { key: "chicken", label: "Chicken", delta: 0 },
-              { key: "shrimp", label: "Shrimp", delta: 3 },
-              { key: "none", label: "No protein", delta: -1 }
-            ]
-          },
-          dressing: {
-            label: "Dressing",
-            type: "single",
-            choices: [
-              { key: "caesar", label: "Caesar", delta: 0 },
-              { key: "light", label: "Light Caesar", delta: 0 },
-              { key: "onSide", label: "On the side", delta: 0 }
-            ]
-          },
-          addons: {
-            label: "Add-ons",
-            type: "multi",
-            choices: [
-              { key: "extraParm", label: "Extra parmesan", delta: 1 },
-              { key: "extraCroutons", label: "Extra croutons", delta: 0.5 }
-            ]
-          }
-        },
-        defaults: { protein: "chicken", dressing: "caesar", addons: [] }
-      }
-    ];
 
     const TAX_RATE = 0.0875;
-
-    // ===== State =====
+    localStorage.setItem("taxRate", TAX_RATE);
     const state = {
       drafts: {},   // per item: { selections, qty }
-      cart: []      // lines: { lineId, itemId, name, selections, unitPrice, qty }
+      cart: [],     // lines: { lineId, itemId, name, selections, unitPrice, qty }
+      items: []
     };
+    
 
-    // ===== Helpers =====
-    const $ = (sel) => document.querySelector(sel);
+    document.getElementById("restName").innerText =
+  localStorage.getItem("currRest");
 
-    function money(n){
-      return n.toLocaleString(undefined, { style: "currency", currency: "USD" });
-    }
+async function renderMenu() {
+  const rest = localStorage.getItem("currRest");
+  const menuItemsRef = ref(savorDB, `rest/${rest}/menu`);
+  const menuItems = document.getElementById("menuCol");
+  const snapshot = await get(menuItemsRef);
+  if(!snapshot.exists()) return;
 
-    function stableLineId(itemId, selections){
-      const parts = Object.entries(selections)
-        .map(([k,v]) => Array.isArray(v) ? `${k}=[${v.slice().sort().join(",")}]` : `${k}=${v}`)
-        .sort();
-      return `${itemId}::${parts.join("|")}`;
-    }
+  state.items = []; // reset items array
 
-    function calcUnitPrice(item, selections){
-      let p = item.base;
-      for (const [groupKey, group] of Object.entries(item.options || {})){
-        const val = selections[groupKey];
-        if (val == null) continue;
+  snapshot.forEach(child => {
+    const data = child.val();
+    const itemObj = {
+      id: child.key,
+      name: data.name,
+      desc: data.desc,
+      price: data.price,
+      imageURL: data.image || "" // fixed typo & default empty
+    };
+    state.items.push(itemObj);
+  });
 
-        if (Array.isArray(val)){
-          for (const key of val){
-            const found = group.choices.find(c => c.key === key);
-            if (found) p += found.delta;
-          }
-        } else {
-          const found = group.choices.find(c => c.key === val);
-          if (found) p += found.delta;
-        }
-      }
-      return Math.max(0, p);
-    }
+  menuItems.innerHTML = ""; // clear previous content
 
-    function formatSelections(item, selections){
-      const rows = [];
-      for (const [groupKey, group] of Object.entries(item.options || {})){
-        const val = selections[groupKey];
-        if (val == null) continue;
+  state.items.forEach(item => {
+    const menuItem = document.createElement("section");
+    menuItem.className = "card"; // optional styling
 
-        if (Array.isArray(val)){
-          if (!val.length) continue;
-          const labels = val.map(k => (group.choices.find(c=>c.key===k)||{}).label).filter(Boolean);
-          if (labels.length) rows.push(`${group.label}: ${labels.join(", ")}`);
-        } else {
-          const label = (group.choices.find(c=>c.key===val)||{}).label;
-          if (label) rows.push(`${group.label}: ${label}`);
-        }
-      }
-      return rows;
-    }
-
-    function cartCount(){
-      return state.cart.reduce((s,l)=>s + l.qty, 0);
-    }
-
-    function totals(){
-      const subtotal = state.cart.reduce((s,l)=>s + l.unitPrice*l.qty, 0);
-      const tax = subtotal * TAX_RATE;
-      return { subtotal, tax, total: subtotal + tax };
-    }
-
-    // ===== Rendering =====
-    function initDrafts(){
-      MENU.forEach(item => {
-        state.drafts[item.id] = {
-          selections: structuredClone(item.defaults || {}),
-          qty: 1
-        };
-      });
-    }
-
-    function renderMenu(){
-      const root = $("#menuCol");
-      root.innerHTML = "";
-
-      MENU.forEach(item => {
-        const draft = state.drafts[item.id];
-        const unit = calcUnitPrice(item, draft.selections);
-
-        const card = document.createElement("section");
-        card.className = "card";
-        card.innerHTML = `
-          <div class="hd">
-            <div class="row">
-              <div>
-                <div class="title">${item.name}</div>
-                <div class="desc">${item.desc}</div>
-                <div class="tags">
-                  ${(item.tags||[]).map(t=>`<span class="tag">${t}</span>`).join("")}
-                </div>
-              </div>
-              <div class="priceCol">
-                <div class="from">From</div>
-                <div class="basePrice">${money(item.base)}</div>
-              </div>
-            </div>
+    menuItem.innerHTML = `
+      <div class="hd">
+        <div class="row">
+          <div>
+            <div class="title">${item.name}</div>
+            <div class="desc">${item.desc}</div>
           </div>
-          <div class="bd">
-            <div class="opts" id="opts-${item.id}"></div>
-
-            <div class="sep"></div>
-
-            <div class="qtyAdd">
-              <div class="qtyBox">
-                <div class="lbl">Quantity</div>
-                <input type="number" min="1" value="${draft.qty}" id="qty-${item.id}" />
-              </div>
-
-              <div class="row" style="align-items:center">
-                <div class="yourPrice">
-                  <div class="muted">Your price</div>
-                  <div class="big" id="your-${item.id}">${money(unit)}</div>
-                </div>
-                <button class="btn primary" type="button" id="add-${item.id}">Add to cart</button>
-              </div>
-            </div>
+          <div>
+            ${item.imageURL ? `<img src="${item.imageURL}" alt="${item.name}" style="max-width:80px; border-radius:8px;">` : ""}
           </div>
-        `;
-
-        root.appendChild(card);
-
-        const optsWrap = card.querySelector(`#opts-${item.id}`);
-
-        // Options UI
-        for (const [groupKey, group] of Object.entries(item.options || {})){
-          const g = document.createElement("div");
-          g.className = "optGroup";
-
-          if (group.type === "multi"){
-            g.innerHTML = `<div class="lbl">${group.label}</div>`;
-            group.choices.forEach(choice => {
-              const checked = (draft.selections[groupKey] || []).includes(choice.key);
-              const row = document.createElement("div");
-              row.className = "addon";
-              row.innerHTML = `
-                <div class="addonLeft">
-                  <label>
-                    <input type="checkbox" ${checked ? "checked" : ""} data-item="${item.id}" data-group="${groupKey}" data-key="${choice.key}" />
-                    <span title="${choice.label}">${choice.label}</span>
-                  </label>
-                </div>
-                <div class="addonRight">${choice.delta === 0 ? "+$0" : `+${money(choice.delta)}`}</div>
-              `;
-              g.appendChild(row);
-            });
-          } else {
-            const current = draft.selections[groupKey] ?? group.choices[0]?.key;
-            g.innerHTML = `
-              <div class="lbl">${group.label}</div>
-              <select data-item="${item.id}" data-group="${groupKey}">
-                ${group.choices.map(c => {
-                  const extra = c.delta ? ` (${c.delta>0?"+":""}${money(c.delta)})` : "";
-                  return `<option value="${c.key}" ${String(c.key)===String(current)?"selected":""}>${c.label}${extra}</option>`;
-                }).join("")}
-              </select>
-            `;
-          }
-
-          optsWrap.appendChild(g);
-        }
-
-        // Wire events for qty + add
-        card.querySelector(`#qty-${item.id}`).addEventListener("input", (e) => {
-          const v = Math.max(1, Number(e.target.value || 1));
-          state.drafts[item.id].qty = v;
-          e.target.value = v;
-        });
-
-        card.querySelector(`#add-${item.id}`).addEventListener("click", () => addToCart(item.id));
-
-        // Wire events for options
-        card.querySelectorAll("select[data-item]").forEach(sel => {
-          sel.addEventListener("change", (e) => {
-            const itemId = e.target.dataset.item;
-            const groupKey = e.target.dataset.group;
-            state.drafts[itemId].selections[groupKey] = e.target.value;
-            rerenderPrice(itemId);
-          });
-        });
-
-        card.querySelectorAll("input[type=checkbox][data-item]").forEach(cb => {
-          cb.addEventListener("change", (e) => {
-            const itemId = e.target.dataset.item;
-            const groupKey = e.target.dataset.group;
-            const key = e.target.dataset.key;
-            const arr = state.drafts[itemId].selections[groupKey] || [];
-            if (e.target.checked){
-              state.drafts[itemId].selections[groupKey] = Array.from(new Set([...arr, key]));
-            } else {
-              state.drafts[itemId].selections[groupKey] = arr.filter(k => k !== key);
-            }
-            rerenderPrice(itemId);
-          });
-        });
-      });
-    }
-
-    function rerenderPrice(itemId){
-      const item = MENU.find(m => m.id === itemId);
-      const draft = state.drafts[itemId];
-      const unit = calcUnitPrice(item, draft.selections);
-      const el = document.getElementById(`your-${itemId}`);
-      if (el) el.textContent = money(unit);
-    }
-
-    function renderCart(){
-      const cartArea = $("#cartArea");
-      const clearBtn = $("#clearBtn");
-
-      if (!state.cart.length){
-        cartArea.innerHTML = `<div class="checkoutEmpty">Your cart is empty. Add items from the menu.</div>`;
-        clearBtn.style.display = "none";
-      } else {
-        clearBtn.style.display = "inline-flex";
-
-        const wrap = document.createElement("div");
-        wrap.className = "cartLines";
-
-        state.cart.forEach(line => {
-          const item = MENU.find(m => m.id === line.itemId);
-          const meta = item ? formatSelections(item, line.selections) : [];
-
-          const div = document.createElement("div");
-          div.className = "line";
-          div.innerHTML = `
-            <div class="lineTop">
-              <div style="min-width:0">
-                <p class="lineName">${line.name}</p>
-                ${meta.length ? `<div class="lineMeta">${meta.map(s=>escapeHtml(s)).join("<br/>")}</div>` : ""}
-              </div>
-              <button class="trash" type="button" title="Remove">🗑️</button>
+          <div class="priceCol">
+            <div class="from">From</div>
+            <div class="basePrice">$${item.price.toFixed(2)}</div>
+          </div>
+        </div>
+      </div>
+      <div class="bd">
+        <div class="sep"></div>
+        <div class="qtyAdd">
+          <div class="qtyBox">
+            <div class="lbl">Quantity</div>
+            <input type="number" min="1" value="1" id="qty-${item.id}">
+          </div>
+          <div class="row" style="align-items:center">
+            <div class="yourPrice">
+              <div class="muted">Your price</div>
+              <div class="big" id="your-${item.id}">$${item.price.toFixed(2)}</div>
             </div>
+            <button class="btn primary" type="button" data-id="${item.id}">Add to cart</button>
+          </div>
+        </div>
+      </div>
+    `;
 
-            <div class="lineBottom">
-              <div class="lineQty">
-                <span>Qty</span>
-                <input type="number" min="1" value="${line.qty}" />
-              </div>
+    menuItems.appendChild(menuItem);
+  });
+}
 
-              <div class="lineNums">
-                <div class="numBox">
-                  <div class="muted">Unit</div>
-                  <div class="val">${money(line.unitPrice)}</div>
-                </div>
-                <div class="numBox">
-                  <div class="muted">Line</div>
-                  <div class="val strong">${money(line.unitPrice * line.qty)}</div>
-                </div>
-              </div>
-            </div>
-          `;
+function updateTotals() {
+  const subtotal = state.cart.reduce((sum, l) => sum + l.unitPrice * l.qty, 0);
+  const tax = subtotal * TAX_RATE;
+  const total = subtotal + tax;
 
-          // remove
-          div.querySelector(".trash").addEventListener("click", () => {
-            state.cart = state.cart.filter(l => l.lineId !== line.lineId);
-            syncUI();
-          });
+  document.getElementById("subTotal").textContent = `$${subtotal.toFixed(2)}`;
+  document.getElementById("taxAmt").textContent = `$${tax.toFixed(2)}`;
+  document.getElementById("totalAmt").textContent = `$${total.toFixed(2)}`;
+  document.getElementById("taxRateText").textContent = (TAX_RATE*100).toFixed(2) + "%";
+  document.getElementById("cartCount").textContent = state.cart.length;
+}
 
-          // qty edit
-          div.querySelector("input[type=number]").addEventListener("input", (e) => {
-            const v = Math.max(1, Number(e.target.value || 1));
-            e.target.value = v;
-            state.cart = state.cart.map(l => l.lineId === line.lineId ? { ...l, qty: v } : l);
-            syncUI(); // keeps totals updated
-          });
+// ---- Updated renderCart ----
+function renderCart() {
+  const cartArea = document.getElementById("cartArea");
+  const clearBtn = document.getElementById("clearBtn");
 
-          wrap.appendChild(div);
-        });
+  if (!state.cart.length) {
+    cartArea.innerHTML = '<div class="checkoutEmpty">Your cart is empty</div>';
+    clearBtn.style.display = "none";
+    updateTotals();
+    return;
+  }
 
-        cartArea.innerHTML = "";
-        cartArea.appendChild(wrap);
-      }
+  clearBtn.style.display = "inline-flex";
 
-      const { subtotal, tax, total } = totals();
-      $("#subTotal").textContent = money(subtotal);
-      $("#taxAmt").textContent = money(tax);
-      $("#totalAmt").textContent = money(total);
-      $("#taxRateText").textContent = (TAX_RATE * 100).toFixed(2) + "%";
+  const wrap = document.createElement("div");
+  wrap.className = "cartLines";
 
-      $("#cartCount").textContent = cartCount();
-    }
+  state.cart.forEach(line => {
+    const item = state.items.find(i => i.id === line.itemId);
 
-    function escapeHtml(str){
-      return String(str)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
+    const div = document.createElement("div");
+    div.className = "line";
 
-    // ===== Actions =====
-    function addToCart(itemId){
-      const item = MENU.find(m => m.id === itemId);
-      const draft = state.drafts[itemId];
-      const selections = structuredClone(draft.selections);
-      const qty = Math.max(1, Number(draft.qty || 1));
-      const unitPrice = calcUnitPrice(item, selections);
-      const lineId = stableLineId(itemId, selections);
+    div.innerHTML = `
+      <div class="lineTop">
+        <div style="min-width:0">
+          <p class="lineName">${line.name}</p>
+        </div>
+        <button class="trash" type="button" title="Remove">🗑️</button>
+      </div>
+      <div class="lineBottom">
+        <div class="lineQty">
+          <span>Qty</span>
+          <input type="number" min="1" value="${line.qty}" />
+        </div>
+        <div class="lineNums">
+          <div class="numBox">
+            <div class="muted">Unit</div>
+            <div class="val">$${line.unitPrice.toFixed(2)}</div>
+          </div>
+          <div class="numBox">
+            <div class="muted">Line</div>
+            <div class="val strong">$${(line.unitPrice * line.qty).toFixed(2)}</div>
+          </div>
+        </div>
+      </div>
+    `;
 
-      const idx = state.cart.findIndex(l => l.lineId === lineId);
-      if (idx >= 0){
-        state.cart[idx].qty += qty;
-      } else {
-        state.cart.push({ lineId, itemId, name: item.name, selections, unitPrice, qty });
-      }
-      syncUI();
-    }
+    // ---- Remove item from cart ----
+    div.querySelector(".trash").addEventListener("click", () => {
+      state.cart = state.cart.filter(l => l.itemId !== line.itemId);
+      syncUI(); // re-render cart & totals
+    });
 
-    function clearCart(){
-      state.cart = [];
-      syncUI();
-    }
+    // ---- Update qty ----
+    div.querySelector("input[type=number]").addEventListener("input", e => {
+      const v = Math.max(1, Number(e.target.value || 1));
+      line.qty = v;
+      syncUI(); // re-render totals
+    });
 
-    function placeOrder(){
-      const { total } = totals();
-      if (!state.cart.length){
-        alert("Your cart is empty.");
-        return;
-      }
-      alert(`Order placed! Total: ${money(total)}\n\n(Replace this with your payment flow.)`);
-    }
+    wrap.appendChild(div);
+  });
 
-    function syncUI(){
-      // only need to re-render checkout + header counts/totals (menu stays as-is)
-      renderCart();
-    }
+  cartArea.innerHTML = "";
+  cartArea.appendChild(wrap);
 
-    function payCheck(){
-        localStorage.setItem("currOrder", JSON.stringify(state.cart));
-        location.href = 'paymentCheckout.html';
-    }
+  updateTotals();
+}
 
-    // ===== Boot =====
-    initDrafts();
-    renderMenu();
-    renderCart();
 
-    $("#clearBtn").addEventListener("click", clearCart);
-    $("#placeOrderBtn").addEventListener("click", payCheck);
+
+function addToCart(itemId) {
+  const item = state.items.find(i => i.id === itemId);
+  if (!item) return;
+
+  // Read quantity from input box
+  const qtyInput = document.getElementById(`qty-${itemId}`);
+  const qty = qtyInput ? Math.max(1, parseInt(qtyInput.value) || 1) : 1;
+
+  // Check if item is already in cart
+  const existing = state.cart.find(l => l.itemId === itemId);
+  if (existing) {
+    existing.qty += qty;
+  } else {
+    state.cart.push({
+      itemId: item.id,
+      name: item.name,
+      unitPrice: item.price,
+      qty
+    });
+  }
+
+  console.log("Cart:", state.cart);
+  syncUI();
+}
+
+
+
+function clearCart(){
+  state.cart = [];
+  syncUI();
+}
+
+function syncUI(){
+  renderCart();
+}
+
+function getTimestamp() {
+  const now = new Date();
+
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const year = now.getFullYear();
+
+  let hours = now.getHours();
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const ampm = hours >= 12 ? 'pm' : 'am';
+
+  hours = hours % 12 || 12; // convert 0 → 12
+
+  return `${month}${day}${year}/${hours}:${minutes}${ampm}`;
+}
+
+
+function getRandom(max) {
+  return Math.floor(Math.random() * max);
+}
+
+
+function payCheck(){
+  const x = getRandom(1000);
+  const items = state.cart;
+  let user = "guest";
+  if (localStorage.getItem("loggedInUser")) {
+    user = localStorage.getItem("loggedInUser");
+  }
+  const pickupTime = getTimestamp();
+  const rest = localStorage.getItem("currRest");
+  const totalPrice = parseFloat(document.getElementById("totalAmt").innerText.replace("$", ""));
+  const status = "pending";
+
+  localStorage.setItem("currOrder", x);
+  const orderRef = ref(savorDB, `order/${x}`);
+  set(orderRef, {items,pickupTime,rest,totalPrice,user,status })
+  .then(() => {
+    location.href = `paymentCheckout.html`;
+  })
+  .catch(err => {
+    console.log("Error creating order",err);
+    alert("Failed to create order.");
+  })
+}
+
+//===Events===//
+document.getElementById("menuCol").addEventListener("click", (e) => {
+  if (!e.target.matches("button.btn.primary")) return;
+
+  const itemId = e.target.dataset.id; // get the ID from data-id
+  addToCart(itemId);
+});
+
+document.getElementById("clearBtn")
+  .addEventListener("click", clearCart);
+
+document.getElementById("placeOrderBtn")
+  .addEventListener("click", payCheck);
+
+
+//==Boot==//
+renderMenu();
   </script>
 </body>
 </html>
+
