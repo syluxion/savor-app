@@ -205,6 +205,37 @@ select.login-input {
   transform: translateY(0);
 }
 
+/*CSS for orders tab*/
+.hd {
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* spreads across full row */
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.title,
+.rest,
+.totalPrice {
+  flex: 1;              /* each takes equal space */
+}
+
+.title {
+  font-weight: 600;
+}
+
+.rest {
+  text-align: center;
+}
+
+.totalPrice {
+  text-align: right;
+}
+
 
   </style>>
 </head>
@@ -215,9 +246,9 @@ select.login-input {
       <nav role="tablist" aria-orientation="vertical">
         <button type="button" class="nav-item is-active" role="tab" aria-selected="true" aria-controls="panel-profile" id="tab-profile">Personal Info</button>
         <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-security" id="tab-security">Security</button>
-        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-subscription" id="tab-subscription">Subscription</button>
+        <!--<button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-subscription" id="tab-subscription">Subscription</button>-->
         <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-payment" id="tab-payment">Payment Info</button>
-        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-locations" id="tab-locations">Saved Locations</button>
+        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-orders" id="tab-orders">Orders</button>
         <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-logout" id="tab-logout">Logout</button>
       </nav>
     </aside>
@@ -289,7 +320,7 @@ select.login-input {
         </section>
       </section>
 
-      <section id="panel-subscription" class="panel" role="tabpanel" aria-labelledby="tab-subscription" hidden>
+      <!--<section id="panel-subscription" class="panel" role="tabpanel" aria-labelledby="tab-subscription" hidden>
         <section class="card" aria-labelledby="subscription-heading">
           <h3 id="subscription-heading">Subscription</h3>
           <form id="subscriptionForm" class="form-grid" autocomplete="off">
@@ -298,7 +329,7 @@ select.login-input {
             </div>
           </form>
         </section>
-      </section>
+      </section>-->
 
       <section id="panel-payment" class="panel" role="tabpanel" aria-labelledby="tab-payment" hidden>
         <section class="card" aria-labelledby="payment-heading">
@@ -311,12 +342,25 @@ select.login-input {
         </section>
       </section>
 
-      <section id="panel-locations" class="panel" role="tabpanel" aria-labelledby="tab-locations" hidden>
-        <section class="card" aria-labelledby="locations-heading">
-          <h3 id="locations-heading">Saved Locations</h3>
-          <form id="locationsForm" class="form-grid" autocomplete="off">
-            <div class="field">
-              <label>Coming Soon</label>
+      <section id="panel-orders" class="panel" role="tabpanel" aria-labelledby="tab-orders" hidden>
+        <section class="card" aria-labelledby="orders-heading">
+          <h3 id="orders-heading">Orders</h3>
+          <form id="ordersForm" class="form-grid" autocomplete="off">
+            <div class="ordersfield">
+              <section class="card">
+                <h3>Pending Orders</h3>
+                  <div id="pending-orders">
+                    <h3>Loading</h3>
+                  </div>
+              </section>
+              
+              <section class = "card">
+                <h3>Completed Orders</h3>
+                  <div id = "completed-orders">
+                    <h3>Loading</h3>
+                  </div>
+              </section>
+
             </div>
           </form>
         </section>
@@ -341,13 +385,21 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const savorDB = getDatabase(app);
+
+const state = {
+  pendOrders: [],
+  compOrders: []
+}
+
+console.log(localStorage.getItem("loggedInUser"));
+
 window.saveAccountChanges1 = function (event) {
   event.preventDefault(); // STOP form from reloading the page
 
   const email = document.getElementById('email').value.trim();
   const firstName = document.getElementById('firstName').value.trim();
   const lastName = document.getElementById('lastName').value.trim();
-  const birthDate = document.getElementById('birthdate').value.trim(); // ID is birthdate
+  const birthDate = document.getElementById('birthdate').value.trim();
 
   const loggedUser = localStorage.getItem("loggedInUser");
 
@@ -368,7 +420,7 @@ window.saveAccountChanges1 = function (event) {
     email,
     firstName,
     lastName,
-    birthDate   // correct property name
+    birthDate
   })
     .then(() => alert("Account updated successfully!"))
     .catch(err => {
@@ -376,10 +428,19 @@ window.saveAccountChanges1 = function (event) {
       alert("Error saving account.");
     });
 };
-window.logoutUser = function() {
-  localStorage.removeItem("loggedInUser");
-  window.location.href = "index.html";
+window.viewOrder = function(){
+    window.location.href = "orderView.html";
+  }
+window.pickupOrder = function(){
+  window.location.href = "pickup.html";
 }
+  
+window.logoutUser = function() {
+    localStorage.removeItem("loggedInUser");
+    window.location.href = "index.html";
+}
+
+
 
 document.getElementById("tab-logout").addEventListener("click", logoutUser);
 
@@ -407,6 +468,93 @@ window.updatePass = function(event) {
       alert("Failed to update password.");
     });
   }
+}
+
+async function organizeOrders() {
+  const loggedUser = localStorage.getItem("loggedInUser");
+  const orderRefs = ref(savorDB, `order`);
+  const snapshot = await get(orderRefs);
+
+  if(!snapshot.exists()) return;
+
+  
+  snapshot.forEach(child => {
+    const order = child.val();
+
+    if (order.user !== loggedUser) return;
+
+    const orderObj = {
+      id: child.key,
+      rest: order.rest,
+      totalPrice: order.totalPrice,
+      status: order.status
+    };
+
+    if (order.status === "pending") {
+      state.pendOrders.push(orderObj);
+    } else {
+      state.compOrders.push(orderObj);
+    }
+  });
+  
+}
+
+async function renderOrders() {
+  const pendingOrdersTab = document.getElementById("pending-orders");
+  const completeOrdersTab = document.getElementById("completed-orders");
+  
+  pendingOrdersTab.innerHTML = "";
+  completeOrdersTab.innerHTML = "";
+
+state.pendOrders.forEach(ord => {
+  const pendOrder = document.createElement("section");
+  pendOrder.className = "card";
+  pendOrder.id = "orderPend";
+
+  pendOrder.addEventListener("click", () => {
+    console.log("Pending order clicked:", ord.id);
+    localStorage.setItem("clickedOrder", ord.id);
+    pickupOrder();
+  });
+
+  pendOrder.innerHTML = `
+
+  <div class="hd">
+  <div class="row">
+    <div class="title">#${ord.id}</div>
+    <div class="rest">${ord.rest}</div>
+    <div class="totalPrice">${ord.totalPrice}</div>
+  </div>
+</div>
+
+      
+  `
+  pendingOrdersTab.appendChild(pendOrder);
+})
+
+state.compOrders.forEach(ord => {
+  const compOrder = document.createElement("section");
+  compOrder.className = "card";
+  compOrder.id = "orderComp"
+
+  compOrder.addEventListener("click", () => {
+    console.log("Complete order clicked:", ord.id);
+    localStorage.setItem("clickedOrder", ord.id);
+    viewOrder();
+  });
+
+  compOrder.innerHTML = `
+  <div class = "hd">
+    <div class = "row">
+      <div class = "title">#${ord.id}</div>
+      <div class = "rest">${ord.rest}</div>
+      <div class = "totalPrice">${ord.totalPrice}</div>
+    </div>
+  </div>
+  `
+  completeOrdersTab.appendChild(compOrder);
+})
+  
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -479,6 +627,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const initial = tabs.find(t => t.classList.contains('is-active')) || tabs[0];
   if (initial) showPanel(initial);
 });
+
+(async () => {
+  await organizeOrders();
+  renderOrders();
+})();
+
 
   </script> 
 </body>
