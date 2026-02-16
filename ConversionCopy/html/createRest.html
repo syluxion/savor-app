@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAVOR</title>
+  <style>
+    /*Create Restaurant Css*/
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background: url("../img/S6.png") no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Arial Rounded MT Bold', sans-serif;
+}
+
+.title{
+  font-size: 20px;
+  color:  #118f54;
+  position: relative;
+  text-align: center;
+  margin-bottom: 30px;
+}
+.overlay {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.login-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding-top: 10px;
+}
+
+.login-box {
+  background: rgba(255, 255, 255, 0.93);
+  border-radius: 25px;
+  padding: 45px 60px; 
+  box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  width: 430px; 
+  max-height: 85vh; 
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.login-box::-webkit-scrollbar {
+  display: none;
+}
+
+.login-input {
+  display: block;
+  width: 100%;
+  padding: 13px; 
+  margin-bottom: 22px; 
+  border: none; /* ✅ removes black outline */
+  border-radius: 10px;
+  font-size: 17px; 
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.25s ease;
+}
+
+.login-input:focus {
+  outline: none; /* removes browser default blue outline */
+  box-shadow: 0 0 10px rgba(17, 143, 84, 0.4); /* ✅ smooth green glow */
+}
+
+select.login-input {
+  cursor: pointer;
+  background-color: #fefefe;
+}
+
+.login-submit {
+  background-color: #0a5a2e;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 15px 50px; 
+  font-size: 22px;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 10px; 
+}
+
+.login-submit:hover {
+  background-color: #118f54;
+  transform: scale(1.05);
+}
+
+.login-links {
+  margin-top: 30px; 
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.login-links a {
+  color: #0a5a2e;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.login-links a:hover {
+  text-decoration: underline;
+  color: #118f54;
+}
+
+@media (max-width: 500px) {
+  .login-box {
+    width: 90%;
+    padding: 40px 25px;
+  }
+
+  .login-input {
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .login-submit {
+    width: 100%;
+    padding: 14px;
+    font-size: 20px;
+  }
+}
+  </style>
+</head>
+<body>
+  <h3 class="title">SAVOR</h3>
+  <div class="login-overlay">
+    <div class="login-box">
+        <h1>Create Restuarant</h1>
+      <input type = "text" class ="login-input" id ="restName" placeholder = "Business Name">
+      <input type="text" class="login-input" id="address" placeholder="Address">
+      <input type = "text" class = "login-input" id = "phoneNum" placeholder = "Phone Number">
+      <input type = "text" class = "login-input" id = "restType" placeholder = "Establishment/Food Type">
+      <input type = "text" class = "login-input" id = "imgLink" placeholder = "Image Link">
+      <strong>
+        Hours of Operation - (HH:MMAM-HH:MMPM)<br>
+        ---------------------------------------------------------------
+      </strong>
+      <input type = "text" class = "login-input" id = "mon" placeholder = "Monday">
+      <input type = "text" class = "login-input" id = "tues" placeholder = "Tuesday">
+      <input type = "text" class = "login-input" id = "wed" placeholder = "Wednesday">
+      <input type = "text" class = "login-input" id = "thurs" placeholder = "Thursday">
+      <input type = "text" class = "login-input" id = "fri" placeholder = "Friday">
+      <input type = "text" class = "login-input" id = "sat" placeholder = "Saturday">
+      <input type = "text" class = "login-input" id = "sun" placeholder = "Sunday">
+
+      <button class="login-submit" id = "createButton">Create Restaurant</button>
+
+    </div>
+  </div>
+  <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getDatabase, ref, set, get, } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+
+
+  console.log("Script loaded");
+//Consts and Vars
+
+const firebaseConfig = {
+  databaseURL: "https://savordatabase-default-rtdb.firebaseio.com"
+};
+const app = initializeApp(firebaseConfig);
+const savorDB = getDatabase(app);
+
+async function geocodeAddress(address) {
+  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+
+  const res = await fetch(url, {
+    headers: {
+      "User-Agent": "YourAppName/1.0"
+    }
+  });
+
+  const data = await res.json();
+
+  if (data.length === 0) {
+    throw new Error("Address not found");
+  }
+
+  return {
+    lat: parseFloat(data[0].lat),
+    lng: parseFloat(data[0].lon)
+  };
+}
+
+
+async function createRest() {
+
+  const rest = document.getElementById("restName").value.trim();
+  const address = document.getElementById("address").value.trim();
+  const phoneNumber = document.getElementById("phoneNum").value.trim();
+  const type = document.getElementById("restType").value.trim();
+  const image = document.getElementById("imgLink").value.trim();
+
+  const mon = document.getElementById("mon").value.trim();
+  const tues = document.getElementById("tues").value.trim();
+  const wed = document.getElementById("wed").value.trim();
+  const thurs = document.getElementById("thurs").value.trim();
+  const fri = document.getElementById("fri").value.trim();
+  const sat = document.getElementById("sat").value.trim();
+  const sun = document.getElementById("sun").value.trim();
+  const rating = 0;
+  const owner = localStorage.getItem("loggedInUser");
+
+  const {lat,lng} = await geocodeAddress(address);
+
+  const hours = [];
+  hours["Monday"]=mon;
+  hours["Tuesday"]=tues;
+  hours["Wednesday"] = wed;
+  hours["Thursday"] = thurs;
+  hours["Friday"] = fri;
+  hours["Saturday"] = sat;
+  hours["Sunday"] = sun;
+
+
+  const restRef = ref(savorDB,`rest/${rest}`);
+
+  set(restRef, {phoneNumber,type,hours,image,lat,lng,rating,owner})
+  .then(() => {
+    alert(`Business "${rest}" created successfully!`);
+    window.location.href = "../html/index2.html";
+  })
+  .catch(err => {
+      console.log("Error creating business:",err);
+      alert("Failed to create business");
+  })
+
+}
+
+document.getElementById("createButton").addEventListener("click", (e) => {
+  createRest();
+})
+  
+  </script>
+</body>
+</html>
