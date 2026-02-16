@@ -151,7 +151,7 @@ body {
 <body>
   <div class="overlay">
     <h1 class="title">SAVOR</h1>
-    <button class="login-btn" onclick="handleLogin()">LOGIN</button>
+    <button class="login-btn" onclick="handleLogin()">Account</button>
   </div>
 
   <!-- Centered Search Bar -->
@@ -167,8 +167,14 @@ body {
 
   <script type="module">
 
-    window.handleLogin = function(){
-  window.location.href = "../html/login.html";
+window.handleLogin = function(){
+  if(localStorage.getItem("loggedInUser")) {
+    window.location.href = "../html/user_acc.html";
+  }
+  else
+  {
+    window.location.href = "../html/login.html";
+  }
 }
 window.searchRestaurants = function () {
   const query = document.getElementById("searchInput").value.trim();

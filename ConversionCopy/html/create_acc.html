@@ -207,6 +207,8 @@ window.createAccount = function () {
 
       const userRef = ref(savorDB, `user/${username}`);
 
+      localStorage.setItem("loggedInUser", username);
+
   set(userRef, { password, email, accountType, firstName, lastName, birthDate })
   .then(() => {
     alert(`User "${username}" created successfully!`);
@@ -214,7 +216,8 @@ window.createAccount = function () {
     if (accountType === "user") {
       window.location.href = "../html/index2.html";
     } else {
-      window.location.href = "../html/business_DB.html";
+      
+      window.location.href = "../html/createRest.html";
     }
   })
   .catch(err => {

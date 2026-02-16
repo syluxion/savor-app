@@ -236,6 +236,7 @@ select.login-input {
                 <div class="bubble-value" id = "pickupTime"></div>
                 <div class="bubble-value" id = "orderNum"> </div>
                 <div class="bubble-value" id = "items"></div>
+                <div class = "bubble-value" id = "tax"></div>
                 <div class="bubble-value" id = "price"></div>
             </div>
         </div>
@@ -261,7 +262,7 @@ const app = initializeApp(firebaseConfig);
 const savorDB = getDatabase(app);
 
 // pickup-map.js
-const map = L.map("pickup-map", {
+let map = L.map("pickup-map", {
   zoomControl: false,        // optional: cleaner small map
   attributionControl: false  // optional
 }).setView([34.241461, -118.529286], 14);
@@ -271,7 +272,7 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 }).addTo(map);
 
 // Example: restaurant location (replace with real order restaurant coords)
-const restaurantLatLng = [34.241461, -118.529286];
+let restaurantLatLng = [34.241461, -118.529286];
 L.marker(restaurantLatLng).addTo(map).bindPopup("Pickup location");
 
 // Optional: route from user to restaurant (if user allows geolocation)
@@ -328,12 +329,10 @@ async function loadOrder() {
   if(!snapshotRest.exists()) return;
   const restVal = snapshotRest.val();
   fetchAddress(restVal.lat, restVal.lng).then(address => {
-    document.getElementById("loc").innerHTML = `<strong>${address}</strong>`;
+    document.getElementById("loc").innerHTML = `<strong>${address}</strong><br>`;
   });
-  document.getElementById("rest-name").innerHTML = `<strong>${order.rest}</strong>`;
-  const od = dayjs(order.pickupTime, "MMDDYYYY/h:mma").format("MMMM D, YYYY h:mm A");
-
-  document.getElementById("pickupTime").innerHTML = `<strong>${od}</strong>`;
+  document.getElementById("rest-name").innerHTML = `<strong>${order.rest}</strong><br>`;
+  document.getElementById("pickupTime").innerHTML = `<strong>${order.pickupTime}</strong><br>`;
   const itemsEl = document.getElementById("items");
   itemsEl.innerHTML = "";
 
@@ -342,7 +341,10 @@ async function loadOrder() {
     row.textContent = `${item.name} - $${item.unitPrice}`;
     itemsEl.appendChild(row);
   });
-  document.getElementById("price").innerHTML = `<strong>Total: ${order.totalPrice}</strong>`;
+  document.getElementById("tax").innerHTML = `<br><strong>Tax: $${(localStorage.taxRate * order.totalPrice).toFixed(2)}</strong>`;
+  //Tax doesn't get calculated correctly
+  document.getElementById("price").innerHTML = `<br><strong>Total: $${order.totalPrice.toFixed(2)}</strong>`;
+
 }
 
 

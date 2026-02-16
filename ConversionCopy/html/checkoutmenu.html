@@ -502,7 +502,12 @@ function updateTotals() {
   document.getElementById("taxAmt").textContent = `$${tax.toFixed(2)}`;
   document.getElementById("totalAmt").textContent = `$${total.toFixed(2)}`;
   document.getElementById("taxRateText").textContent = (TAX_RATE*100).toFixed(2) + "%";
-  document.getElementById("cartCount").textContent = state.cart.length;
+  let cartItemCount = 0;
+  for (let x = 0; x < state.cart.length; x++) 
+  {
+      cartItemCount += Number(state.cart[x].qty);
+  }
+  document.getElementById("cartCount").textContent = cartItemCount;
 }
 
 // ---- Updated renderCart ----
@@ -573,6 +578,7 @@ function renderCart() {
   cartArea.appendChild(wrap);
 
   updateTotals();
+  syncUI();
 }
 
 
@@ -672,10 +678,25 @@ document.getElementById("clearBtn")
 
 document.getElementById("placeOrderBtn")
   .addEventListener("click", payCheck);
-
+async function checkOrderVal()
+{
+  if(localStorage.getItem("currOrder"))
+  {
+    const orderRef = ref(savorDB,`order/${localStorage.getItem("currOrder")}`);
+    const snapshotRef = await get(orderRef);
+    const orderPrev = snapshotRef.val();
+    state.cart = orderPrev.items;
+    renderCart();
+  }
+  else
+  {
+    return;
+  }
+}
 
 //==Boot==//
 renderMenu();
+checkOrderVal();
   </script>
 </body>
 </html>
