@@ -293,6 +293,14 @@ select.login-input {
   text-align: right;
   color: #0a5a2e;
 }
+
+.back-btn {
+    margin-top:15px;
+    margin-left: 15px;
+    width: 40px;
+    height: 30px;
+  }
+
 </style>
 </head>
 <body>
@@ -303,7 +311,7 @@ select.login-input {
     <main class="settings-content">
 
       <header class="settings-header">
-        <button class="header-left" id ="backButton">←</button>
+        <button class="back-btn" id ="backButton">←</button>
         <p class="header-center">Checkout</p>
         <p class="header-right">Review & Pay</p>
       </header>
@@ -380,7 +388,7 @@ window.finishOrder = function() {
 }
 
 window.loadOrder = async function () {
-  const x = localStorage.getItem("currOrder");
+  const x = sessionStorage.getItem("currOrder");
   const itemRef = ref(savorDB, `order/${x}/items`);
   const snapshot = await get(itemRef);
 
@@ -446,7 +454,7 @@ async function renderCart() {
   });
 
   
-  totalEl.textContent = (total+total*localStorage.getItem("taxRate")).toFixed(2);
+  totalEl.textContent = (total+total*sessionStorage.getItem("taxRate")).toFixed(2);
 }
 
 renderCart();
@@ -457,7 +465,7 @@ document.addEventListener("click", async (e) => {
   if (!e.target.classList.contains("delete-btn")) return;
 
   const itemId = e.target.dataset.id;
-  const y = localStorage.getItem("currOrder");
+  const y = sessionStorage.getItem("currOrder");
   if (!itemId) return;
 
   console.log("Delete clicked:", itemId);
@@ -486,6 +494,8 @@ document.addEventListener("click", async (e) => {
 
 
 }
+
+
 </script>
 
 </body>

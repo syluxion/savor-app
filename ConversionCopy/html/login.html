@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <button class = "back-btn" onclick = "backPress()">←</button>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>S4VOR Login</title>
@@ -133,6 +134,13 @@ body {
     color: #118f54;
   }
 
+  .back-btn {
+    margin-top:15px;
+    margin-left: 15px;
+    width: 40px;
+    height: 30px;
+  }
+
   </style>>
 </head>
 <body>
@@ -167,6 +175,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const savorDB = getDatabase(app);
 
+window.backPress = function() {
+  window.location.href = "../html/index.html";
+}
+
 window.submitLogin = function() {
   const username = document.getElementById('username').value.trim();
   const password = document.getElementById('password').value.trim();
@@ -189,7 +201,7 @@ window.submitLogin = function() {
           if (storedPassword === password) {
             console.log('Passwords match — login OK');
             localStorage.setItem("loggedInUser", username);
-            window.location.href = "../html/index2.html";
+            window.location.href = "../html/index.html";
           } else {
             console.log('Passwords do not match');
             alert('Incorrect password');
@@ -212,6 +224,14 @@ window.createAcc = function() {
 window.forgotAcc = function(){
   window.location.href = "../html/forgot_acc.html";
 }
+
+document.addEventListener('keydown', (event) => { 
+    if(event.key === "Enter") {
+        submitLogin();
+    }
+});
+
+
   </script>
 </body>
 </html>
