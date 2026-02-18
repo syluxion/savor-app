@@ -28,7 +28,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 16px;
+    padding: 0 5px;
     z-index: 1000;
 }
 
@@ -216,12 +216,12 @@ select.login-input {
 </head>
 <body>
     <div class="title-bar">
-        <a href="" class= "title-link"> <!--Add link to home-->
-            <h1 class="title-pickup">SAVOR</h1>
+        <a href="../html/index.html" class= "title-link">
+            <h1 class="title-pickup" onclick = "clearStorage()">SAVOR</h1>
         </a>
 
         <a href="../html/user_acc.html" class="settings-btn">
-            <img src="../img/cog.png" alt="Settings" class="settings-icon">
+            <img src="../img/cog.png" alt="Settings" class="settings-icon" onclick = "clearStorage()">
         </a>
     </div>
   <div class="login-overlay">
@@ -260,6 +260,13 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const savorDB = getDatabase(app);
+
+window.clearStorage = function() {
+  sessionStorage.removeItem("clickedOrder");
+  sessionStorage.removeItem("taxRate");
+  sessionStorage.removeItem("currRest");
+  sessionStorage.removeItem("currOrder");
+}
 
 // pickup-map.js
 let map = L.map("pickup-map", {
@@ -317,7 +324,7 @@ async function fetchAddress(lat, lng) {
 }
 
 async function loadOrder() {
-  const orderNum = localStorage.getItem("clickedOrder");
+  const orderNum = sessionStorage.getItem("currOrder");
   if (!orderNum) return;
 
   const ord = ref(savorDB, `order/${orderNum}`);
@@ -336,16 +343,19 @@ async function loadOrder() {
   const itemsEl = document.getElementById("items");
   itemsEl.innerHTML = "";
 
+  let totItemPrice = 0;
   Object.values(order.items).forEach(item => {
     const row = document.createElement("div");
-    row.textContent = `${item.name} - $${item.unitPrice}`;
+    row.textContent = `${item.name} - $${item.unitPrice} x ${item.qty} = $${(item.unitPrice * item.qty).toFixed(2)}`;
     itemsEl.appendChild(row);
+    totItemPrice += item.unitPrice * item.qty;
   });
-  document.getElementById("tax").innerHTML = `<br><strong>Tax: $${(localStorage.taxRate * order.totalPrice).toFixed(2)}</strong>`;
+  document.getElementById("tax").innerHTML = `<br><strong>Tax: $${(order.totalPrice-totItemPrice).toFixed(2)}</strong>`;
   //Tax doesn't get calculated correctly
   document.getElementById("price").innerHTML = `<br><strong>Total: $${order.totalPrice.toFixed(2)}</strong>`;
 
 }
+
 
 
 loadOrder();

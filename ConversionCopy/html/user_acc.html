@@ -513,7 +513,7 @@ state.pendOrders.forEach(ord => {
 
   pendOrder.addEventListener("click", () => {
     console.log("Pending order clicked:", ord.id);
-    localStorage.setItem("clickedOrder", ord.id);
+    sessionStorage.setItem("currOrder", ord.id);
     pickupOrder();
   });
 
@@ -539,7 +539,7 @@ state.compOrders.forEach(ord => {
 
   compOrder.addEventListener("click", () => {
     console.log("Complete order clicked:", ord.id);
-    localStorage.setItem("clickedOrder", ord.id);
+    sessionStorage.setItem("currOrder", ord.id);
     viewOrder();
   });
 
@@ -632,7 +632,6 @@ document.addEventListener('DOMContentLoaded', () => {
   await organizeOrders();
   renderOrders();
 })();
-
 
   </script> 
 </body>

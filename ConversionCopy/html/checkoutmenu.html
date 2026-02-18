@@ -356,9 +356,19 @@
     .miniCard .mtitle{ font-weight: 750; font-size: 13px; }
     .miniCard ul{ margin: 8px 0 0; padding-left: 18px; color: var(--muted); font-size: 13px; }
     .miniCard li{ margin: 6px 0; }
+
+    .back-btn {
+    margin-top:15px;
+    margin-left: 15px;
+    width: 40px;
+    height: 30px;
+  }
   </style>
 </head>
 <body>
+  <div class = "topBar">
+    <button class = "back-btn" onclick="backPress()">←</button>
+  </div>
   <div class="wrap">
     <header>
       <div>
@@ -417,7 +427,7 @@ const savorDB = getDatabase(app);
     // ===== Data =====
 
     const TAX_RATE = 0.0875;
-    localStorage.setItem("taxRate", TAX_RATE);
+    sessionStorage.setItem("taxRate", TAX_RATE);
     const state = {
       drafts: {},   // per item: { selections, qty }
       cart: [],     // lines: { lineId, itemId, name, selections, unitPrice, qty }
@@ -426,10 +436,15 @@ const savorDB = getDatabase(app);
     
 
     document.getElementById("restName").innerText =
-  localStorage.getItem("currRest");
+  sessionStorage.getItem("currRest");
+
+window.backPress = function() {
+  sessionStorage.removeItem("currRest");
+  window.location.href = '../html/map.html';
+}
 
 async function renderMenu() {
-  const rest = localStorage.getItem("currRest");
+  const rest = sessionStorage.getItem("currRest");
   const menuItemsRef = ref(savorDB, `rest/${rest}/menu`);
   const menuItems = document.getElementById("menuCol");
   const snapshot = await get(menuItemsRef);
@@ -592,6 +607,10 @@ function addToCart(itemId) {
   const qty = qtyInput ? Math.max(1, parseInt(qtyInput.value) || 1) : 1;
 
   // Check if item is already in cart
+  if(state.cart === undefined)
+  {
+    state.cart = [];
+  }
   const existing = state.cart.find(l => l.itemId === itemId);
   if (existing) {
     existing.qty += qty;
@@ -642,20 +661,22 @@ function getRandom(max) {
 
 
 function payCheck(){
-  const x = getRandom(1000);
+  if(!sessionStorage.getItem("currOrder")){
+    const x = getRandom(1000);
   const items = state.cart;
   let user = "guest";
   if (localStorage.getItem("loggedInUser")) {
     user = localStorage.getItem("loggedInUser");
   }
   const pickupTime = getTimestamp();
-  const rest = localStorage.getItem("currRest");
+  const rest = sessionStorage.getItem("currRest");
   const totalPrice = parseFloat(document.getElementById("totalAmt").innerText.replace("$", ""));
   const status = "pending";
+  const taxRate = TAX_RATE;
 
-  localStorage.setItem("currOrder", x);
+  sessionStorage.setItem("currOrder", x);
   const orderRef = ref(savorDB, `order/${x}`);
-  set(orderRef, {items,pickupTime,rest,totalPrice,user,status })
+  set(orderRef, {items,pickupTime,rest,totalPrice,user,status,taxRate })
   .then(() => {
     location.href = `paymentCheckout.html`;
   })
@@ -663,6 +684,14 @@ function payCheck(){
     console.log("Error creating order",err);
     alert("Failed to create order.");
   })
+  }else{
+    const items = state.cart;
+    const pickupTime = getTimestamp();
+    const totalPrice = parseFloat(document.getElementById("totalAmt").innerText.replace("$", ""));
+    const orderRef = ref(savorDB, `order/${sessionStorage.getItem("currOrder")}`);
+    update(orderRef, {items,totalPrice,pickupTime})
+    location.href = 'paymentCheckout.html';
+  }
 }
 
 //===Events===//
@@ -680,9 +709,9 @@ document.getElementById("placeOrderBtn")
   .addEventListener("click", payCheck);
 async function checkOrderVal()
 {
-  if(localStorage.getItem("currOrder"))
+  if(sessionStorage.getItem("currOrder"))
   {
-    const orderRef = ref(savorDB,`order/${localStorage.getItem("currOrder")}`);
+    const orderRef = ref(savorDB,`order/${sessionStorage.getItem("currOrder")}`);
     const snapshotRef = await get(orderRef);
     const orderPrev = snapshotRef.val();
     state.cart = orderPrev.items;

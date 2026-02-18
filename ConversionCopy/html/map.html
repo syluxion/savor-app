@@ -26,8 +26,8 @@
 /* ================= SIDEBAR ================= */
 .sidebar {
   position: absolute;
-  left: 20px;
-  top: 20px;
+  left: 5px;
+  top: 2px;
   width: 260px;
   height: calc(100vh - 40px);
   padding: 20px;
@@ -216,6 +216,12 @@
   background: #118f54;
   transform: scale(1.05);
 }
+
+.back-btn {
+    width: 40px;
+    height: 30px;
+  }
+
   </style>
 </head>
 <body>
@@ -223,6 +229,7 @@
   <button class="login-btn" onclick=loginPress()>LOGIN</button>
 
   <div class="sidebar">
+    <button class = "back-btn" onclick="backPress()">←</button>
     <h2>Restaurants</h2>
     <ul id="restaurantList"></ul>
   </div>
@@ -264,6 +271,11 @@ const dateRef = new Date().toLocaleString('en-us', { weekday: 'long' });
 
 window.loginPress = function() {
   window.location.href = 'login.html';
+}
+
+window.backPress = function() {
+  sessionStorage.removeItem("query");
+  window.location.href = '../html/index.html';
 }
 
 window.resPage = function()
@@ -412,7 +424,7 @@ console.log("Hours object:", r.hours);
   });
 
   document.getElementById("order-btn").onclick = () => {
-    localStorage.setItem("currRest", r.id);
+    sessionStorage.setItem("currRest", r.id);
     resPage();
   };
 }
@@ -456,6 +468,7 @@ function queryFromURL() {
 
 searchInput.oninput = e => filter(e.target.value);
 searchBtn.onclick = () => filter(searchInput.value);
+
 
   </script>
 </body>
