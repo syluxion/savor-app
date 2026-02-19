@@ -238,6 +238,7 @@ select.login-input {
                 <div class="bubble-value" id = "items"></div>
                 <div class = "bubble-value" id = "tax"></div>
                 <div class="bubble-value" id = "price"></div>
+                <div class="bubble-value" id = "cardNum"></div>
             </div>
         </div>
     </div>
@@ -386,6 +387,9 @@ async function loadOrder() {
 
   document.getElementById("price").innerHTML =
     `<br><strong>Total: $${order.totalPrice.toFixed(2)}</strong>`;
+
+  document.getElementById("cardNum").innerHTML =
+    `<br><strong>Card: **** **** **** ${order.cardNumber.slice(-4)}</strong>`;
 }
 
 loadOrder();
