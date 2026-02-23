@@ -13,7 +13,7 @@ body {
   height: 100vh;
   background: url("../img/S6.png") no-repeat center center fixed;
   background-size: cover;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Arial Rounded MT Bold', sans-serif;
 }
 
 .settings-layout {
@@ -120,6 +120,7 @@ body {
 /* .panel { display: none; }
 .panel.is-visible { display: block;} --> */
 
+
 .card {
     background: #fff;
     border-radius: 20px;
@@ -169,7 +170,7 @@ body {
   width: 100%;
   padding: 13px; 
   margin-bottom: 22px; 
-  border: none; /* ✅ removes black outline */
+  border: none; /* removes black outline */
   border-radius: 10px;
   font-size: 17px; 
   background-color: #fff;
@@ -178,13 +179,13 @@ body {
 }
 
 .login-input:focus {
-  outline: none; /* removes browser default blue outline */
-  box-shadow: 0 0 10px rgba(17, 143, 84, 0.4); /* ✅ smooth green glow */
+  outline: none;
+  box-shadow: 0 0 10px rgba(17, 143, 84, 0.4);
 }
 
 select.login-input {
-  cursor: pointer;
-  background-color: #fefefe;
+  cursor: pointer; /* removes browser default blue outline */
+  background-color: #fefefe; /*  smooth green glow */
 }
 
 .login-submit {
@@ -236,8 +237,8 @@ select.login-input {
 }
 
 /* --- Smooth fade animation for settings panels --- */
-
 /* Start hidden panels fully transparent */
+
 .panel {
   opacity: 0;
   transform: translateY(10px);
@@ -252,62 +253,206 @@ select.login-input {
   transform: translateY(0);
 }
 
-.nav-item-with-link {
-    display: block;
-    width: 100%;
-    text-align: left;
-    padding: 12px 14px;
-    background: #fff;
-    border: none;
-    border-radius: 14px;
-    font-size: 16px;
-    font-weight: normal;   /* 👈 removes bold */
-    cursor: pointer;
-    box-shadow: 0 0 5px rgba(0,0,0,0.08);
-    transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
-    text-decoration: none; /* removes underline */
-    color: inherit;        /* matches other buttons */
+/* Inventory Panel Styles */
+.inventory-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: calc(100vh - 150px); 
+  overflow-y: auto;
 }
 
-.title-pickup {
-    font-size: 40px; 
-    color: #0a5a2e;
-    margin: 0; 
-    font-weight: 900;
-    letter-spacing: 3px;
-    text-shadow:
-      0 3px 0 #c8e1c8,
-      0 6px 0 #a8d1a8,
-      0 9px 10px rgba(0, 0, 0, 0.25);
-    overflow: hidden;
+.inventory-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background: #fdfdfd;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  gap: 16px;
 }
 
-.title-link {
-    text-decoration: none;
-    color: inherit
-} /*This takes off the underline for links*/
+.item-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.item-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.item-description {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #0a5a2e;
+}
+
+.item-price {
+  font-weight: bold;
+  color: #118f54;
+}
+
+.item-quantity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.item-subdescription {
+  font-size: 0.9rem;
+  color: #555;
+}
 
 
-  </style>>
+.quantity-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background-color: #0a5a2e;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.quantity-btn:hover {
+  background-color: #118f54;
+}
+
+.quantity-input {
+  width: 50px;
+  text-align: center;
+  font-size: 16px;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* ---- Modal ---- */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 9999;
+}
+.modal.is-open { display: flex; }
+
+.modal-card {
+  width: min(720px, 100%);
+  background: rgba(255,255,255,0.97);
+  border-radius: 22px;
+  padding: 18px 18px 22px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+}
+
+.modal-header {
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  margin-bottom: 12px;
+}
+
+.modal-close {
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+.modal-close:hover { background: rgba(0,0,0,0.06); }
+
+/* ---- Dropzone ---- */
+.dropzone {
+  border: 2px dashed rgba(17, 143, 84, 0.45);
+  border-radius: 18px;
+  padding: 18px;
+  margin: 10px 0 16px;
+  background: #f4faf6;
+  cursor: pointer;
+  position: relative;
+  min-height: 160px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+.dropzone.is-dragover {
+  background: #e7f5ee;
+  border-color: #118f54;
+}
+
+.image-preview {
+  display:none;
+  max-width: 100%;
+  max-height: 240px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+.dropzone.has-image .dropzone-text { display:none; }
+.dropzone.has-image .image-preview { display:block; }
+
+/* ---- Validation (red highlight) ---- */
+.login-input.is-invalid {
+  box-shadow: 0 0 0 2px rgba(220, 30, 30, 0.65) inset, 0 0 10px rgba(220, 30, 30, 0.2);
+}
+.dropzone.is-invalid {
+  border-color: rgba(220, 30, 30, 0.8);
+  background: rgba(255, 220, 220, 0.55);
+}
+
+.item-action-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background: #0a5a2e;
+  color: #fff;
+  font-size: 14px;
+}
+.item-action-btn:hover { background: #118f54; }
+
+.item-action-btn.delete-btn {
+  background: #b3261e;
+}
+.item-action-btn.delete-btn:hover {
+  background: #d93025;
+}
+
+/* Small helper for new action buttons */
+.item-actions {
+  display:flex;
+  gap: 10px;
+  align-items:center;
+  flex-wrap: wrap;
+}
+
+  </style>
 </head>
 <body>
   <div class ="settings-layout">
     <aside class="settings-nav" aria-label="Settings sections">
-      <a href="../html/index.html" class= "title-link">
-            <h1 class="title-pickup">SAVOR</h1>
-        </a>
+      <h1 class="app-title">S4VOR</h1>
       <nav role="tablist" aria-orientation="vertical">
         <button type="button" class="nav-item is-active" role="tab" aria-selected="true" aria-controls="panel-profile" id="tab-profile">Home</button>
+        
         <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-security" id="tab-security">Inventory</button>
-        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-subscription" id="tab-subscription">Add New Item</button>
         <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-payment" id="tab-payment">Orders & Sales</button>
-        <a href="../html/user_acc.html" class="nav-item nav-item-with-link">Profile Settings</a>
-
-
+        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-locations" id="tab-locations"><a href="../html/user_acc.html">Profile Settings</a></button>
       </nav>
     </aside>
 
     <main class="settings-content">
+
       <!--<div class="profile-avatar">
         <img src="../img/user_icon.png" alt="User Avatar" class="avatar-large"/>
       </div> -->
@@ -383,22 +528,27 @@ select.login-input {
 
       <section id="panel-security" class="panel" role="tabpanel" aria-labelledby="tab-security" hidden>
         <section class="card" aria-labelledby="security-heading">
-          <h3 id="security-heading"><!--Inventory--></h3>
-          <form id="securityForm" class="form-grid" autocomplete="off">
-            <div class="field">
-              <label for="currentPassword">Coming Soon</label>
-          </form>
-        </section>
-      </section>
-
-      <section id="panel-subscription" class="panel" role="tabpanel" aria-labelledby="tab-subscription" hidden>
-        <section class="card" aria-labelledby="subscription-heading">
-          <h3 id="subscription-heading"><!--Add New Item--></h3>
-          <form id="subscriptionForm" class="form-grid" autocomplete="off">
-            <div class="field">
-              <label>Coming Soon</label>
+          <div class="inventory-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h3 id="security-heading">Inventory</h3>
+            <button id="add-item-btn" class="login-submit" style="padding:8px 20px; font-size:16px;">Add Item</button>
+          </div>
+      
+          <div class="inventory-list">
+            <!-- Example item block -->
+            <div class="inventory-item">
+              <img src="../img/placeholder.png" alt="Item Image" class="item-image"/>
+              <div class="item-details">
+                <div class="item-description">Sample Item </div>
+                <div class="item-price">$12.99</div>
+              </div>
+              <div class="item-quantity">
+                <button class="quantity-btn minus">-</button>
+                <input type="number" class="quantity-input" value="0" min="0"/>
+                <button class="quantity-btn plus">+</button>
+              </div>
             </div>
-          </form>
+            <!-- Repeat inventory-item blocks as needed -->
+          </div>
         </section>
       </section>
 
@@ -425,16 +575,65 @@ select.login-input {
         </section>
       </section>
     </main>
-  </div> -->
+   </div> -->
 
-  <script type ="module">
-  
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getDatabase, ref, set, get, } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
-import { update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+  <!-- ADD ITEM MODAL (paste this block right here) -->
+  <div id="addItemModal" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="addItemTitle">
+      <div class="modal-header">
+        <h3 id="addItemTitle" style="margin:0; color:#0a5a2e;">Add Inventory Item</h3>
+        <button type="button" id="closeAddItemModal" class="modal-close" aria-label="Close">✕</button>
+      </div>
 
-  console.log("Script loaded");
+      <div id="imageDropZone" class="dropzone" tabindex="0">
+        <div class="dropzone-text">
+          <strong>Drop image here</strong> or click to upload
+          <div style="font-size:12px; color:#666; margin-top:6px;">PNG / JPG recommended</div>
+        </div>
+        <input id="itemImageInput" type="file" accept="image/*" hidden />
+        <img id="imagePreview" class="image-preview" alt="Preview" />
+      </div>
+
+      <div class="form-grid" style="max-width:none;">
+        <div class="field">
+          <label for="itemName">Name</label>
+          <input id="itemName" class="login-input" type="text" placeholder="e.g., Chocolate Cake" />
+        </div>
+
+        <div class="field">
+          <label for="itemDescription">Description</label>
+          <input id="itemDescription" class="login-input" type="text" placeholder="e.g., A sweet indulgence" />
+        </div>
+
+        <div class="field">
+          <label for="itemQuantity">Quantity</label>
+          <input id="itemQuantity" class="login-input" type="number" min="0" step="1" placeholder="e.g., 12" />
+        </div>
+
+        <div class="field">
+          <label for="itemPrice">Price</label>
+          <input id="itemPrice" class="login-input" type="number" min="0" step="0.01" placeholder="e.g., 11.50" />
+        </div>
+
+        <div class="actions">
+          <button type="button" id="saveItemBtn" class="login-submit">Save Item</button>
+          <button type="button" id="cancelItemBtn" class="login-submit" style="background:#777;">Cancel</button>
+          <div id="addItemStatus" class="status" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script type ="module">
+
+
+ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+ import { getDatabase, ref, set, get, push, update, remove } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+console.log("Script loaded");
+
 //Consts and Vars
+// Firebase setup
 
 const firebaseConfig = {
   databaseURL: "https://savordatabase-default-rtdb.firebaseio.com"
@@ -442,8 +641,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const savorDB = getDatabase(app);
 
-
-    document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   // Only run on pages that have the settings layout
   const nav = document.querySelector('.settings-nav');
   const content = document.querySelector('.settings-content');
@@ -451,6 +649,17 @@ const savorDB = getDatabase(app);
 
   const tabs = Array.from(nav.querySelectorAll('[role="tab"]'));
   const panels = Array.from(document.querySelectorAll('.panel'));
+
+    // Fix: you used inventoryTab later but never defined it
+    const inventoryTab = document.getElementById('tab-security');
+
+// Keep items in memory so we can append new ones
+let inventoryItems = [];
+
+// Track add vs edit mode
+let editMode = false;
+let editingItemId = '';
+let editingExistingImage = '';
 
   // Helper: show the panel controlled by a tab
   function showPanel(tabEl) {
@@ -490,11 +699,9 @@ const savorDB = getDatabase(app);
   // Wire click + keyboard navigation
   tabs.forEach((btn, index) => {
     btn.addEventListener('click', () => showPanel(btn));
-
     btn.addEventListener('keydown', e => {
       const prevKeys = ['ArrowUp', 'ArrowLeft'];
       const nextKeys = ['ArrowDown', 'ArrowRight'];
-
       if (prevKeys.includes(e.key)) {
         e.preventDefault();
         const prev = tabs[(index - 1 + tabs.length) % tabs.length];
@@ -509,11 +716,388 @@ const savorDB = getDatabase(app);
     });
   });
 
+  
   // Initialize: use the one marked .is-active, or fall back to the first
   const initial = tabs.find(t => t.classList.contains('is-active')) || tabs[0];
   if (initial) showPanel(initial);
+
+  // --- Inventory functionality ---
+  const inventoryPanel = document.getElementById('panel-security');
+  if (inventoryPanel) {
+    inventoryPanel.addEventListener('click', async e => {
+
+      // Delete button
+      if (e.target.classList.contains('delete-btn')) {
+        const itemDiv = e.target.closest('.inventory-item');
+        const id = itemDiv?.dataset?.id || '';
+        if (!id) return;
+
+        const ok = confirm('Delete this item?');
+        if (!ok) return;
+
+        try {
+          await remove(ref(savorDB, `foodItems/${id}`));
+          await loadInventory('firebase');
+        } catch (err) {
+          console.error(err);
+          alert('Error deleting item (check Rules).');
+        }
+        return;
+      }
+
+      // Edit button
+      if (e.target.classList.contains('edit-btn')) {
+        const itemDiv = e.target.closest('.inventory-item');
+        const id = itemDiv?.dataset?.id || '';
+        if (!id) return;
+
+        const item = inventoryItems.find(x => String(x.id) === String(id));
+        if (!item) return;
+
+        openEditModal(item);
+        return;
+      }
+
+      // Quantity + / -
+      if (!e.target.classList.contains('quantity-btn')) return;
+      const itemDiv = e.target.closest('.inventory-item');
+      const input = itemDiv.querySelector('.quantity-input');
+      let value = parseInt(input.value);
+      if (e.target.classList.contains('plus')) value++;
+      if (e.target.classList.contains('minus') && value > 0) value--;
+      input.value = value;
+
+      // Save quantity to Firebase (only if item has id)
+      const id = itemDiv?.dataset?.id || '';
+      if (id) {
+        try {
+          await update(ref(savorDB, `foodItems/${id}`), { quantity: value });
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    });
+
+    inventoryPanel.addEventListener('input', async e => {
+      if (!e.target.classList.contains('quantity-input')) return;
+      let value = parseInt(e.target.value);
+      if (isNaN(value) || value < 0) value = 0;
+      e.target.value = value;
+
+      // Save quantity to Firebase (only if item has id)
+      const itemDiv = e.target.closest('.inventory-item');
+      const id = itemDiv?.dataset?.id || '';
+      if (id) {
+        try {
+          await update(ref(savorDB, `foodItems/${id}`), { quantity: value });
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    });
+
+    const addBtn = document.getElementById('add-item-btn');
+    if (addBtn) {
+      addBtn.addEventListener('click', () => openModal());
+    }
+
+  }
+  // Inventory loader (JSON or Firebase) ---
+  async function loadInventory(source = 'json') { // default to json
+     let items = [];
+     if (source === 'json') {
+       try {
+         const res = await fetch('../inventory.json'); // <--  local JSON path
+         items = await res.json();
+       } catch (err) {
+         console.error('Error loading JSON inventory:', err);
+       }
+     } else if (source === 'firebase') {
+  try {
+    const snapshot = await get(ref(savorDB, 'foodItems'));
+    if (snapshot.exists()) {
+  const data = snapshot.val(); // {id1: {...}, id2: {...}}
+  items = Object.entries(data).map(([id, item]) => ({ id, ...item }));
+} else {
+  items = [];
+}
+
+  } catch (err) {
+    console.error('Error loading Firebase inventory:', err);
+    items = [];
+  }
+}
+
+inventoryItems = Array.isArray(items) ? items : [];
+populateInventory(inventoryItems);
+
+   }
+
+   //  Function to render inventory items ---
+   function populateInventory(items) {
+     const list = document.querySelector('.inventory-list');
+     if (!list) return;
+     list.innerHTML = ''; // clear existing items
+     items.forEach(item => {
+       const div = document.createElement('div');
+       div.classList.add('inventory-item');
+       div.dataset.id = item.id || '';
+
+       div.innerHTML = `
+         <img src="${item.image || '../img/placeholder.png'}" alt="Item Image" class="item-image"/>
+         <div class="item-details">
+           <div class="item-description">${item.name || 'Unnamed Item'}</div>
+            <div class="item-subdescription">${item.description || ''}</div>
+           <div class="item-price">$${(typeof item.price === 'number' ? item.price : Number(item.price || 0)).toFixed(2)}</div>
+         </div>
+
+         <div class="item-quantity">
+           <button class="quantity-btn minus">-</button>
+           <input type="number" class="quantity-input" value="${item.quantity ?? 0}" min="0"/>
+           <button class="quantity-btn plus">+</button>
+         </div>
+
+         <div class="item-actions">
+           <button type="button" class="item-action-btn edit-btn">Edit</button>
+           <button type="button" class="item-action-btn delete-btn">Delete</button>
+         </div>
+       `;
+       list.appendChild(div);
+     });
+   }
+
+   const modal = document.getElementById('addItemModal');
+    const closeModalBtn = document.getElementById('closeAddItemModal');
+    const cancelBtn = document.getElementById('cancelItemBtn');
+    const saveBtn = document.getElementById('saveItemBtn');
+    const statusEl = document.getElementById('addItemStatus');
+
+    const dropZone = document.getElementById('imageDropZone');
+    const fileInput = document.getElementById('itemImageInput');
+    const previewImg = document.getElementById('imagePreview');
+
+    const nameInput = document.getElementById('itemName');
+    const descInput = document.getElementById('itemDescription');
+    const qtyInput = document.getElementById('itemQuantity');
+    const priceInput = document.getElementById('itemPrice');
+
+    const titleEl = document.getElementById('addItemTitle');
+
+    let imageDataUrl = '';
+
+    function clearValidation() {
+      [nameInput, descInput, qtyInput, priceInput].forEach(i => i.classList.remove('is-invalid'));
+      dropZone.classList.remove('is-invalid');
+    }
+
+    function resetForm() {
+      nameInput.value = '';
+      descInput.value = '';
+      qtyInput.value = '';
+      priceInput.value = '';
+      imageDataUrl = '';
+      previewImg.src = '';
+      dropZone.classList.remove('has-image');
+      clearValidation();
+
+      // reset edit mode
+      editMode = false;
+      editingItemId = '';
+      editingExistingImage = '';
+      titleEl.textContent = 'Add Inventory Item';
+      saveBtn.textContent = 'Save Item';
+    }
+
+    function openModal() {
+      editMode = false;
+      editingItemId = '';
+      editingExistingImage = '';
+      titleEl.textContent = 'Add Inventory Item';
+      saveBtn.textContent = 'Save Item';
+
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      statusEl.textContent = '';
+      clearValidation();
+    }
+
+    function openEditModal(item) {
+      editMode = true;
+      editingItemId = item.id || '';
+      editingExistingImage = item.image || '';
+
+      titleEl.textContent = 'Edit Inventory Item';
+      saveBtn.textContent = 'Update Item';
+
+      nameInput.value = item.name || '';
+      descInput.value = item.description || '';
+      qtyInput.value = String(item.quantity ?? 0);
+      priceInput.value = String(item.price ?? 0);
+
+      // show existing image preview (optional)
+      imageDataUrl = ''; // means "no new image selected yet"
+      if (editingExistingImage) {
+        previewImg.src = editingExistingImage;
+        dropZone.classList.add('has-image');
+      } else {
+        previewImg.src = '';
+        dropZone.classList.remove('has-image');
+      }
+
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      statusEl.textContent = '';
+      clearValidation();
+    }
+
+    function closeModal() {
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      resetForm();
+    }
+
+    function validateForm() {
+      clearValidation();
+      let ok = true;
+
+      if (!nameInput.value.trim()) { nameInput.classList.add('is-invalid'); ok = false; }
+      if (!descInput.value.trim()) { descInput.classList.add('is-invalid'); ok = false; }
+
+      const qty = qtyInput.value.trim();
+      if (qty === '' || Number.isNaN(Number(qty)) || Number(qty) < 0) { qtyInput.classList.add('is-invalid'); ok = false; }
+
+      const price = priceInput.value.trim();
+      if (price === '' || Number.isNaN(Number(price)) || Number(price) < 0) { priceInput.classList.add('is-invalid'); ok = false; }
+
+      // Image required (remove this if you want it optional)
+      // For edit mode: image can be left as-is (existing image)
+      if (!editMode) {
+        if (!imageDataUrl) { dropZone.classList.add('is-invalid'); ok = false; }
+      } else {
+        if (!imageDataUrl && !editingExistingImage) { dropZone.classList.add('is-invalid'); ok = false; }
+      }
+
+      return ok;
+    }
+
+    function setImageFromFile(file) {
+      if (!file || !file.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        imageDataUrl = String(reader.result || '');
+        previewImg.src = imageDataUrl;
+        dropZone.classList.add('has-image');
+        dropZone.classList.remove('is-invalid');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Dropzone click -> file picker
+    dropZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => setImageFromFile(fileInput.files?.[0]));
+
+    // Drag + drop
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('is-dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('is-dragover'));
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('is-dragover');
+      setImageFromFile(e.dataTransfer.files?.[0]);
+    });
+
+    // Close buttons + backdrop close
+    closeModalBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+
+    // Download updated inventory.json (browser can't write to ../inventory.json directly)
+    function downloadInventoryJson(items) {
+      const json = JSON.stringify(items, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'inventory.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      URL.revokeObjectURL(url);
+    }
+
+    // Hook Add Item button (IMPORTANT: after openModal exists)
+    const addBtn = document.getElementById('add-item-btn');
+    if (addBtn) addBtn.addEventListener('click', openModal);
+
+    // Save item
+    saveBtn.addEventListener('click', async () => {
+  if (!validateForm()) {
+    statusEl.textContent = 'Please fill in the highlighted fields.';
+    return;
+  }
+
+  // Decide which image to save:
+  // - If user picked a new one: imageDataUrl
+  // - Else if editing: keep old editingExistingImage
+  // - Else (add mode): must have imageDataUrl because validation
+  const finalImage = imageDataUrl || editingExistingImage || '';
+
+  const payload = {
+    name: nameInput.value.trim(),
+    image: finalImage,                // currently storing base64 from dropzone
+    description: descInput.value.trim(),
+    quantity: Number(qtyInput.value),
+    price: Number(priceInput.value),
+    updatedAt: Date.now()
+  };
+
+  try {
+    if (!editMode) {
+      const newItem = {
+        ...payload,
+        createdAt: Date.now()
+      };
+
+      // Save to: /foodItems/<autoId>
+      const newItemRef = push(ref(savorDB, 'foodItems'));
+      await set(newItemRef, newItem);
+
+      statusEl.textContent = 'Saved to Firebase!';
+      closeModal();
+
+      // Reload from Firebase so UI matches DB
+      await loadInventory('firebase');
+      return;
+    }
+
+    // EDIT MODE
+    if (!editingItemId) {
+      statusEl.textContent = 'Missing item id.';
+      return;
+    }
+
+    await update(ref(savorDB, `foodItems/${editingItemId}`), payload);
+
+    statusEl.textContent = 'Updated in Firebase!';
+    closeModal();
+    await loadInventory('firebase');
+
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = 'Error saving to Firebase (check Rules).';
+  }
 });
 
-  </script> 
+
+ 
+
+
+loadInventory('firebase');
+if (inventoryTab) inventoryTab.addEventListener('click', () => loadInventory('firebase'));
+
+
+});
+</script>
 </body>
 </html>
