@@ -151,7 +151,7 @@ body {
 <body>
   <div class="overlay">
     <h1 class="title">SAVOR</h1>
-    <button class="login-btn" onclick="handleLogin()">Account</button>
+    <button class="login-btn" id="login-btn">Account</button>
   </div>
 
   <!-- Centered Search Bar -->
@@ -167,9 +167,31 @@ body {
 
   <script type="module">
 
-window.handleLogin = function(){
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getDatabase, ref, get, update} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+console.log("Script loaded");
+
+const firebaseConfig = {
+  databaseURL: "https://savordatabase-default-rtdb.firebaseio.com"
+};
+
+const app = initializeApp(firebaseConfig);
+const savorDB = getDatabase(app);
+
+async function handleLogin() {
   if(localStorage.getItem("loggedInUser")) {
-    window.location.href = "../html/user_acc.html";
+    const restOwner = ref(savorDB, `user/${localStorage.getItem("loggedInUser")}/rest`);
+    const restOwnerSnap = await get(restOwner);
+    if(!restOwnerSnap.val())
+    {
+      window.location.href = "../html/user_acc.html";
+    }
+    else
+    {
+      sessionStorage.setItem("ownedRest", restOwnerSnap.val());
+      window.location.href = "../html/res_dash.html";
+    }
   }
   else
   {
@@ -195,6 +217,8 @@ document.addEventListener('keydown', (event) => {
     }
     
     });
+
+  document.getElementById("login-btn").addEventListener('click', handleLogin);
 
   </script>
 </body>

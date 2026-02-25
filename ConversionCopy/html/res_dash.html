@@ -13,7 +13,7 @@ body {
   height: 100vh;
   background: url("../img/S6.png") no-repeat center center fixed;
   background-size: cover;
-  font-family: 'Arial Rounded MT Bold', sans-serif;
+  font-family: 'Arial', sans-serif;
 }
 
 .settings-layout {
@@ -436,18 +436,56 @@ select.login-input {
   flex-wrap: wrap;
 }
 
+.title-pickup {
+    font-size: 40px; 
+    color: #0a5a2e;
+    margin: 0; 
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-shadow:
+      0 3px 0 #c8e1c8,
+      0 6px 0 #a8d1a8,
+      0 9px 10px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+.title-link {
+    text-decoration: none;
+    color: inherit
+} /*This takes off the underline for links*/
+
+.nav-item-with-link {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 12px 14px;
+    background: #fff;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: normal;   /* 👈 removes bold */
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0,0,0,0.08);
+    transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+    text-decoration: none; /* removes underline */
+    color: inherit;        /* matches other buttons */
+}
+
   </style>
 </head>
 <body>
   <div class ="settings-layout">
     <aside class="settings-nav" aria-label="Settings sections">
-      <h1 class="app-title">S4VOR</h1>
+      <a href="../html/index.html" class= "title-link">
+            <h1 class="title-pickup">SAVOR</h1>
+        </a>
       <nav role="tablist" aria-orientation="vertical">
         <button type="button" class="nav-item is-active" role="tab" aria-selected="true" aria-controls="panel-profile" id="tab-profile">Home</button>
         
         <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-security" id="tab-security">Inventory</button>
         <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-payment" id="tab-payment">Orders & Sales</button>
-        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-locations" id="tab-locations"><a href="../html/user_acc.html">Profile Settings</a></button>
+        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-settings" id="tab-settings">Restaurant Info</button>
+        <a href="../html/user_acc.html" class="nav-item nav-item-with-link">Profile Settings</a>
       </nav>
     </aside>
 
@@ -459,7 +497,7 @@ select.login-input {
 
       <header class="settings-header">
         <h2 class="header-left">Dashboard</h2>
-        <p class="header-right">Restaurant Name Here</p>
+        <p class="header-right" id="header-right">Restaurant Name Here</p>
       </header>
 
       <section id="panel-profile" class="panel is-visible" role="tabpanel" aria-labelledby="tab-profile">
@@ -575,6 +613,105 @@ select.login-input {
         </section>
       </section>
 
+      <section id="panel-settings" class="panel" role="tabpanel" aria-labelledby="settings">
+        <section class="card" aria-labelledby="Restaurant-Settings-heading">
+        <h3 id="Restaurant-Settings-heading"><!--Restaurant Settings--></h3>
+        <form id="profileBasicsForm" class="form-grid" autocomplete="on">
+          <div class="field">
+            <label for="firstName">Restaurant Name</label>
+            <input type="text" id="restName" name="restName" class="login-input"/>
+          </div>
+          <div class="field">
+            <label for="lastName">Manager</label>
+            <input type="text" id="fullName" name="fullName" class="login-input"/>
+          </div>
+          <div class="field">
+            <label for="phoneNumber">Phone Number</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" class="login-input"/>
+          </div>
+<div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" class="login-input"/>
+          </div>
+          <div class="field">
+            <label for="street1">Street Address</label>
+            <input
+              type="text"
+              id="street1"
+              name="street1"
+              class="login-input"
+              autocomplete="address-line1"
+              placeholder="123 Main St"
+            />
+          </div>
+          <div class="field">
+          <label for="street2">Apartment / Suite (optional)</label>
+          <input
+            type="text"
+            id="street2"
+            name="street2"
+            class="login-input"
+            autocomplete="address-line2"
+            placeholder="Suite 200"
+          />
+          </div>
+          <div class="field">
+          <label for="city">City</label>
+          <input
+            type="text"
+            id="city"
+            name="city"
+            class="login-input"
+            autocomplete="address-level2"
+            placeholder="Los Angeles"
+          />
+          </div>
+          <div class="field">
+          <label for="state">State</label>
+          <input
+            type="text"
+            id="state"
+            name="state"
+            class="login-input"
+            autocomplete="address-level1"
+            placeholder="CA"
+          />
+          </div>
+
+        <div class="field">
+          <label for="zip">ZIP Code</label>
+          <input
+            type="text"
+            id="zip"
+            name="zip"
+            class="login-input"
+            autocomplete="postal-code"
+            placeholder="90001"
+          />
+        </div>
+        <div class="field">
+          <label for="country">Country</label>
+          <input
+            type="text"
+            id="country"
+            name="country"
+            class="login-input"
+            autocomplete="country-name"
+            placeholder="United States"
+          />
+        </div>
+
+          <!--add account type in the future-->
+          <div class="actions">
+            <button type="submit" class="login-submit" onclick="saveResChanges(event)">Save Changes</button>
+            <div id="profileBasicsStatus" class="status" aria-live="polite"></div>
+          </div>
+        </form>
+        </section>
+      </section>
+
+      
+
       <!--<section id="panel-locations" class="panel" role="tabpanel" aria-labelledby="tab-locations" hidden>
         <section class="card" aria-labelledby="locations-heading">
           <a href="../html/user_acc.html">Profile Settings</a>
@@ -652,6 +789,33 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const savorDB = getDatabase(app);
+
+let restTarget = '';
+
+document.addEventListener('DOMContentLoaded', async () => {
+
+  const loggedUser = localStorage.getItem("loggedInUser");
+
+  if (!loggedUser) {
+    console.warn("No logged in user found.");
+    return;
+  }
+
+  try {
+    const userRef = ref(savorDB, `user/${loggedUser}`);
+    const userSnap = await get(userRef);
+    const userData = userSnap.val();
+    restTarget = userData.rest;
+    const header = document.getElementById('header-right');
+    if (header) {
+      header.textContent = restTarget;
+    }
+
+  } catch (err) {
+    console.error("Error loading user:", err);
+  }
+  //
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   // Only run on pages that have the settings layout
@@ -748,7 +912,7 @@ let editingExistingImage = '';
         if (!ok) return;
 
         try {
-          await remove(ref(savorDB, `foodItems/${id}`));
+          await remove(ref(savorDB, `rest/${restTarget}/menu/${id}`));
           await loadInventory('firebase');
         } catch (err) {
           console.error(err);
@@ -783,7 +947,7 @@ let editingExistingImage = '';
       const id = itemDiv?.dataset?.id || '';
       if (id) {
         try {
-          await update(ref(savorDB, `foodItems/${id}`), { quantity: value });
+          await update(ref(savorDB, `rest/${restTarget}/menu/${id}`), { quantity: value });
         } catch (err) {
           console.error(err);
         }
@@ -801,7 +965,7 @@ let editingExistingImage = '';
       const id = itemDiv?.dataset?.id || '';
       if (id) {
         try {
-          await update(ref(savorDB, `foodItems/${id}`), { quantity: value });
+          await update(ref(savorDB, `rest/${restTarget}/menu/${id}`), { quantity: value });
         } catch (err) {
           console.error(err);
         }
@@ -826,7 +990,7 @@ let editingExistingImage = '';
        }
      } else if (source === 'firebase') {
   try {
-    const snapshot = await get(ref(savorDB, 'foodItems'));
+    const snapshot = await get(ref(savorDB, `rest/${restTarget}/menu`));
     if (snapshot.exists()) {
   const data = snapshot.val(); // {id1: {...}, id2: {...}}
   items = Object.entries(data).map(([id, item]) => ({ id, ...item }));
@@ -1071,8 +1235,8 @@ populateInventory(inventoryItems);
         createdAt: Date.now()
       };
 
-      // Save to: /foodItems/<autoId>
-      const newItemRef = push(ref(savorDB, 'foodItems'));
+      // Save to: /rest/restTarget/menu/<autoId>
+      const newItemRef = push(ref(savorDB, `rest/${restTarget}/menu`));
       await set(newItemRef, newItem);
 
       statusEl.textContent = 'Saved to Firebase!';
@@ -1089,7 +1253,7 @@ populateInventory(inventoryItems);
       return;
     }
 
-    await update(ref(savorDB, `foodItems/${editingItemId}`), payload);
+    await update(ref(savorDB, `rest/${restTarget}/menu/${editingItemId}`), payload);
 
     statusEl.textContent = 'Updated in Firebase!';
     closeModal();
@@ -1110,6 +1274,153 @@ if (inventoryTab) inventoryTab.addEventListener('click', () => loadInventory('fi
 
 
 });
+
+const state = {
+  pendOrders: [],
+  compOrders: []
+}
+
+async function organizeOrders() {
+  const loggedUser = localStorage.getItem("loggedInUser");
+  const orderRefs = ref(savorDB, `order`);
+  const snapshot = await get(orderRefs);
+  const userRef = ref(savorDB, `user/${loggedUser}`);
+  const userSnap = await get(userRef);
+  const userData = userSnap.val();
+  restTarget = userData.rest; 
+
+  if(!snapshot.exists()) return;
+
+  
+  snapshot.forEach(child => {
+    const order = child.val();
+
+    if (order.rest !== restTarget) return;
+
+    const orderObj = {
+      id: child.key,
+      rest: order.rest,
+      totalPrice: order.totalPrice,
+      status: order.status
+    };
+
+    if (order.status === "pending") {
+      state.pendOrders.push(orderObj);
+    } else {
+      state.compOrders.push(orderObj);
+    }
+  });
+  
+}
+
+async function renderOrders() {
+  const pendingOrdersTab = document.getElementById("pending-orders");
+  const completeOrdersTab = document.getElementById("completed-orders");
+  
+  pendingOrdersTab.innerHTML = "";
+  completeOrdersTab.innerHTML = "";
+
+state.pendOrders.forEach(ord => {
+  const pendOrder = document.createElement("section");
+  pendOrder.className = "card";
+  pendOrder.id = "orderPend";
+
+  pendOrder.addEventListener("click", () => {
+    console.log("Pending order clicked:", ord.id);
+    sessionStorage.setItem("currOrder", ord.id);
+    pickupOrder();
+  });
+
+  pendOrder.innerHTML = `
+
+  <div class="hd">
+  <div class="row">
+    <div class="title">#${ord.id}</div>
+    <div class="rest">${ord.rest}</div>
+    <div class="totalPrice">${ord.totalPrice}</div>
+  </div>
+</div>
+
+      
+  `
+  pendingOrdersTab.appendChild(pendOrder);
+})
+
+state.compOrders.forEach(ord => {
+  const compOrder = document.createElement("section");
+  compOrder.className = "card";
+  compOrder.id = "orderComp"
+
+  compOrder.addEventListener("click", () => {
+    console.log("Complete order clicked:", ord.id);
+    sessionStorage.setItem("currOrder", ord.id);
+    viewOrder();
+  });
+
+  compOrder.innerHTML = `
+  <div class = "hd">
+    <div class = "row">
+      <div class = "title">#${ord.id}</div>
+      <div class = "rest">${ord.rest}</div>
+      <div class = "totalPrice">${ord.totalPrice}</div>
+    </div>
+  </div>
+  `
+  completeOrdersTab.appendChild(compOrder);
+})
+  
+}
+
+window.saveResChanges = function (event) {
+  event.preventDefault(); // STOP form from reloading the page
+
+
+  const restname = restTarget;
+
+  if (!restname) {
+    alert("No restaurant found!");
+    return;
+  }
+
+  const email = document.getElementById('email').value.trim();
+  const manager = document.getElementById('fullName').value.trim();
+  const phoneNum = document.getElementById('phoneNumber').value.trim();
+
+  const city = document.getElementById('city').value.trim();
+  const country = document.getElementById('country').value.trim();
+  const state = document.getElementById('state').value.trim();
+  const street = document.getElementById('street1').value.trim();
+  const suite = document.getElementById('street2').value.trim();
+  const zipCode = document.getElementById('zip').value.trim();
+
+  const infoRef = ref(savorDB, `rest/${restname}/Info`);
+
+  update(infoRef, {
+    "Email:": email,
+    "Manager:": manager,
+    "phoneNum:": phoneNum,
+    Address: {
+      "City:": city,
+      "Country:": country,
+      "State:": state,
+      "Street:": street,
+      "Suite:": suite,
+      "Zip Code:": zipCode
+    }
+  })
+    .then(() => alert("Restaurant updated successfully!"))
+    .catch(err => {
+      console.error(err);
+      alert("Error saving restaurant.");
+    });
+};
+
+
+(async () => {
+  await organizeOrders();
+  renderOrders();
+})();
+
 </script>
 </body>
 </html>
