@@ -212,8 +212,17 @@ async function createRest() {
   const fri = document.getElementById("fri").value.trim();
   const sat = document.getElementById("sat").value.trim();
   const sun = document.getElementById("sun").value.trim();
-  const rating = 0;
+  const rating = (Math.floor(Math.random() * 21) + 30) / 10;
   const owner = localStorage.getItem("loggedInUser");
+
+  const ownerRef = ref(savorDB, `users/${owner}`);
+  ownerRef.update({ rest })
+  .then(() => {
+    console.log(`Added restaurant "${rest}" to owner "${owner}"`);
+  })
+  .catch(err => {
+    console.log("Error updating user with restaurant:", err);
+  });
 
   const {lat,lng} = await geocodeAddress(address);
 

@@ -241,6 +241,9 @@ select.login-input {
                 <div class="bubble-value" id = "cardNum"></div>
             </div>
         </div>
+      <div class="actions">
+            <button type="button" class="login-submit" id = "placeOrder">Confirm Pickup</button>
+      </div>
     </div>
   </div>
 
@@ -249,7 +252,7 @@ select.login-input {
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { getDatabase, ref, get, update} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
 console.log("Script loaded");
 
@@ -393,6 +396,44 @@ async function loadOrder() {
 }
 
 loadOrder();
+
+document.getElementById("placeOrder").addEventListener("click", async () => {
+
+  const orderNum = sessionStorage.getItem("currOrder");
+
+  if (!orderNum) {
+    console.error("No order ID found in sessionStorage");
+    return;
+  }
+
+  const orderRef = ref(savorDB, `order/${orderNum}`);
+
+  try {
+    const snapshot = await get(orderRef);
+
+    if (!snapshot.exists()) {
+      console.error("Order not found");
+      return;
+    }
+
+    const order = snapshot.val();
+
+    if (order.status === "Completed") {
+      alert("Order already completed");
+      return;
+    }
+
+    await update(orderRef, { status: "Completed" });
+
+    clearStorage();
+
+    window.location.href = "../html/user_acc.html";
+
+  } catch (err) {
+    console.error("Error fetching order:", err);
+  }
+
+});
 </script>
 
 </body>
