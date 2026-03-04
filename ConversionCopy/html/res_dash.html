@@ -454,6 +454,14 @@ select.login-input {
     color: inherit
 } /*This takes off the underline for links*/
 
+.rest {
+  text-align: center;
+}
+
+.totalPrice {
+  text-align: right;
+}
+
 .nav-item-with-link {
     display: block;
     width: 100%;
@@ -469,6 +477,33 @@ select.login-input {
     transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
     text-decoration: none; /* removes underline */
     color: inherit;        /* matches other buttons */
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-weight: 700;
+  color: #0a5a2e;
+}
+
+.hd {
+  width: 100%;
+}
+
+#pending-orders .card,
+#completed-orders .card {
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+#pending-orders .card:hover,
+#completed-orders .card:hover {
+  transform: translateY(-2px);
 }
 
   </style>
@@ -593,9 +628,9 @@ select.login-input {
       <section id="panel-payment" class="panel" role="tabpanel" aria-labelledby="tab-payment" hidden>
         <section class="card" aria-labelledby="payment-heading">
           <h3 id="payment-heading"><!--Order & Sales--></h3>
-          <form id="paymentForm" class="form-grid" autocomplete="off">
-            <div class="field">
-               <section class="card">
+          <form id="ordersForm" class="form-grid" autocomplete="off">
+            <div class="ordersfield">
+              <section class="card">
                 <h3>Pending Orders</h3>
                   <div id="pending-orders">
                     <h3>Loading</h3>
@@ -608,6 +643,7 @@ select.login-input {
                     <h3>Loading</h3>
                   </div>
               </section>
+
             </div>
           </form>
         </section>
@@ -1369,6 +1405,14 @@ state.compOrders.forEach(ord => {
   completeOrdersTab.appendChild(compOrder);
 })
   
+}
+
+window.viewOrder = function(){
+    window.location.href = "orderView.html";
+  }
+
+window.pickupOrder = function(){
+  window.location.href = "orderView.html";
 }
 
 window.saveResChanges = function (event) {
