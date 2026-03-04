@@ -301,6 +301,24 @@ select.login-input {
     height: 30px;
   }
 
+.title-pickup {
+    font-size: 40px; 
+    color: #0a5a2e;
+    margin: 0; 
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-shadow:
+      0 3px 0 #c8e1c8,
+      0 6px 0 #a8d1a8,
+      0 9px 10px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+.title-link {
+    text-decoration: none;
+    color: inherit
+} /*This takes off the underline for links*/
+
 </style>
 </head>
 <body>
@@ -368,12 +386,17 @@ select.login-input {
     </main>
   </div>
 
+  <!--EMAILJS SCRIPT-->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <!-- Optional JS for delete buttons -->
   <script type = "module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 import { remove } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
+emailjs.init({
+        publicKey: "OpgxQEcmI8I90SyHp",
+      });
 
 {
   console.log("Script loaded");
@@ -521,6 +544,29 @@ async function renderCart() {
   totalEl.textContent = (total+total*sessionStorage.getItem("taxRate")).toFixed(2);
 }
 
+async function comfEmail() {
+  const loggedUser = localStorage.getItem("loggedInUser");
+  if (!loggedUser) return Promise.reject("No logged user");
+  const emailRef = ref(savorDB, `user/${loggedUser}/email`);
+  const emailSnapshot = await get(emailRef);
+  if (!emailSnapshot.exists()) {return Promise.reject("No email found");}
+  const email = emailSnapshot.val();
+  const orderId = sessionStorage.getItem("currOrder");
+  const params = {
+    email:email,
+    //message: "Your order has been placed! We will notify you when it's ready for pickup. Thank you for choosing Savor!",
+    order_id: orderId
+  }
+  try {
+    const res = await emailjs.send("service_1ijw1gl", "template_8n7iawn", params);
+    console.log("Email sent:", res);
+  } catch (err) {
+    console.error("Email failed:", err);
+    alert("Email failed to send.");
+  }
+
+}
+
 renderCart();
 
 //Events
@@ -553,7 +599,8 @@ document.addEventListener("click", async (e) => {
 
   if (target.id === "placeOrder") {
     savePaymentInfo()
-    .then(finishOrder)
+    .then(() => comfEmail())
+    .then(() => finishOrder())
     .catch(err => console.error(err));
   }
 });

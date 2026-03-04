@@ -26,9 +26,9 @@ body {
     right: 0;
 
     display: flex;
+    justify-content: center;   /* Center the title */
     align-items: center;
-    justify-content: space-between;
-    padding: 0 5px;
+
     z-index: 1000;
 }
 
@@ -212,6 +212,30 @@ select.login-input {
   margin-top: 16px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
+
+.title-pickup {
+    font-size: 40px;
+    color: #0a5a2e;
+    margin: 0;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-shadow:
+      0 3px 0 #c8e1c8,
+      0 6px 0 #a8d1a8,
+      0 9px 10px rgba(0, 0, 0, 0.25);
+}
+
+.title-link {
+    text-decoration: none;
+    color: inherit
+} /*This takes off the underline for links*/
+
+.settings-btn {
+    position: absolute;
+    right: 20px;
+}
+
+
 </style>
 </head>
 <body>
@@ -219,7 +243,6 @@ select.login-input {
         <a href="../html/index.html" class= "title-link">
             <h1 class="title-pickup" onclick = "clearStorage()">SAVOR</h1>
         </a>
-
         <a href="../html/user_acc.html" class="settings-btn">
             <img src="../img/cog.png" alt="Settings" class="settings-icon" onclick = "clearStorage()">
         </a>
@@ -263,6 +286,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const savorDB = getDatabase(app);
 
+
+const params = new URLSearchParams(window.location.search);
+const orderIdFromURL = params.get("orderID");
+
+if (orderIdFromURL) {
+    sessionStorage.setItem("currOrder", orderIdFromURL);
+}
 
 let map = L.map("pickup-map", {
   zoomControl: false,
@@ -395,7 +425,23 @@ async function loadOrder() {
     `<br><strong>Card: **** **** **** ${order.cardNumber.slice(-4)}</strong>`;
 }
 
+async function checkStatus() {
+  const orderNum = sessionStorage.getItem("currOrder");
+  if (!orderNum) return;
+
+  const ord = ref(savorDB, `order/${orderNum}`);
+  const snapshot = await get(ord);
+  if (!snapshot.exists()) return;
+
+  const order = snapshot.val();
+  if(order.status != "pending"){
+    document.getElementById("placeOrder").disabled = true;
+    document.getElementById("placeOrder").textContent = "Order Completed";
+  }
+}
+
 loadOrder();
+checkStatus();
 
 document.getElementById("placeOrder").addEventListener("click", async () => {
 
