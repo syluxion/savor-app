@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile-settings - Savor</title>
   <style>
-    /*Restaurant Account Css*/
+    /*User Account Css*/
 
 body {
   margin: 0;
@@ -91,26 +91,9 @@ body {
 }
 
 .settings-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    text-align: center;
     margin-bottom: 18px;
-    padding: 0 10px;
 }
-
-.header-left {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #0a5a2e;
-    margin: 0;
-}
-
-.header-right {
-    font-size: 0.95rem;
-    color: #444;
-    margin: 0;
-}
-
 .settings-subtitle {
     color: #444;
     margin: 6px 0 0;
@@ -125,36 +108,6 @@ body {
     border-radius: 20px;
     padding: 18px 16px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-}
-
-.info-bubbles {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 16px;
-}
-
-.info-bubble {
-    flex: 1 1 150px;
-    padding: 12px 14px;
-    border-radius: 16px;
-    background: #f4faf6;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    border: 1px solid rgba(17, 143, 84, 0.15);
-}
-
-.bubble-label {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #666;
-    margin-bottom: 4px;
-}
-
-.bubble-value {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #0a5a2e;
 }
 
 .form-grid { max-width: 720px; margin: 0 auto; }
@@ -252,6 +205,15 @@ select.login-input {
   transform: translateY(0);
 }
 
+.rest,
+.totalPrice {
+  flex: 1;              /* each takes equal space */
+}
+
+.title {
+  font-weight: 600;
+}
+
 .title-pickup {
     font-size: 40px; 
     color: #0a5a2e;
@@ -270,7 +232,46 @@ select.login-input {
     color: inherit
 } /*This takes off the underline for links*/
 
-  </style>
+
+
+.rest {
+  text-align: center;
+}
+
+.totalPrice {
+  text-align: right;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-weight: 700;
+  color: #0a5a2e;
+}
+
+.hd {
+  width: 100%;
+}
+
+#pending-orders .card,
+#completed-orders .card {
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+#pending-orders .card:hover,
+#completed-orders .card:hover {
+  transform: translateY(-2px);
+}
+
+
+
+  </style>>
 </head>
 <body>
   <div class ="settings-layout">
@@ -279,61 +280,30 @@ select.login-input {
             <h1 class="title-pickup">SAVOR</h1>
         </a>
       <nav role="tablist" aria-orientation="vertical">
-        <button type="button" class="nav-item is-active" role="tab" aria-selected="true" aria-controls="panel-profile" id="tab-profile">Home</button>
-        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-security" id="tab-security">Inventory</button>
-        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-subscription" id="tab-subscription">Add New Item</button>
-        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-payment" id="tab-payment">Orders & Sales</button>
-        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-locations" id="tab-locations"><a href="../html/user_acc.html">Profile Settings</a></button>
+        <button type="button" class="nav-item is-active" role="tab" aria-selected="true" aria-controls="panel-profile" id="tab-profile">Personal Info</button>
+        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-security" id="tab-security">Security</button>
+        <!--<button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-subscription" id="tab-subscription">Subscription</button>-->
+        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-payment" id="tab-payment">Payment Info</button>
+        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-orders" id="tab-orders">Orders</button>
+        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-logout" id="tab-logout">Logout</button>
       </nav>
     </aside>
 
     <main class="settings-content">
-      <!--<div class="profile-avatar">
+      <div class="profile-avatar">
         <img src="../img/user_icon.png" alt="User Avatar" class="avatar-large"/>
-      </div> -->
+      </div>
 
       <header class="settings-header">
-        <h2 class="header-left">Dashboard</h2>
-        <p class="header-right">Restaurant Name Here</p>
+        <h2 id="panel-title">Profile Settings</h2>
+        <p class="settings-subtitle">Manage your info and settings here.</p>
       </header>
 
       <section id="panel-profile" class="panel is-visible" role="tabpanel" aria-labelledby="tab-profile">
         <section class="card" aria-labelledby="profile-basics-heading">
-        <h3 id="profile-basics-heading"><!-- Home --></h3>
-        <div class="info-bubbles">
-            <div class="info-bubble">
-                <div class="bubble-label">Active Listings</div>
-                <div class="bubble-value">0</div>
-            </div>
-        </div>
-
-        <div class="info-bubbles">
-            <div class="info-bubble">
-                <div class="bubble-label">Total Sales Today</div>
-                <div class="bubble-value">$0.00</div>
-            </div>
-        </div>
-
-        <div class="info-bubbles">
-            <div class="info-bubble">
-                <div class="bubble-label">Expiring Soon</div>
-                <div class="bubble-value">0</div>
-            </div>
-        </div>
-
-        <div class="info-bubbles">
-            <div class="info-bubble">
-                <div class="bubble-label">Popular Items</div>
-                <ul class="bubble-list">
-                    <li>1. Null</li>
-                    <li>2. Null</li>
-                    <li>3. Null</li>
-                </ul>
-            </div>
-        </div>
-
+        <h3 id="profile-basics-heading">Personal Info</h3>
         <form id="profileBasicsForm" class="form-grid" autocomplete="on">
-          <!-- <div class="field">
+          <div class="field">
             <label for="firstName">First Name</label>
             <input type="text" id="firstName" name="firstName" class="login-input"/>
           </div>
@@ -346,69 +316,126 @@ select.login-input {
             <input type="email" id="email" name="email" class="login-input"/>
           </div>
           <div class="field">
-            <label for="birthDate">Birthdate</label>
-            <input type="date" id="birthDate" name="birthDate" class="login-input"/>
+            <label for="birthdate">Birthdate</label>
+            <input type="date" id="birthdate" name="birthdate" class="login-input"/>
           </div>
           <div class="field">
             <label for="phoneNumber">Phone Number</label>
             <input type="tel" id="phoneNumber" name="phoneNumber" class="login-input"/>
           </div>
+          <!--add account type in the future-->
           <div class="actions">
-            <button type="submit" class="login-submit">Save Changes</button>
+            <button type="submit" class="login-submit" onclick="saveAccountChanges1(event)">Save Changes</button>
             <div id="profileBasicsStatus" class="status" aria-live="polite"></div>
-          </div> -->
+          </div>
         </form>
         </section>
       </section> 
 
       <section id="panel-security" class="panel" role="tabpanel" aria-labelledby="tab-security" hidden>
         <section class="card" aria-labelledby="security-heading">
-          <h3 id="security-heading"><!--Inventory--></h3>
+          <h3 id="security-heading">Security</h3>
           <form id="securityForm" class="form-grid" autocomplete="off">
             <div class="field">
-              <label for="currentPassword">Coming Soon</label>
+              <label for="currentPassword">Current Password</label>
+              <input type="password" id="currentPassword" name="currentPassword" class="login-input"/>
+            </div>
+            <div class="field">
+              <label for="newPassword">New Password</label>
+              <input type="password" id="newPassword" name="newPassword" class="login-input"/>
+            </div>
+            <div class="field">
+              <label for="confirmPassword">Confirm New Password</label>
+              <input type="password" id="confirmPassword" name="confirmPassword" class="login-input"/>
+            </div>
+            <div class="actions">
+              <button type="submit" class="login-submit" onclick="updatePass(event)">Update Password</button>
+              <div id="securityStatus" class="status" aria-live="polite"></div>
+            </div>
           </form>
         </section>
       </section>
 
-      <section id="panel-subscription" class="panel" role="tabpanel" aria-labelledby="tab-subscription" hidden>
+      <!--<section id="panel-subscription" class="panel" role="tabpanel" aria-labelledby="tab-subscription" hidden>
         <section class="card" aria-labelledby="subscription-heading">
-          <h3 id="subscription-heading"><!--Add New Item--></h3>
+          <h3 id="subscription-heading">Subscription</h3>
           <form id="subscriptionForm" class="form-grid" autocomplete="off">
             <div class="field">
               <label>Coming Soon</label>
             </div>
           </form>
         </section>
-      </section>
+      </section>-->
 
       <section id="panel-payment" class="panel" role="tabpanel" aria-labelledby="tab-payment" hidden>
         <section class="card" aria-labelledby="payment-heading">
-          <h3 id="payment-heading"><!--Order & Sales--></h3>
+          <h3 id="payment-heading">Payment Info</h3>
           <form id="paymentForm" class="form-grid" autocomplete="off">
-            <div class="field">
-              <label>Coming Soon</label>
+            <section class="card" style="margin-top: 24px;">
+
+              <div class="field">
+                <label for="cardName">Cardholder Name</label>
+                <input type="text" id="cardName" class="login-input" placeholder="John Doe" />
+              </div>
+
+              <div class="field">
+                <label for="cardNumber">Card Number</label>
+                <input type="text" id="cardNumber" class="login-input" placeholder="1234 5678 9012 3456" />
+              </div>
+
+              <div class="field">
+                <label for="expiry">Expiration Date</label>
+                <input type="month" id="expiry" class="login-input" />
+              </div>
+
+              <div class="field">
+                <label for="cvv">CVV</label>
+                <input type="password" id="cvv" class="login-input" placeholder="123" />
+              </div>
+              
+
+              <div class="actions">
+                <button type="button" class="login-submit" id = "savePayment">Save Changes</button>
+              </div>
+
+        </form>
+      </section>
+          </form>
+        </section>
+      </section>
+
+      <section id="panel-orders" class="panel" role="tabpanel" aria-labelledby="tab-orders" hidden>
+        <section class="card" aria-labelledby="orders-heading">
+          <h3 id="orders-heading">Orders</h3>
+          <form id="ordersForm" class="form-grid" autocomplete="off">
+            <div class="ordersfield">
+              <section class="card">
+                <h3>Pending Orders</h3>
+                  <div id="pending-orders">
+                    <h3>Loading</h3>
+                  </div>
+              </section>
+              
+              <section class = "card">
+                <h3>Completed Orders</h3>
+                  <div id = "completed-orders">
+                    <h3>Loading</h3>
+                  </div>
+              </section>
+
             </div>
           </form>
         </section>
       </section>
 
-      <!--<section id="panel-locations" class="panel" role="tabpanel" aria-labelledby="tab-locations" hidden>
-        <section class="card" aria-labelledby="locations-heading">
-          <a href="../html/user_acc.html">Profile Settings</a>
-          <h3 id="locations-heading">Saved Locations</h3>
-          <form id="locationsForm" class="form-grid" autocomplete="off">
-            <div class="field">
-              <label>Add Link to user account but for restaurant owners</label>
-            </div>
-          </form> 
-        </section>
+      <section id="panel-logout" class="panel" role="tabpanel" aria-labelledby="tab-logout" hidden>
       </section>
+      
     </main>
-  </div> -->
+  </div>
 
   <script type ="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getDatabase, ref, set, get, } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 import { update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
@@ -420,30 +447,209 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const savorDB = getDatabase(app);
-    window.sendEmail = async function() {
-  const username = localStorage.getItem("loggedInUser");
-  if (!username) {
+
+const state = {
+  pendOrders: [],
+  compOrders: []
+}
+
+console.log(localStorage.getItem("loggedInUser"));
+
+window.saveAccountChanges1 = function (event) {
+  event.preventDefault(); // STOP form from reloading the page
+
+  const email = document.getElementById('email').value.trim();
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
+  const birthDate = document.getElementById('birthdate').value.trim();
+
+  const loggedUser = localStorage.getItem("loggedInUser");
+
+  if (!loggedUser) {
     alert("No logged in user!");
     return;
   }
 
-  try {
-    const snapshot = await get(ref(savorDB, `user/${username}/email`));
-
-    if (!snapshot.exists()) {
-      alert("User email not found!");
-      return;
-    }
-
-    const email = snapshot.val();
-
-  }catch (error) {
-    console.error("Error fetching user email:", error);
-    alert("Failed to fetch user email.");
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/;
+  if (!emailPattern.test(email)) {
+    alert("Please enter a valid email.");
     return;
   }
 
+  const userRef = ref(savorDB, `user/${loggedUser}`);
+
+  update(userRef, {
+    email,
+    firstName,
+    lastName,
+    birthDate
+  })
+    .then(() => alert("Account updated successfully!"))
+    .catch(err => {
+      console.error(err);
+      alert("Error saving account.");
+    });
+};
+
+window.savePaymentInfo = function(){
+  const cardName = document.getElementById('cardName').value.trim();
+  const cardNumber = document.getElementById('cardNumber').value.trim();
+  const expiry = document.getElementById('expiry').value.trim();
+  const cvv = document.getElementById('cvv').value.trim();
+  const loggedUser = localStorage.getItem("loggedInUser");
+  if (!loggedUser) {
+    alert("No logged in user!");
+    return;
+  }
+  if (!cardName || !cardNumber || !expiry || !cvv) {
+    alert("Please fill in all payment fields.");
+    return;
+  }
+  
+  const userRef = ref(savorDB, `user/${loggedUser}`);
+  update(userRef, {
+    cardName,
+    cardNumber,
+    expiry,
+    cvv
+  })
+    .then(() => alert("Payment info updated successfully!"))
+    .catch(err => {
+      console.error(err);
+      alert("Error saving payment info.");
+    });
 }
+
+window.viewOrder = function(){
+    window.location.href = "orderView.html";
+  }
+window.pickupOrder = function(){
+  window.location.href = "orderView.html";
+}
+  
+window.logoutUser = function() {
+    localStorage.removeItem("loggedInUser");
+    window.location.href = "index.html";
+}
+
+
+
+document.getElementById("tab-logout").addEventListener("click", logoutUser);
+
+//Updates password
+window.updatePass = function(event) {
+  event.preventDefault();
+  const loggedUser = localStorage.getItem("loggedInUser");
+  const currentPassword = document.getElementById('currentPassword').value.trim();
+  const newPassword = document.getElementById('newPassword').value.trim();
+  const confirmPassword = document.getElementById('confirmPassword').value.trim();
+  const passRef = ref(savorDB, `user/${loggedUser}/password`);
+
+  if (newPassword!==confirmPassword) {
+        alert("Passwords do not match. Please re-enter them.");
+        return;
+      }
+  else{
+    
+    set(passRef, newPassword)
+    .then(() => {
+      alert("Password updated successfully!");
+    })
+    .catch(err => {
+      console.error("Error updating password:", err);
+      alert("Failed to update password.");
+    });
+  }
+}
+
+async function organizeOrders() {
+  const loggedUser = localStorage.getItem("loggedInUser");
+  const orderRefs = ref(savorDB, `order`);
+  const snapshot = await get(orderRefs);
+
+  if(!snapshot.exists()) return;
+
+  
+  snapshot.forEach(child => {
+    const order = child.val();
+
+    if (order.user !== loggedUser) return;
+
+    const orderObj = {
+      id: child.key,
+      rest: order.rest,
+      totalPrice: order.totalPrice,
+      status: order.status
+    };
+
+    if (order.status === "pending") {
+      state.pendOrders.push(orderObj);
+    } else {
+      state.compOrders.push(orderObj);
+    }
+  });
+  
+}
+
+async function renderOrders() {
+  const pendingOrdersTab = document.getElementById("pending-orders");
+  const completeOrdersTab = document.getElementById("completed-orders");
+  
+  pendingOrdersTab.innerHTML = "";
+  completeOrdersTab.innerHTML = "";
+
+state.pendOrders.forEach(ord => {
+  const pendOrder = document.createElement("section");
+  pendOrder.className = "card";
+  pendOrder.id = "orderPend";
+
+  pendOrder.addEventListener("click", () => {
+    console.log("Pending order clicked:", ord.id);
+    sessionStorage.setItem("currOrder", ord.id);
+    pickupOrder();
+  });
+
+  pendOrder.innerHTML = `
+
+  <div class="hd">
+  <div class="row">
+    <div class="title">#${ord.id}</div>
+    <div class="rest">${ord.rest}</div>
+    <div class="totalPrice">${ord.totalPrice}</div>
+  </div>
+</div>
+
+      
+  `
+  pendingOrdersTab.appendChild(pendOrder);
+})
+
+state.compOrders.forEach(ord => {
+  const compOrder = document.createElement("section");
+  compOrder.className = "card";
+  compOrder.id = "orderComp"
+
+  compOrder.addEventListener("click", () => {
+    console.log("Complete order clicked:", ord.id);
+    sessionStorage.setItem("currOrder", ord.id);
+    viewOrder();
+  });
+
+  compOrder.innerHTML = `
+  <div class = "hd">
+    <div class = "row">
+      <div class = "title">#${ord.id}</div>
+      <div class = "rest">${ord.rest}</div>
+      <div class = "totalPrice">${ord.totalPrice}</div>
+    </div>
+  </div>
+  `
+  completeOrdersTab.appendChild(compOrder);
+})
+  
+}
+document.getElementById("savePayment").addEventListener("click", savePaymentInfo);
+
 document.addEventListener('DOMContentLoaded', () => {
   // Only run on pages that have the settings layout
   const nav = document.querySelector('.settings-nav');
@@ -514,6 +720,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const initial = tabs.find(t => t.classList.contains('is-active')) || tabs[0];
   if (initial) showPanel(initial);
 });
+
+(async () => {
+  await organizeOrders();
+  renderOrders();
+})();
 
   </script> 
 </body>
