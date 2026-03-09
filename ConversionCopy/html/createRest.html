@@ -167,7 +167,7 @@ select.login-input {
   </div>
   <div class="login-overlay">
     <div class="login-box">
-        <h1>Create Restuarant</h1>
+        <h1 id = "createHeader">Create Restuarant</h1>
       <input type = "text" class ="login-input" id ="restName" placeholder = "Business Name">
       <input type="text" class="login-input" id="address" placeholder="Address">
       <input type = "text" class = "login-input" id = "phoneNum" placeholder = "Phone Number">
@@ -225,7 +225,21 @@ async function geocodeAddress(address) {
     lng: parseFloat(data[0].lon)
   };
 }
-
+if(!localStorage.getItem("loggedInUser")){
+  alert("You must be logged in to create a restaurant!");
+  window.location.href = "../html/login.html";
+}
+localStorage.getItem("loggedInUser");
+const userRef = ref(savorDB, `users/${localStorage.getItem("loggedInUser")}/accountType`);
+get(userRef).then((snapshot) => {
+  if (snapshot.exists()) {
+    const accountType = snapshot.val();
+    if (accountType == "fb"){
+      document.getElementById("createHeader").textContent = "Create Food Bank";
+    }}
+}).catch((error) => {
+  console.error("Error fetching account type:", error);
+});
 
 async function createRest() {
 
@@ -271,6 +285,7 @@ async function createRest() {
   set(restRef, {phoneNumber,type,hours,image,lat,lng,rating,owner})
   .then(() => {
     alert(`Business "${rest}" created successfully!`);
+    document.getElementById("createHeader").textContent = "Create Restaurant";
     window.location.href = "../html/index2.html";
   })
   .catch(err => {

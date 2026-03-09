@@ -366,6 +366,11 @@ select.login-input {
             <input type="month" id="expiry" class="login-input" />
           </div>
 
+          <div class = "field">
+            <label for="email">Email</label>
+            <input type="email" id="email" class="login-input" placeholder="john@example.com"/>
+          </div>
+
           <div class="field">
             <label for="cvv">CVV</label>
             <input type="password" id="cvv" class="login-input" placeholder="123" />
@@ -447,6 +452,7 @@ window.loadSavedPayment = async function() {
   document.getElementById('cardNumber').value = data.cardNumber || '';
   document.getElementById('expiry').value = data.expiry || '';
   document.getElementById('cvv').value = data.cvv || '';
+  document.getElementByID('email').value = data.email || '';
 };
 
 
@@ -463,30 +469,56 @@ window.savePaymentInfo = function() {
       alert("Please fill in all payment fields.");
       return reject("Missing payment info");
     }
+
+    let orderRef = ref(savorDB, `order/${orderId}`);
+    let orderUpdate = update(orderRef, { cardName, cardNumber });
+
     if (!loggedUser || !orderId) {
-      alert("Missing user or order info!");
-      return reject("Missing user/order info");
+      if(!loggedUser && orderId)
+      {
+        orderRef = ref(savorDB, `order/${orderId}`);
+        orderUpdate = update(orderRef, { cardName, cardNumber });
+        orderUpdate.then(() => {
+          console.log("Payment info saved for guest!");
+          resolve();
+        }).catch(err => {
+          console.error(err);
+          reject(err);
+        });
+      }
+      else if(loggedUser && !orderId)
+      {
+        alert("No order found for user.");
+        return reject("No order found");
+      }
+      else
+      {
+        alert("Please log in to save payment info.");
+        return reject("Not logged in");
+      }
+
     }
-
-    const orderRef = ref(savorDB, `order/${orderId}`);
-    const orderUpdate = update(orderRef, { cardName, cardNumber });
-
-    let userUpdate = Promise.resolve();
-    if (document.getElementById("saveForLater").checked) {
-      const userRef = ref(savorDB, `user/${loggedUser}`);
+    else
+    {
+      orderRef = ref(savorDB, `order/${orderId}`);
+      orderUpdate = update(orderRef, { cardName, cardNumber });
+      userRef = ref(savorDB, `user/${loggedUser}`);
       userUpdate = update(userRef, { cardName, cardNumber, expiry, cvv });
+      let userUpdate = Promise.resolve();
+      if (document.getElementById("saveForLater").checked && loggedUser) {
+        const userRef = ref(savorDB, `user/${loggedUser}`);
+        userUpdate = update(userRef, { cardName, cardNumber, expiry, cvv });
+      }
+      Promise.all([orderUpdate, userUpdate])
+        .then(() => {
+          console.log("Payment info saved!");
+          resolve();
+        })
+        .catch(err => {
+          console.error(err);
+          reject(err);
+        });
     }
-
-    // Wait for both updates
-    Promise.all([orderUpdate, userUpdate])
-      .then(() => {
-        console.log("Payment info saved!");
-        resolve();
-      })
-      .catch(err => {
-        console.error(err);
-        reject(err);
-      });
   });
 }
 
@@ -546,15 +578,25 @@ async function renderCart() {
 
 async function comfEmail() {
   const loggedUser = localStorage.getItem("loggedInUser");
-  if (!loggedUser) return Promise.reject("No logged user");
-  const emailRef = ref(savorDB, `user/${loggedUser}/email`);
-  const emailSnapshot = await get(emailRef);
-  if (!emailSnapshot.exists()) {return Promise.reject("No email found");}
-  const email = emailSnapshot.val();
-  const orderId = sessionStorage.getItem("currOrder");
+  let emailRef;
+  let email;
+  let orderId;
+
+  if (!loggedUser){
+    console.log("No logged user");
+    email = document.getElementById("email").value.trim();
+    orderId = sessionStorage.getItem("currOrder");
+  }
+  else
+  {
+    emailRef = ref(savorDB, `user/${loggedUser}/email`);
+    const emailSnapshot = await get(emailRef);
+    if (!emailSnapshot.exists()) {return Promise.reject("No email found");}
+    email = emailSnapshot.val();
+    orderId = sessionStorage.getItem("currOrder");
+  }
   const params = {
     email:email,
-    //message: "Your order has been placed! We will notify you when it's ready for pickup. Thank you for choosing Savor!",
     order_id: orderId
   }
   try {
