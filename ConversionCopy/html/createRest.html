@@ -131,10 +131,40 @@ select.login-input {
     font-size: 20px;
   }
 }
+
+.title-pickup {
+    font-size: 40px; 
+    color: #0a5a2e;
+    margin: 0; 
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-shadow:
+      0 3px 0 #c8e1c8,
+      0 6px 0 #a8d1a8,
+      0 9px 10px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+.title-link {
+    text-decoration: none;
+    color: inherit
+} /*This takes off the underline for links*/
+
+.title-overlay {
+    position: relative;
+    width: 100%;
+    padding: 5px 0;
+    text-align: center; 
+  }
+
   </style>
 </head>
 <body>
-  <h3 class="title">SAVOR</h3>
+  <div class = "title-overlay">
+  <a href="../html/index.html" class= "title-link">
+            <h1 class="title-pickup">SAVOR</h1>
+        </a>
+  </div>
   <div class="login-overlay">
     <div class="login-box">
         <h1>Create Restuarant</h1>
@@ -212,8 +242,17 @@ async function createRest() {
   const fri = document.getElementById("fri").value.trim();
   const sat = document.getElementById("sat").value.trim();
   const sun = document.getElementById("sun").value.trim();
-  const rating = 0;
+  const rating = (Math.floor(Math.random() * 21) + 30) / 10;
   const owner = localStorage.getItem("loggedInUser");
+
+  const ownerRef = ref(savorDB, `users/${owner}`);
+  ownerRef.update({ rest })
+  .then(() => {
+    console.log(`Added restaurant "${rest}" to owner "${owner}"`);
+  })
+  .catch(err => {
+    console.log("Error updating user with restaurant:", err);
+  });
 
   const {lat,lng} = await geocodeAddress(address);
 

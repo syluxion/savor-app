@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>S4VOR Map</title>
+  <title>SAVOR Map</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
@@ -217,10 +217,91 @@
   transform: scale(1.05);
 }
 
+/*================= FOOD BANK INFO CARD =================*/
+#fb-info-box {
+  position: absolute;
+  top: 95px;
+  right: 28px;
+  width: 260px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 25px;
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(6px);
+  display: none;
+  z-index: 999999;
+}
+
+#fb-info-box img {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 15px;
+  margin-bottom: 10px;
+}
+
+#fb-info-box h3 {
+  margin: 6px 0;
+  color: #0a5a2e;
+  font-size: 20px;
+  text-align: center;
+}
+
+#fb-info-rating {
+  text-align: center;
+  font-size: 20px;
+  color: #ffb400;
+}
+
+#fb-info-hours {
+  text-align: center;
+  font-size: 16px;
+  color: #0a5a2e;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+#fb-dir-btn {
+  width: 100%;
+  padding: 12px;
+  background: #0a5a2e;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#fb-dir-btn:hover {
+  background: #118f54;
+  transform: scale(1.05);
+}
+/* ================= BACK BUTTON ================= */
+
 .back-btn {
     width: 40px;
     height: 30px;
   }
+
+.title-pickup {
+    font-size: 40px; 
+    color: #0a5a2e;
+    margin: 0; 
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-shadow:
+      0 3px 0 #c8e1c8,
+      0 6px 0 #a8d1a8,
+      0 9px 10px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+.title-link {
+    text-decoration: none;
+    color: inherit
+} /*This takes off the underline for links*/
 
   </style>
 </head>
@@ -249,6 +330,15 @@
     <p id="info-hours"></p>
     <p id="info-address">Loading address…</p>
     <button id="order-btn">ORDER</button>
+  </div>
+
+  <div id="fb-info-box">
+    <img id="fb-info-img">
+    <h3 id="fb-info-name"></h3>
+    <div id="fb-info-rating"></div>
+    <p id="fb-info-hours"></p>
+    <p id="fb-info-address">Loading address…</p>
+    <button id="fb-dir-btn">Directions</button>
   </div>
   
 
@@ -400,8 +490,35 @@ function populateSidebar(restaurants) {
 
 function updateInfoBox(r) {
 //Sanity check logs
-  console.log("Today:", dateRef);
+document.getElementById("restaurant-info-box").style.display = "none";
+document.getElementById("fb-info-box").style.display = "none";
+console.log("Today:", dateRef);
 console.log("Hours object:", r.hours);
+if(r.type == "Food Bank")
+{
+  document.getElementById("fb-info-box").style.display = "block";
+  document.getElementById("fb-info-img").src =r.image;
+  document.getElementById("fb-info-name").innerText = r.id;
+  document.getElementById("fb-info-rating").innerText =
+    `${formatRatingStars(r.rating)} (${r.rating.toFixed(1)})`;
+  document.getElementById("fb-info-hours").innerText =r.hours?.[dateRef] ?? "Hours not available";
+    const addressEl = document.getElementById("fb-info-address");
+  addressEl.innerText = "Loading address…";
+  fetchAddress(r.lat, r.lng).then(address => {
+    addressEl.innerText = address;
+  });
+  document.getElementById("fb-dir-btn").onclick = () => {
+    sessionStorage.setItem("currRest", r.id);
+    fetchAddress(r.lat, r.lng).then(address => {
+      const query = `${address}`;
+      window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`,'_blank');
+    });
+    
+  return;
+  }
+}
+else
+{
 
   document.getElementById("restaurant-info-box").style.display = "block";
 
@@ -427,6 +544,7 @@ console.log("Hours object:", r.hours);
     sessionStorage.setItem("currRest", r.id);
     resPage();
   };
+}
 }
 
 

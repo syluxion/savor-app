@@ -34,9 +34,7 @@ body {
 .login-overlay {
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100%;
-  padding-top: 10px;
+  margin-top: 20px;
 }
 
 .login-box {
@@ -131,9 +129,40 @@ select.login-input {
     font-size: 20px;
   }
 }
+
+.title-pickup {
+    font-size: 40px; 
+    color: #0a5a2e;
+    margin: 0; 
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-shadow:
+      0 3px 0 #c8e1c8,
+      0 6px 0 #a8d1a8,
+      0 9px 10px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+.title-link {
+    text-decoration: none;
+    color: inherit
+} /*This takes off the underline for links*/
+
+.title-overlay {
+    margin-top: 60px;
+    position: relative;
+    width: 100%;
+    padding: 5px 0;
+    text-align: center; 
+  }
   </style>
 </head>
 <body>
+  <div class="title-overlay"> 
+    <a href="../html/index.html" class= "title-link">
+      <h1 class="title-pickup">SAVOR</h1>
+    </a>
+  </div>
   <div class="login-overlay">
     <div class="login-box">
       
