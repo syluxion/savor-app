@@ -227,7 +227,7 @@ select.login-input {
 
 @media (max-width: 900px) {
   .settings-layout { grid-template-columns: 1fr; padding: 16px; }
-  .setting-nav, .settings-content { max-height: none; }
+  .settings-nav, .settings-content { max-height: none; }
 }
 
 @media (max-width: 500px) {
@@ -262,6 +262,14 @@ select.login-input {
   overflow-y: auto;
 }
 
+.donations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+}
+
 .inventory-item {
   display: flex;
   align-items: center;
@@ -270,6 +278,23 @@ select.login-input {
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   gap: 16px;
+}
+
+
+.inventory-item.is-expired {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+
+.item-timer{
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #444;
+  margin-top: 2px;
+}
+.inventory-item.is-expired .item-timer{
+  color: #777;
 }
 
 .item-image {
@@ -308,6 +333,35 @@ select.login-input {
   color: #555;
 }
 
+.item-allergy {
+  font-size: 0.78rem;
+  color: #a85a00;
+  margin-top: 2px;
+  font-style: italic;
+}
+
+.selected-allergy-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f4faf6;
+  border: 1px solid rgba(17, 143, 84, 0.18);
+  color: #0a5a2e;
+  border-radius: 999px;
+  padding: 6px 10px;
+  margin: 4px 6px 0 0;
+  font-size: 0.85rem;
+}
+
+.selected-allergy-chip button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  color: #b3261e;
+  padding: 0;
+}
+
 
 .quantity-btn {
   width: 32px;
@@ -342,12 +396,16 @@ select.login-input {
   align-items: center;
   justify-content: center;
   padding: 20px;
+  overflow-y: auto;
   z-index: 9999;
 }
+
 .modal.is-open { display: flex; }
 
 .modal-card {
   width: min(720px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
   background: rgba(255,255,255,0.97);
   border-radius: 22px;
   padding: 18px 18px 22px;
@@ -401,7 +459,7 @@ select.login-input {
 .dropzone.has-image .dropzone-text { display:none; }
 .dropzone.has-image .image-preview { display:block; }
 
-/* ---- Validation (red highlight) ---- */
+/* ---- Validation Styles ---- */
 .login-input.is-invalid {
   box-shadow: 0 0 0 2px rgba(220, 30, 30, 0.65) inset, 0 0 10px rgba(220, 30, 30, 0.2);
 }
@@ -454,14 +512,6 @@ select.login-input {
     color: inherit
 } /*This takes off the underline for links*/
 
-.rest {
-  text-align: center;
-}
-
-.totalPrice {
-  text-align: right;
-}
-
 .nav-item-with-link {
     display: block;
     width: 100%;
@@ -471,39 +521,12 @@ select.login-input {
     border: none;
     border-radius: 14px;
     font-size: 16px;
-    font-weight: normal;   /* 👈 removes bold */
+    font-weight: normal;   
     cursor: pointer;
     box-shadow: 0 0 5px rgba(0,0,0,0.08);
     transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
     text-decoration: none; /* removes underline */
     color: inherit;        /* matches other buttons */
-}
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.title {
-  font-weight: 700;
-  color: #0a5a2e;
-}
-
-.hd {
-  width: 100%;
-}
-
-#pending-orders .card,
-#completed-orders .card {
-  margin-bottom: 12px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-#pending-orders .card:hover,
-#completed-orders .card:hover {
-  transform: translateY(-2px);
 }
 
   </style>
@@ -518,6 +541,7 @@ select.login-input {
         <button type="button" class="nav-item is-active" role="tab" aria-selected="true" aria-controls="panel-profile" id="tab-profile">Home</button>
         
         <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-security" id="tab-security">Inventory</button>
+        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-donations" id="tab-donations">Donations</button>
         <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-payment" id="tab-payment">Orders & Sales</button>
         <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-settings" id="tab-settings">Restaurant Info</button>
         <a href="../html/user_acc.html" class="nav-item nav-item-with-link">Profile Settings</a>
@@ -624,13 +648,25 @@ select.login-input {
           </div>
         </section>
       </section>
+      
+      <section id="panel-donations" class="panel" role="tabpanel" aria-labelledby="tab-donations" hidden>
+        <section class="card" aria-labelledby="donations-heading">
+          <div class="inventory-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h3 id="donations-heading">Donations</h3>
+          </div>
 
+          <div class="donations-list">
+            <!-- Donation items load here -->
+          </div>
+        </section>
+      
+      </section>
       <section id="panel-payment" class="panel" role="tabpanel" aria-labelledby="tab-payment" hidden>
         <section class="card" aria-labelledby="payment-heading">
           <h3 id="payment-heading"><!--Order & Sales--></h3>
-          <form id="ordersForm" class="form-grid" autocomplete="off">
-            <div class="ordersfield">
-              <section class="card">
+          <form id="paymentForm" class="form-grid" autocomplete="off">
+            <div class="field">
+               <section class="card">
                 <h3>Pending Orders</h3>
                   <div id="pending-orders">
                     <h3>Loading</h3>
@@ -643,13 +679,12 @@ select.login-input {
                     <h3>Loading</h3>
                   </div>
               </section>
-
             </div>
           </form>
         </section>
       </section>
 
-      <section id="panel-settings" class="panel" role="tabpanel" aria-labelledby="settings">
+      <section id="panel-settings" class="panel" role="tabpanel" aria-labelledby="tab-settings" hidden>
         <section class="card" aria-labelledby="Restaurant-Settings-heading">
         <h3 id="Restaurant-Settings-heading"><!--Restaurant Settings--></h3>
         <form id="profileBasicsForm" class="form-grid" autocomplete="on">
@@ -739,7 +774,7 @@ select.login-input {
 
           <!--add account type in the future-->
           <div class="actions">
-            <button type="submit" class="login-submit" onclick="saveResChanges(event)">Save Changes</button>
+            <button type="button" class="login-submit" onclick="saveResChanges(event)">Save Changes</button>
             <div id="profileBasicsStatus" class="status" aria-live="polite"></div>
           </div>
         </form>
@@ -789,7 +824,28 @@ select.login-input {
           <label for="itemDescription">Description</label>
           <input id="itemDescription" class="login-input" type="text" placeholder="e.g., A sweet indulgence" />
         </div>
-
+        
+        <div class="field">
+          <label for="itemAllergy">Allergies</label>
+          <select id="itemAllergy" class="login-input">
+            <option value="">Select an allergy</option>
+            <option value="Gluten allergy">Gluten allergy</option>
+            <option value="Nut allergy">Nut allergy</option>
+            <option value="Wheat allergy">Wheat allergy</option>
+            <option value="Other">Other</option>
+          </select>
+        
+          <div id="otherAllergyField" style="display:none;">
+            <input id="itemOtherAllergy" class="login-input" type="text" placeholder="Enter specific allergy" />
+          </div>
+        
+          <button type="button" id="addAllergyBtn" class="item-action-btn" style="margin-top:8px;">
+            Add Allergy
+          </button>
+        
+          <div id="selectedAllergiesList" style="margin-top:12px;"></div>
+        </div>
+        
         <div class="field">
           <label for="itemQuantity">Quantity</label>
           <input id="itemQuantity" class="login-input" type="number" min="0" step="1" placeholder="e.g., 12" />
@@ -798,6 +854,11 @@ select.login-input {
         <div class="field">
           <label for="itemPrice">Price</label>
           <input id="itemPrice" class="login-input" type="number" min="0" step="0.01" placeholder="e.g., 11.50" />
+        </div>
+
+        <div class="field">
+          <label for="itemExpireMins">Expires in (optional)</label>
+          <input id="itemExpireMins" class="login-input" type="number" min="1" step="1" placeholder="e.g., 60" />
         </div>
 
         <div class="actions">
@@ -828,32 +889,36 @@ const savorDB = getDatabase(app);
 
 let restTarget = '';
 
-document.addEventListener('DOMContentLoaded', async () => {
 
+
+document.addEventListener('DOMContentLoaded', async () => {
   const loggedUser = localStorage.getItem("loggedInUser");
 
-  if (!loggedUser) {
-    console.warn("No logged in user found.");
+if (!loggedUser) {
+  console.warn("No logged in user found.");
+  return;
+}
+
+try {
+  const userRef = ref(savorDB, `user/${loggedUser}`);
+  const userSnap = await get(userRef);
+  const userData = userSnap.val();
+
+  if (!userData || !userData.rest) {
+    console.warn("No restaurant found for user.");
     return;
   }
 
-  try {
-    const userRef = ref(savorDB, `user/${loggedUser}`);
-    const userSnap = await get(userRef);
-    const userData = userSnap.val();
-    restTarget = userData.rest;
-    const header = document.getElementById('header-right');
-    if (header) {
-      header.textContent = restTarget;
-    }
+  restTarget = userData.rest;
 
-  } catch (err) {
-    console.error("Error loading user:", err);
+  const header = document.getElementById('header-right');
+  if (header) {
+    header.textContent = restTarget;
   }
-  //
-});
-
-document.addEventListener('DOMContentLoaded', () => {
+} catch (err) {
+  console.error("Error loading user:", err);
+  return;
+}
   // Only run on pages that have the settings layout
   const nav = document.querySelector('.settings-nav');
   const content = document.querySelector('.settings-content');
@@ -864,16 +929,87 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fix: you used inventoryTab later but never defined it
     const inventoryTab = document.getElementById('tab-security');
+const donationsTab = document.getElementById('tab-donations');
 
-// Keep items in memory so we can append new ones
+// Keep items in memory
 let inventoryItems = [];
+let donationItems = [];
 
-// Track add vs edit mode
+
 let editMode = false;
 let editingItemId = '';
 let editingExistingImage = '';
+let currentEditCollection = 'menu';
 
-  // Helper: show the panel controlled by a tab
+// ---- Expiration helpers ----
+function nextDayEndTimestamp() {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  d.setHours(23, 59, 0, 0); // tomorrow 11:59pm
+  return d.getTime();
+}
+
+// if expire mins blank -> tomorrow 11:59pm
+// if expire mins provided -> now + mins
+function computeExpiresAt(expireMinsRaw) {
+  const raw = String(expireMinsRaw ?? '').trim();
+  if (raw === '') return nextDayEndTimestamp();
+  const mins = Number(raw);
+  return Date.now() + mins * 60 * 1000;
+}
+
+// when reviving an item, use stored expireMins; if null, default to tomorrow 11:59pm
+function resetExpiresAtFromItem(item) {
+  if (item?.expireMins == null) return nextDayEndTimestamp();
+  return Date.now() + Number(item.expireMins) * 60 * 1000;
+}
+
+// ---- Timer formatting ----
+function formatMs(ms) {
+  if (ms < 0) ms = 0;
+  const totalSeconds = Math.floor(ms / 1000);
+
+  const hrs = Math.floor(totalSeconds / 3600);
+  const mins = Math.floor((totalSeconds % 3600) / 60);
+  const secs = totalSeconds % 60;
+
+  const pad = n => String(n).padStart(2, '0');
+  return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+}
+
+let countdownInterval = null;
+function startCountdownUI() {
+  if (countdownInterval) clearInterval(countdownInterval);
+
+  countdownInterval = setInterval(() => {
+    const now = Date.now();
+
+    document.querySelectorAll('.item-timer[data-timer-id]').forEach(el => {
+      const id = el.getAttribute('data-timer-id');
+      const item = inventoryItems.find(x => String(x.id) === String(id));
+      if (!item) return;
+
+      if (item.status === "expired") {
+        el.textContent = "Expired (sent to donations)";
+        return;
+      }
+
+      if (!item.expiresAt) {
+        el.textContent = "No expiration set";
+        return;
+      }
+
+      const left = item.expiresAt - now;
+
+      if (left <= 0) {
+        el.textContent = "Expiring...";
+      } else {
+        el.textContent = `Expires in: ${formatMs(left)}`;
+      }
+    });
+  }, 1000);
+}
+  
   function showPanel(tabEl) {
     // Update tab states
     tabs.forEach(btn => {
@@ -983,7 +1119,18 @@ let editingExistingImage = '';
       const id = itemDiv?.dataset?.id || '';
       if (id) {
         try {
-          await update(ref(savorDB, `rest/${restTarget}/menu/${id}`), { quantity: value });
+          const item = inventoryItems.find(x => String(x.id) === String(id));
+
+const patch = { quantity: value, updatedAt: Date.now() };
+
+
+if (item && item.status === "expired" && value > 0) {
+  patch.status = "active";
+  patch.expiresAt = resetExpiresAtFromItem(item);
+}
+
+await update(ref(savorDB, `rest/${restTarget}/menu/${id}`), patch);
+await loadInventory('firebase');
         } catch (err) {
           console.error(err);
         }
@@ -1001,20 +1148,110 @@ let editingExistingImage = '';
       const id = itemDiv?.dataset?.id || '';
       if (id) {
         try {
-          await update(ref(savorDB, `rest/${restTarget}/menu/${id}`), { quantity: value });
+          const item = inventoryItems.find(x => String(x.id) === String(id));
+
+const patch = { quantity: value, updatedAt: Date.now() };
+
+
+if (item && item.status === "expired" && value > 0) {
+  patch.status = "active";
+  patch.expiresAt = resetExpiresAtFromItem(item);
+}
+
+await update(ref(savorDB, `rest/${restTarget}/menu/${id}`), patch);
+await loadInventory('firebase');
         } catch (err) {
           console.error(err);
         }
       }
     });
 
-    const addBtn = document.getElementById('add-item-btn');
-    if (addBtn) {
-      addBtn.addEventListener('click', () => openModal());
-    }
-
   }
   // Inventory loader (JSON or Firebase) ---
+
+  const donationsPanel = document.getElementById('panel-donations');
+if (donationsPanel) {
+  donationsPanel.addEventListener('click', async e => {
+
+    if (e.target.classList.contains('delete-donation-btn')) {
+      const itemDiv = e.target.closest('.inventory-item');
+      const id = itemDiv?.dataset?.id || '';
+      if (!id) return;
+
+      const ok = confirm('Delete this donation item?');
+      if (!ok) return;
+
+      try {
+        await remove(ref(savorDB, `rest/${restTarget}/donations/${id}`));
+        await loadDonations();
+      } catch (err) {
+        console.error(err);
+        alert('Error deleting donation item.');
+      }
+      return;
+    }
+
+    if (e.target.classList.contains('edit-donation-btn')) {
+      const itemDiv = e.target.closest('.inventory-item');
+      const id = itemDiv?.dataset?.id || '';
+      if (!id) return;
+
+      const item = donationItems.find(x => String(x.id) === String(id));
+      if (!item) return;
+
+      openDonationEditModal(item);
+      return;
+    }
+
+    if (!e.target.classList.contains('quantity-btn')) return;
+
+    const itemDiv = e.target.closest('.inventory-item');
+    const input = itemDiv.querySelector('.quantity-input');
+    let value = parseInt(input.value);
+
+    if (e.target.classList.contains('plus')) value++;
+    if (e.target.classList.contains('minus') && value > 0) value--;
+
+    input.value = value;
+
+    const id = itemDiv?.dataset?.id || '';
+    if (id) {
+      try {
+        await update(ref(savorDB, `rest/${restTarget}/donations/${id}`), {
+          quantity: value,
+          updatedAt: Date.now()
+        });
+        await loadDonations();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  });
+
+  donationsPanel.addEventListener('input', async e => {
+    if (!e.target.classList.contains('quantity-input')) return;
+
+    let value = parseInt(e.target.value);
+    if (isNaN(value) || value < 0) value = 0;
+    e.target.value = value;
+
+    const itemDiv = e.target.closest('.inventory-item');
+    const id = itemDiv?.dataset?.id || '';
+
+    if (id) {
+      try {
+        await update(ref(savorDB, `rest/${restTarget}/donations/${id}`), {
+          quantity: value,
+          updatedAt: Date.now()
+        });
+        await loadDonations();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  });
+}
+
   async function loadInventory(source = 'json') { // default to json
      let items = [];
      if (source === 'json') {
@@ -1024,15 +1261,27 @@ let editingExistingImage = '';
        } catch (err) {
          console.error('Error loading JSON inventory:', err);
        }
-     } else if (source === 'firebase') {
+      } else if (source === 'firebase') {
   try {
     const snapshot = await get(ref(savorDB, `rest/${restTarget}/menu`));
     if (snapshot.exists()) {
-  const data = snapshot.val(); // {id1: {...}, id2: {...}}
-  items = Object.entries(data).map(([id, item]) => ({ id, ...item }));
-} else {
-  items = [];
-}
+      const data = snapshot.val();
+      items = Object.entries(data).map(([id, item]) => ({ id, ...item }));
+    } else {
+      items = [];
+    }
+
+    
+    await sweepExpiredItems(items);
+
+    
+    const snapshot2 = await get(ref(savorDB, `rest/${restTarget}/menu`));
+    if (snapshot2.exists()) {
+      const data2 = snapshot2.val();
+      items = Object.entries(data2).map(([id, item]) => ({ id, ...item }));
+    } else {
+      items = [];
+    }
 
   } catch (err) {
     console.error('Error loading Firebase inventory:', err);
@@ -1043,40 +1292,215 @@ let editingExistingImage = '';
 inventoryItems = Array.isArray(items) ? items : [];
 populateInventory(inventoryItems);
 
+
    }
+
+   async function loadDonations() {
+  let items = [];
+
+  try {
+    const snapshot = await get(ref(savorDB, `rest/${restTarget}/donations`));
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      items = Object.entries(data).map(([id, item]) => ({ id, ...item }));
+    } else {
+      items = [];
+    }
+  } catch (err) {
+    console.error('Error loading Firebase donations:', err);
+    items = [];
+  }
+
+  donationItems = Array.isArray(items) ? items : [];
+  populateDonations(donationItems);
+}
 
    //  Function to render inventory items ---
    function populateInventory(items) {
-     const list = document.querySelector('.inventory-list');
-     if (!list) return;
-     list.innerHTML = ''; // clear existing items
-     items.forEach(item => {
-       const div = document.createElement('div');
-       div.classList.add('inventory-item');
-       div.dataset.id = item.id || '';
+  const list = document.querySelector('.inventory-list');
+  if (!list) return;
+  list.innerHTML = '';
 
-       div.innerHTML = `
-         <img src="${item.image || '../img/placeholder.png'}" alt="Item Image" class="item-image"/>
-         <div class="item-details">
-           <div class="item-description">${item.name || 'Unnamed Item'}</div>
-            <div class="item-subdescription">${item.description || ''}</div>
-           <div class="item-price">$${(typeof item.price === 'number' ? item.price : Number(item.price || 0)).toFixed(2)}</div>
-         </div>
+  const sorted = [...items].sort((a, b) => {
+    const aExpired = a.status === "expired";
+    const bExpired = b.status === "expired";
+    if (aExpired !== bExpired) return aExpired ? 1 : -1; // expired bottom
+    return (b.updatedAt || 0) - (a.updatedAt || 0);
+  });
 
-         <div class="item-quantity">
-           <button class="quantity-btn minus">-</button>
-           <input type="number" class="quantity-input" value="${item.quantity ?? 0}" min="0"/>
-           <button class="quantity-btn plus">+</button>
-         </div>
+  sorted.forEach(item => {
+    const div = document.createElement('div');
+    div.classList.add('inventory-item');
+    if (item.status === "expired") div.classList.add('is-expired');
 
-         <div class="item-actions">
-           <button type="button" class="item-action-btn edit-btn">Edit</button>
-           <button type="button" class="item-action-btn delete-btn">Delete</button>
-         </div>
-       `;
-       list.appendChild(div);
-     });
-   }
+    div.dataset.id = item.id || '';
+
+    div.innerHTML = `
+      <img src="${item.image || '../img/placeholder.png'}" alt="Item Image" class="item-image"/>
+      <div class="item-details">
+        <div class="item-description">${item.name || 'Unnamed Item'}</div>
+<div class="item-subdescription">${item.description || ''}</div>
+${Array.isArray(item.allergies) && item.allergies.length
+  ? `<div class="item-allergy">Contains: ${item.allergies.join(', ')}</div>`
+  : (item.allergy ? `<div class="item-allergy">Contains: ${item.allergy}</div>` : '')
+}
+<div class="item-timer" data-timer-id="${item.id || ''}">Loading...</div>
+        <div class="item-price">$${(typeof item.price === 'number' ? item.price : Number(item.price || 0)).toFixed(2)}</div>
+      </div>
+
+      <div class="item-quantity">
+        <button class="quantity-btn minus">-</button>
+        <input type="number" class="quantity-input" value="${item.quantity ?? 0}" min="0"/>
+        <button class="quantity-btn plus">+</button>
+      </div>
+
+      <div class="item-actions">
+        <button type="button" class="item-action-btn edit-btn">Edit</button>
+        <button type="button" class="item-action-btn delete-btn">Delete</button>
+      </div>
+    `;
+
+    list.appendChild(div);
+  });
+
+  // start el coutndown timers
+  startCountdownUI();
+}
+
+function populateDonations(items) {
+  const list = document.querySelector('.donations-list');
+  if (!list) return;
+
+  list.innerHTML = '';
+
+  const sorted = [...items].sort((a, b) => {
+    return (b.updatedAt || 0) - (a.updatedAt || 0);
+  });
+
+  sorted.forEach(item => {
+    if(item.name === "rootKeeper"){return}
+    else
+  {
+    const div = document.createElement('div');
+    div.classList.add('inventory-item');
+    div.dataset.id = item.id || '';
+
+    div.innerHTML = `
+      <img src="${item.image || '../img/placeholder.png'}" alt="Item Image" class="item-image"/>
+      <div class="item-details">
+        <div class="item-description">${item.name || 'Unnamed Item'}</div>
+<div class="item-subdescription">${item.description || ''}</div>
+${Array.isArray(item.allergies) && item.allergies.length
+  ? `<div class="item-allergy">Contains: ${item.allergies.join(', ')}</div>`
+  : (item.allergy ? `<div class="item-allergy">Contains: ${item.allergy}</div>` : '')
+}
+<div class="item-price">$${(typeof item.price === 'number' ? item.price : Number(item.price || 0)).toFixed(2)}</div>
+      </div>
+
+      <div class="item-quantity">
+        <button class="quantity-btn minus">-</button>
+        <input type="number" class="quantity-input" value="${item.quantity ?? 0}" min="0"/>
+        <button class="quantity-btn plus">+</button>
+      </div>
+
+      <div class="item-actions">
+        <button type="button" class="item-action-btn edit-donation-btn">Edit</button>
+        <button type="button" class="item-action-btn delete-btn delete-donation-btn">Delete</button>
+      </div>
+    `;
+
+    list.appendChild(div);
+  }
+  });
+  
+}
+
+
+async function moveExpiredToDonations(item) {
+  if (!item?.id) return;
+
+  const now = Date.now();
+  const donationsRef = ref(savorDB, `rest/${restTarget}/donations`);
+  const snapshot = await get(donationsRef);
+
+  let existingDonationId = null;
+  let existingDonation = null;
+
+  if (snapshot.exists()) {
+    snapshot.forEach(child => {
+      const donationItem = child.val();
+
+      if (
+        donationItem.name &&
+        item.name &&
+        donationItem.name.toLowerCase().trim() === item.name.toLowerCase().trim()
+      ) {
+        existingDonationId = child.key;
+        existingDonation = donationItem;
+      }
+    });
+  }
+
+  if (existingDonationId) {
+    await update(ref(savorDB, `rest/${restTarget}/donations/${existingDonationId}`), {
+      quantity: Number(existingDonation.quantity || 0) + Number(item.quantity || 0),
+      movedToDonationsAt: now,
+      donationExpiresAt: now + 24 * 60 * 60 * 1000,
+      updatedAt: now,
+      status: "donation"
+    });
+  } else {
+    const donationPayload = {
+      ...item,
+      status: "donation",
+      movedToDonationsAt: now,
+      donationExpiresAt: now + 24 * 60 * 60 * 1000
+    };
+
+    await set(ref(savorDB, `rest/${restTarget}/donations/${item.id}`), donationPayload);
+  }
+
+  await update(ref(savorDB, `rest/${restTarget}/menu/${item.id}`), {
+    quantity: 0,
+    status: "expired",
+    expiredAt: now,
+    updatedAt: now
+  });
+}  
+
+
+async function sweepExpiredItems(items) {
+  const now = Date.now();
+  for (const item of items) {
+    if (
+      (item.status ?? "active") === "active" &&
+      (item.quantity ?? 0) > 0 &&
+      (item.expiresAt ?? 0) <= now
+    ) {
+      await moveExpiredToDonations(item);
+    }
+  }
+}
+
+let expirationTimer = null;
+function startExpirationWatcher() {
+  if (expirationTimer) clearInterval(expirationTimer);
+
+  expirationTimer = setInterval(async () => {
+    try {
+      const snapshot = await get(ref(savorDB, `rest/${restTarget}/menu`));
+      if (!snapshot.exists()) return;
+
+      const data = snapshot.val();
+      const items = Object.entries(data).map(([id, it]) => ({ id, ...it }));
+
+      await sweepExpiredItems(items);
+      await loadInventory('firebase');
+    } catch (err) {
+      console.error("Expiration watcher error:", err);
+    }
+  }, 30 * 1000); // every 30 seconds
+}
 
    const modal = document.getElementById('addItemModal');
     const closeModalBtn = document.getElementById('closeAddItemModal');
@@ -1089,78 +1513,202 @@ populateInventory(inventoryItems);
     const previewImg = document.getElementById('imagePreview');
 
     const nameInput = document.getElementById('itemName');
-    const descInput = document.getElementById('itemDescription');
-    const qtyInput = document.getElementById('itemQuantity');
-    const priceInput = document.getElementById('itemPrice');
+const descInput = document.getElementById('itemDescription');
+const allergySelect = document.getElementById('itemAllergy');
+const otherAllergyField = document.getElementById('otherAllergyField');
+const otherAllergyInput = document.getElementById('itemOtherAllergy');
+const addAllergyBtn = document.getElementById('addAllergyBtn');
+const selectedAllergiesList = document.getElementById('selectedAllergiesList');
+const qtyInput = document.getElementById('itemQuantity');
+const priceInput = document.getElementById('itemPrice');
+const expireInput = document.getElementById('itemExpireMins');
+const titleEl = document.getElementById('addItemTitle');
 
-    const titleEl = document.getElementById('addItemTitle');
+let selectedAllergies = [];
 
     let imageDataUrl = '';
 
+    allergySelect.addEventListener('change', () => {
+  if (allergySelect.value === 'Other') {
+    otherAllergyField.style.display = 'block';
+  } else {
+    otherAllergyField.style.display = 'none';
+    otherAllergyInput.value = '';
+  }
+});
+
+function renderSelectedAllergies() {
+  selectedAllergiesList.innerHTML = '';
+
+  selectedAllergies.forEach((allergy, index) => {
+    const chip = document.createElement('span');
+    chip.className = 'selected-allergy-chip';
+    chip.innerHTML = `
+      ${allergy}
+      <button type="button" data-index="${index}">✕</button>
+    `;
+    selectedAllergiesList.appendChild(chip);
+  });
+}
+
+addAllergyBtn.addEventListener('click', () => {
+  let value = allergySelect.value.trim();
+
+  if (!value) return;
+
+  if (value === 'Other') {
+    value = otherAllergyInput.value.trim();
+    if (!value) {
+      otherAllergyInput.classList.add('is-invalid');
+      return;
+    }
+  }
+
+  if (!selectedAllergies.includes(value)) {
+    selectedAllergies.push(value);
+    renderSelectedAllergies();
+  }
+
+  allergySelect.value = '';
+  otherAllergyInput.value = '';
+  otherAllergyField.style.display = 'none';
+  otherAllergyInput.classList.remove('is-invalid');
+});
+
+selectedAllergiesList.addEventListener('click', e => {
+  if (e.target.tagName !== 'BUTTON') return;
+
+  const index = Number(e.target.dataset.index);
+  selectedAllergies.splice(index, 1);
+  renderSelectedAllergies();
+});
+
+
+
     function clearValidation() {
-      [nameInput, descInput, qtyInput, priceInput].forEach(i => i.classList.remove('is-invalid'));
-      dropZone.classList.remove('is-invalid');
-    }
+  [nameInput, descInput, otherAllergyInput, qtyInput, priceInput, expireInput].forEach(i => i.classList.remove('is-invalid'));
+  dropZone.classList.remove('is-invalid');
+}
 
-    function resetForm() {
-      nameInput.value = '';
-      descInput.value = '';
-      qtyInput.value = '';
-      priceInput.value = '';
-      imageDataUrl = '';
-      previewImg.src = '';
-      dropZone.classList.remove('has-image');
-      clearValidation();
+function resetForm() {
+  nameInput.value = '';
+  descInput.value = '';
+  allergySelect.value = '';
+  otherAllergyInput.value = '';
+  otherAllergyField.style.display = 'none';
+  selectedAllergies = [];
+  renderSelectedAllergies();
+  qtyInput.value = '';
+  priceInput.value = '';
+  expireInput.value = '';
+  imageDataUrl = '';
+  previewImg.src = '';
+  dropZone.classList.remove('has-image');
+  clearValidation();
 
-      // reset edit mode
-      editMode = false;
-      editingItemId = '';
-      editingExistingImage = '';
-      titleEl.textContent = 'Add Inventory Item';
-      saveBtn.textContent = 'Save Item';
-    }
+  editMode = false;
+  editingItemId = '';
+  editingExistingImage = '';
+  titleEl.textContent = 'Add Inventory Item';
+  saveBtn.textContent = 'Save Item';
+}
+function openModal() {
+  resetForm();   // clears old values including allergy + image
+  editMode = false;
+  editingItemId = '';
+  editingExistingImage = '';
+  currentEditCollection = 'menu';
+  titleEl.textContent = 'Add Inventory Item';
+  saveBtn.textContent = 'Save Item';
 
-    function openModal() {
-      editMode = false;
-      editingItemId = '';
-      editingExistingImage = '';
-      titleEl.textContent = 'Add Inventory Item';
-      saveBtn.textContent = 'Save Item';
+  modal.classList.add('is-open');
+  modal.setAttribute('aria-hidden', 'false');
+  statusEl.textContent = '';
+  clearValidation();
+}
 
-      modal.classList.add('is-open');
-      modal.setAttribute('aria-hidden', 'false');
-      statusEl.textContent = '';
-      clearValidation();
-    }
+function openEditModal(item) {
+  editMode = true;
+  editingItemId = item.id || '';
+  editingExistingImage = item.image || '';
+  currentEditCollection = 'menu';
 
-    function openEditModal(item) {
-      editMode = true;
-      editingItemId = item.id || '';
-      editingExistingImage = item.image || '';
+  titleEl.textContent = 'Edit Inventory Item';
+  saveBtn.textContent = 'Update Item';
 
-      titleEl.textContent = 'Edit Inventory Item';
-      saveBtn.textContent = 'Update Item';
+  nameInput.value = item.name || '';
+  descInput.value = item.description || '';
 
-      nameInput.value = item.name || '';
-      descInput.value = item.description || '';
-      qtyInput.value = String(item.quantity ?? 0);
-      priceInput.value = String(item.price ?? 0);
+  selectedAllergies = Array.isArray(item.allergies)
+    ? [...item.allergies]
+    : (item.allergy ? [item.allergy] : []);
 
-      // show existing image preview (optional)
-      imageDataUrl = ''; // means "no new image selected yet"
-      if (editingExistingImage) {
-        previewImg.src = editingExistingImage;
-        dropZone.classList.add('has-image');
-      } else {
-        previewImg.src = '';
-        dropZone.classList.remove('has-image');
-      }
+  renderSelectedAllergies();
 
-      modal.classList.add('is-open');
-      modal.setAttribute('aria-hidden', 'false');
-      statusEl.textContent = '';
-      clearValidation();
-    }
+  allergySelect.value = '';
+  otherAllergyField.style.display = 'none';
+  otherAllergyInput.value = '';
+
+  qtyInput.value = String(item.quantity ?? 0);
+  priceInput.value = String(item.price ?? 0);
+  expireInput.value = item.expireMins == null ? '' : String(item.expireMins);
+
+  imageDataUrl = '';
+  if (editingExistingImage) {
+    previewImg.src = editingExistingImage;
+    dropZone.classList.add('has-image');
+  } else {
+    previewImg.src = '';
+    dropZone.classList.remove('has-image');
+  }
+
+  modal.classList.add('is-open');
+  modal.setAttribute('aria-hidden', 'false');
+  statusEl.textContent = '';
+  clearValidation();
+}
+
+
+function openDonationEditModal(item) {
+  editMode = true;
+  editingItemId = item.id || '';
+  editingExistingImage = item.image || '';
+  currentEditCollection = 'donations';
+
+  titleEl.textContent = 'Edit Donation Item';
+  saveBtn.textContent = 'Update Item';
+
+  nameInput.value = item.name || '';
+  descInput.value = item.description || '';
+
+  selectedAllergies = Array.isArray(item.allergies)
+    ? [...item.allergies]
+    : (item.allergy ? [item.allergy] : []);
+
+  renderSelectedAllergies();
+
+  allergySelect.value = '';
+  otherAllergyField.style.display = 'none';
+  otherAllergyInput.value = '';
+
+  qtyInput.value = String(item.quantity ?? 0);
+  priceInput.value = String(item.price ?? 0);
+  expireInput.value = '';
+
+  imageDataUrl = '';
+  if (editingExistingImage) {
+    previewImg.src = editingExistingImage;
+    dropZone.classList.add('has-image');
+  } else {
+    previewImg.src = '';
+    dropZone.classList.remove('has-image');
+  }
+
+  modal.classList.add('is-open');
+  modal.setAttribute('aria-hidden', 'false');
+  statusEl.textContent = '';
+  clearValidation();
+}
 
     function closeModal() {
       modal.classList.remove('is-open');
@@ -1181,8 +1729,18 @@ populateInventory(inventoryItems);
       const price = priceInput.value.trim();
       if (price === '' || Number.isNaN(Number(price)) || Number(price) < 0) { priceInput.classList.add('is-invalid'); ok = false; }
 
-      // Image required (remove this if you want it optional)
-      // For edit mode: image can be left as-is (existing image)
+      const exp = expireInput.value.trim();
+
+if (exp !== '' && (Number.isNaN(Number(exp)) || Number(exp) <= 0)) {
+  expireInput.classList.add('is-invalid');
+  ok = false;
+}
+
+if (allergySelect.value === 'Other' && !otherAllergyInput.value.trim()) {
+  otherAllergyInput.classList.add('is-invalid');
+  ok = false;
+}
+     
       if (!editMode) {
         if (!imageDataUrl) { dropZone.classList.add('is-invalid'); ok = false; }
       } else {
@@ -1255,21 +1813,38 @@ populateInventory(inventoryItems);
   // - Else (add mode): must have imageDataUrl because validation
   const finalImage = imageDataUrl || editingExistingImage || '';
 
-  const payload = {
-    name: nameInput.value.trim(),
-    image: finalImage,                // currently storing base64 from dropzone
-    description: descInput.value.trim(),
-    quantity: Number(qtyInput.value),
-    price: Number(priceInput.value),
-    updatedAt: Date.now()
+  const now = Date.now();
+
+const expireMinsRaw = expireInput.value.trim();
+const expireMins = expireMinsRaw === '' ? null : Number(expireMinsRaw);
+
+
+
+let payload = {
+  name: nameInput.value.trim(),
+  image: finalImage,
+  description: descInput.value.trim(),
+  allergies: [...selectedAllergies],
+  quantity: Number(qtyInput.value),
+  price: Number(priceInput.value),
+  updatedAt: now
+};
+
+if (currentEditCollection === 'menu') {
+  payload = {
+    ...payload,
+    expireMins,
+    expiresAt: computeExpiresAt(expireMinsRaw),
+    status: "active"
   };
+}
 
   try {
     if (!editMode) {
       const newItem = {
-        ...payload,
-        createdAt: Date.now()
-      };
+  ...payload,
+  createdAt: now
+};
 
       // Save to: /rest/restTarget/menu/<autoId>
       const newItemRef = push(ref(savorDB, `rest/${restTarget}/menu`));
@@ -1289,11 +1864,17 @@ populateInventory(inventoryItems);
       return;
     }
 
-    await update(ref(savorDB, `rest/${restTarget}/menu/${editingItemId}`), payload);
+    await update(ref(savorDB, `rest/${restTarget}/${currentEditCollection}/${editingItemId}`), payload);
 
-    statusEl.textContent = 'Updated in Firebase!';
-    closeModal();
-    await loadInventory('firebase');
+statusEl.textContent = 'Updated in Firebase!';
+closeModal();
+
+if (currentEditCollection === 'menu') {
+  await loadInventory('firebase');
+} else {
+  await loadDonations();
+}
+
 
   } catch (err) {
     console.error(err);
@@ -1306,8 +1887,11 @@ populateInventory(inventoryItems);
 
 
 loadInventory('firebase');
-if (inventoryTab) inventoryTab.addEventListener('click', () => loadInventory('firebase'));
+loadDonations();
+startExpirationWatcher();
 
+if (inventoryTab) inventoryTab.addEventListener('click', () => loadInventory('firebase'));
+if (donationsTab) donationsTab.addEventListener('click', () => loadDonations());
 
 });
 
@@ -1317,6 +1901,10 @@ const state = {
 }
 
 async function organizeOrders() {
+
+  state.pendOrders = [];
+state.compOrders = [];
+
   const loggedUser = localStorage.getItem("loggedInUser");
   const orderRefs = ref(savorDB, `order`);
   const snapshot = await get(orderRefs);
@@ -1405,14 +1993,6 @@ state.compOrders.forEach(ord => {
   completeOrdersTab.appendChild(compOrder);
 })
   
-}
-
-window.viewOrder = function(){
-    window.location.href = "orderView.html";
-  }
-
-window.pickupOrder = function(){
-  window.location.href = "orderView.html";
 }
 
 window.saveResChanges = function (event) {
