@@ -1,196 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> 
+<head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Create Account - S4VOR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Forgot Account - S4VOR</title>
   <style>
-    /*Create Account Css*/
+    * {
+      box-sizing: border-box;
+    }
 
-body {
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  background: url("../img/S6.png") no-repeat center center fixed;
-  background-size: cover;
-  font-family: 'Arial Rounded MT Bold', sans-serif;
-}
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100dvh;
+      background: url("../img/S6.png") no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Arial Rounded MT Bold', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-.title{
-  font-size: 20px;
-  color:  #118f54;
-  position: relative;
-  text-align: center;
-  margin-bottom: 30px;
-}
-.overlay {
-  position: absolute;
-  top: 6%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
+    /* ── Top logo ── */
+    .title-overlay {
+      width: 100%;
+      padding: 14px 0 8px;
+      text-align: center;
+      flex-shrink: 0;
+    }
 
-.login-overlay {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
+    .title-link {
+      text-decoration: none;
+      color: inherit;
+    }
 
-.login-box {
-  background: rgba(255, 255, 255, 0.93);
-  border-radius: 25px;
-  padding: 45px 60px; 
-  box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.3);
-  text-align: center;
-  width: 430px; 
-  max-height: 85vh; 
-  overflow-y: auto;
-  scrollbar-width: none;
-}
-.login-box::-webkit-scrollbar {
-  display: none;
-}
+    .title-pickup {
+      font-size: clamp(28px, 10vw, 40px);
+      color: #0a5a2e;
+      margin: 0;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-shadow:
+        0 3px 0 #c8e1c8,
+        0 6px 0 #a8d1a8,
+        0 9px 10px rgba(0,0,0,0.25);
+    }
 
-.login-input {
-  display: block;
-  width: 100%;
-  padding: 13px; 
-  margin-bottom: 22px; 
-  border: none; /* ✅ removes black outline */
-  border-radius: 10px;
-  font-size: 17px; 
-  background-color: #fff;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  transition: all 0.25s ease;
-}
+    /* ── Centered card area ── */
+    .login-overlay {
+      flex: 1;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px 16px 40px;
+    }
 
-.login-input:focus {
-  outline: none; /* removes browser default blue outline */
-  box-shadow: 0 0 10px rgba(17, 143, 84, 0.4); /* ✅ smooth green glow */
-}
+    /* ── Card ── */
+    .login-box {
+      background: rgba(255, 255, 255, 0.93);
+      border-radius: 25px;
+      padding: 36px 24px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+      text-align: center;
+      width: 100%;
+      max-width: 460px;
+    }
 
-select.login-input {
-  cursor: pointer;
-  background-color: #fefefe;
-}
+    .card-heading {
+      font-size: 15px;
+      color: #555;
+      margin: 0 0 20px;
+      line-height: 1.5;
+    }
 
-.login-submit {
-  background-color: #0a5a2e;
-  color: white;
-  border: none;
-  border-radius: 25px;
-  padding: 15px 50px; 
-  font-size: 22px;
-  cursor: pointer;
-  transition: 0.3s;
-  margin-top: 10px; 
-}
+    /* ── Input ── */
+    .login-input {
+      display: block;
+      width: 100%;
+      padding: 14px 13px;
+      margin-bottom: 18px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;        /* prevents iOS auto-zoom */
+      font-family: inherit;
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      transition: box-shadow 0.25s ease;
+      -webkit-appearance: none;
+      appearance: none;
+    }
 
-.login-submit:hover {
-  background-color: #118f54;
-  transform: scale(1.05);
-}
+    .login-input:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(17,143,84,0.4);
+    }
 
-.login-links {
-  margin-top: 30px; 
-  font-size: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  flex-wrap: wrap;
-}
+    /* ── Button ── */
+    .login-submit {
+      background-color: #0a5a2e;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      width: 100%;
+      padding: 15px;
+      font-size: 17px;
+      font-family: inherit;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 4px;
+    }
 
-.login-links a {
-  color: #0a5a2e;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
+    .login-submit:hover  { background-color: #118f54; transform: scale(1.03); }
+    .login-submit:active { transform: scale(0.97); background-color: #0d7f40; }
 
-.login-links a:hover {
-  text-decoration: underline;
-  color: #118f54;
-}
+    /* ── Bottom links ── */
+    .login-links {
+      margin-top: 24px;
+      font-size: 16px;
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
 
-@media (max-width: 500px) {
-  .login-box {
-    width: 90%;
-    padding: 40px 25px;
-  }
+    .login-links a {
+      color: #0a5a2e;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
 
-  .login-input {
-    padding: 12px;
-    font-size: 16px;
-  }
+    .login-links a:hover {
+      text-decoration: underline;
+      color: #118f54;
+    }
 
-  .login-submit {
-    width: 100%;
-    padding: 14px;
-    font-size: 20px;
-  }
-}
+    /* ── Tablet / desktop ── */
+    @media (min-width: 520px) {
+      .login-box {
+        padding: 45px 52px;
+      }
 
-.title-pickup {
-    font-size: 40px; 
-    color: #0a5a2e;
-    margin: 0; 
-    font-weight: 900;
-    letter-spacing: 3px;
-    text-shadow:
-      0 3px 0 #c8e1c8,
-      0 6px 0 #a8d1a8,
-      0 9px 10px rgba(0, 0, 0, 0.25);
-    overflow: hidden;
-}
+      .login-submit {
+        width: auto;
+        padding: 14px 40px;
+        font-size: 20px;
+      }
 
-.title-link {
-    text-decoration: none;
-    color: inherit
-} /*This takes off the underline for links*/
-
-.title-overlay {
-    margin-top: 60px;
-    position: relative;
-    width: 100%;
-    padding: 5px 0;
-    text-align: center; 
-  }
+      .login-links {
+        font-size: 18px;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="title-overlay"> 
-    <a href="../html/index.html" class= "title-link">
+
+  <div class="title-overlay">
+    <a href="../html/index.html" class="title-link">
       <h1 class="title-pickup">SAVOR</h1>
     </a>
   </div>
+
   <div class="login-overlay">
     <div class="login-box">
-      
-      <input type="email" class="login-input" id="email" placeholder="Email">
 
-      <!-- ADDED ID TO THE BUTTON -->
+      <p class="card-heading">Enter your email address and we'll send you a recovery link.</p>
+
+      <input
+        type="email"
+        class="login-input"
+        id="email"
+        placeholder="Email"
+        autocomplete="email"
+        inputmode="email"
+      >
+
       <button id="sendEmailBtn" class="login-submit">SEND RECOVERY EMAIL</button>
 
       <div class="login-links">
         <a href="login.html">Back to Login</a>
       </div>
+
     </div>
   </div>
 
-  <!-- LOAD EMAILJS (NEEDS TO BE FIRST) -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
-  <!-- YOUR SCRIPT -->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
 
-      // Initialize EmailJS
-      emailjs.init({
-        publicKey: "OpgxQEcmI8I90SyHp",
-      });
+      emailjs.init({ publicKey: "OpgxQEcmI8I90SyHp" });
 
       document.getElementById("sendEmailBtn").addEventListener("click", async () => {
-        const userEmail = document.getElementById("email").value;
+        const userEmail = document.getElementById("email").value.trim();
 
         if (!userEmail) {
           alert("Please enter an email address.");
@@ -211,8 +215,8 @@ select.login-input {
           alert("Email failed to send.");
         }
       });
-    });
 
+    });
   </script>
 
 </body>
