@@ -1,185 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> 
+<head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Create Account - S4VOR</title>
   <style>
-    /*Create Account Css*/
+    * {
+      box-sizing: border-box;
+    }
 
-body {
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  background: url("../img/S6.png") no-repeat center center fixed;
-  background-size: cover;
-  font-family: 'Arial Rounded MT Bold', sans-serif;
-}
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100dvh;
+      background: url("../img/S6.png") no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Arial Rounded MT Bold', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-.title{
-  font-size: 20px;
-  color:  #118f54;
-  position: relative;
-  text-align: center;
-  margin-bottom: 30px;
-}
-.overlay {
-  position: absolute;
-  top: 6%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
+    /* ── Top logo ── */
+    .title-overlay {
+      width: 100%;
+      padding: 14px 0 8px;
+      text-align: center;
+      flex-shrink: 0;
+    }
 
-.login-overlay {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  padding-top: 10px;
-}
+    .title-link {
+      text-decoration: none;
+      color: inherit;
+    }
 
-.login-box {
-  background: rgba(255, 255, 255, 0.93);
-  border-radius: 25px;
-  padding: 45px 60px; 
-  box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.3);
-  text-align: center;
-  width: 430px; 
-  max-height: 85vh; 
-  overflow-y: auto;
-  scrollbar-width: none;
-}
-.login-box::-webkit-scrollbar {
-  display: none;
-}
+    .title-pickup {
+      font-size: clamp(28px, 10vw, 40px);
+      color: #0a5a2e;
+      margin: 0;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-shadow:
+        0 3px 0 #c8e1c8,
+        0 6px 0 #a8d1a8,
+        0 9px 10px rgba(0,0,0,0.25);
+    }
 
-.login-input {
-  display: block;
-  width: 100%;
-  padding: 13px; 
-  margin-bottom: 22px; 
-  border: none; /* ✅ removes black outline */
-  border-radius: 10px;
-  font-size: 17px; 
-  background-color: #fff;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  transition: all 0.25s ease;
-}
+    /* ── Scrollable page area below logo ── */
+    .login-overlay {
+      flex: 1;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 12px 16px 32px;
+    }
 
-.login-input:focus {
-  outline: none; /* removes browser default blue outline */
-  box-shadow: 0 0 10px rgba(17, 143, 84, 0.4); /* ✅ smooth green glow */
-}
+    /* ── Card ── */
+    .login-box {
+      background: rgba(255, 255, 255, 0.93);
+      border-radius: 25px;
+      padding: 32px 24px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+      text-align: center;
+      width: 100%;
+      max-width: 460px;
+    }
 
-select.login-input {
-  cursor: pointer;
-  background-color: #fefefe;
-}
+    .title {
+      font-size: 18px;
+      color: #118f54;
+      text-align: center;
+      margin: 0 0 22px;
+    }
 
-.login-submit {
-  background-color: #0a5a2e;
-  color: white;
-  border: none;
-  border-radius: 25px;
-  padding: 15px 50px; 
-  font-size: 22px;
-  cursor: pointer;
-  transition: 0.3s;
-  margin-top: 10px; 
-}
+    /* ── Inputs ── */
+    .login-input {
+      display: block;
+      width: 100%;
+      padding: 14px 13px;
+      margin-bottom: 16px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;       /* prevents iOS auto-zoom */
+      font-family: inherit;
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      transition: box-shadow 0.25s ease;
+      -webkit-appearance: none;
+      appearance: none;
+    }
 
-.login-submit:hover {
-  background-color: #118f54;
-  transform: scale(1.05);
-}
+    .login-input:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(17,143,84,0.4);
+    }
 
-.login-links {
-  margin-top: 30px; 
-  font-size: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  flex-wrap: wrap;
-}
+    select.login-input {
+      cursor: pointer;
+      background-color: #fefefe;
+      /* Custom dropdown arrow */
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%230a5a2e' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
 
-.login-links a {
-  color: #0a5a2e;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
+    /* ── Submit button ── */
+    .login-submit {
+      background-color: #0a5a2e;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      font-family: inherit;
+      font-weight: bold;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 6px;
+    }
 
-.login-links a:hover {
-  text-decoration: underline;
-  color: #118f54;
-}
+    .login-submit:hover  { background-color: #118f54; transform: scale(1.03); }
+    .login-submit:active { transform: scale(0.97); background-color: #0d7f40; }
 
-@media (max-width: 500px) {
-  .login-box {
-    width: 90%;
-    padding: 40px 25px;
-  }
+    /* ── Bottom links ── */
+    .login-links {
+      margin-top: 24px;
+      font-size: 16px;
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
 
-  .login-input {
-    padding: 12px;
-    font-size: 16px;
-  }
+    .login-links a {
+      color: #0a5a2e;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
 
-  .login-submit {
-    width: 100%;
-    padding: 14px;
-    font-size: 20px;
-  }
-}
+    .login-links a:hover {
+      text-decoration: underline;
+      color: #118f54;
+    }
 
-.title-pickup {
-    font-size: 40px; 
-    color: #0a5a2e;
-    margin: 0; 
-    font-weight: 900;
-    letter-spacing: 3px;
-    text-shadow:
-      0 3px 0 #c8e1c8,
-      0 6px 0 #a8d1a8,
-      0 9px 10px rgba(0, 0, 0, 0.25);
-    overflow: hidden;
-}
+    /* ── Tablet / desktop: restore wider card ── */
+    @media (min-width: 520px) {
+      .login-overlay {
+        align-items: center;
+        padding: 16px 24px 40px;
+      }
 
-.title-link {
-    text-decoration: none;
-    color: inherit
-} /*This takes off the underline for links*/
+      .login-box {
+        padding: 40px 52px;
+      }
 
-.title-overlay {
-    position: relative;
-    width: 100%;
-    padding: 5px 0;
-    text-align: center; 
-  }
+      .login-submit {
+        width: auto;
+        padding: 14px 50px;
+        font-size: 20px;
+      }
 
+      .login-links {
+        font-size: 18px;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class = "title-overlay">
-  <a href="../html/index.html" class= "title-link">
-            <h1 class="title-pickup">SAVOR</h1>
-        </a>
+
+  <div class="title-overlay">
+    <a href="../html/index.html" class="title-link">
+      <h1 class="title-pickup">SAVOR</h1>
+    </a>
   </div>
+
   <div class="login-overlay">
     <div class="login-box">
-      <input type="text" class="login-input" id="username" placeholder="Username">
-      <input type="text" class="login-input" id="firstName" placeholder="First Name">
-      <input type="text" class="login-input" id="lastName" placeholder="Last Name">
-      <input type="date" class="login-input" id="birthDate" placeholder="Birthdate">
-      <input type="email" class="login-input" id="email" placeholder="Email">
-      <input type="password" class="login-input" id="password" placeholder="Password">
-      <input type="password" class="login-input" id="confirmPassword" placeholder="Re-enter Password">
+
+      <input type="text"     class="login-input" id="username"        placeholder="Username"          autocomplete="username"         inputmode="text">
+      <input type="text"     class="login-input" id="firstName"       placeholder="First Name"        autocomplete="given-name">
+      <input type="text"     class="login-input" id="lastName"        placeholder="Last Name"         autocomplete="family-name">
+      <input type="date"     class="login-input" id="birthDate"       placeholder="Birthdate">
+      <input type="email"    class="login-input" id="email"           placeholder="Email"             autocomplete="email"            inputmode="email">
+      <input type="password" class="login-input" id="password"        placeholder="Password"          autocomplete="new-password">
+      <input type="password" class="login-input" id="confirmPassword" placeholder="Re-enter Password" autocomplete="new-password">
 
       <select class="login-input" id="accountType">
         <option value="" disabled selected>Select Account Type</option>
         <option value="user">User</option>
         <option value="business">Business</option>
-        <option value="fb">Food Bank/Donation Center</option>
+        <option value="fb">Food Bank / Donation Center</option>
       </select>
 
       <button class="login-submit" onclick="createAccount()">CREATE ACCOUNT</button>
@@ -187,42 +201,36 @@ select.login-input {
       <div class="login-links">
         <a href="login.html">Back to Login</a>
       </div>
+
     </div>
   </div>
+
   <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getDatabase, ref, set, get, } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
-import { update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
+    const firebaseConfig = {
+      databaseURL: "https://savordatabase-default-rtdb.firebaseio.com"
+    };
+    const app = initializeApp(firebaseConfig);
+    const savorDB = getDatabase(app);
 
-
-  console.log("Script loaded");
-//Consts and Vars
-
-const firebaseConfig = {
-  databaseURL: "https://savordatabase-default-rtdb.firebaseio.com"
-};
-const app = initializeApp(firebaseConfig);
-const savorDB = getDatabase(app);
-
-window.createAccount = function () {
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
+    window.createAccount = function () {
+      const username        = document.getElementById('username').value.trim();
+      const password        = document.getElementById('password').value.trim();
       const confirmPassword = document.getElementById('confirmPassword').value.trim();
-      const accountType = document.getElementById('accountType').value;
-      const email = document.getElementById('email').value.trim();
-      const firstName = document.getElementById('firstName').value.trim();
-      const lastName = document.getElementById('lastName').value.trim();
-      const birthDate = document.getElementById('birthDate').value.trim();
+      const accountType     = document.getElementById('accountType').value;
+      const email           = document.getElementById('email').value.trim();
+      const firstName       = document.getElementById('firstName').value.trim();
+      const lastName        = document.getElementById('lastName').value.trim();
+      const birthDate       = document.getElementById('birthDate').value.trim();
 
-      
       const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/;
       if (!emailPattern.test(email)) {
         alert("Please enter a valid email address (e.g., johndoe1234@gmail.com).");
         return;
       }
 
-      
       if (password !== confirmPassword) {
         alert("Passwords do not match. Please re-enter them.");
         return;
@@ -233,31 +241,21 @@ window.createAccount = function () {
         return;
       }
 
-      //My Section 
-
       const userRef = ref(savorDB, `user/${username}`);
-
       localStorage.setItem("loggedInUser", username);
 
-  set(userRef, { password, email, accountType, firstName, lastName, birthDate })
-  .then(() => {
-    alert(`User "${username}" created successfully!`);
-
-    if (accountType === "user") {
-      window.location.href = "../html/index.html";
-    } else {
-      
-      window.location.href = "../html/createRest.html";
-    }
-  })
-  .catch(err => {
-    console.error("Error creating user:", err);
-    alert("Failed to create user.");
-  });
-
-      
-    }
-
+      set(userRef, { password, email, accountType, firstName, lastName, birthDate })
+        .then(() => {
+          alert(`User "${username}" created successfully!`);
+          window.location.href = accountType === "user"
+            ? "../html/index.html"
+            : "../html/createRest.html";
+        })
+        .catch(err => {
+          console.error("Error creating user:", err);
+          alert("Failed to create user.");
+        });
+    };
   </script>
 </body>
 </html>

@@ -2,640 +2,558 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile-settings - Savor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Dashboard - Savor</title>
   <style>
-    /*Restaurant Account Css*/
-
-body {
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  background: url("../img/S6.png") no-repeat center center fixed;
-  background-size: cover;
-  font-family: 'Arial', sans-serif;
-}
-
-.settings-layout {
-    display: grid;
-    grid-template-columns: 260px 1fr;
-    gap: 24px;
-    height: 100vh;
-    padding: 24px;
-    box-sizing: border-box;
-}
-
-.settings-nav {
-    background: rgba(255, 255, 255, 0.93);
-    border-radius: 25px;
-    padding: 24px;
-    box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.3);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    overflow: auto;
-    height: auto;
-    max-height: none;
-    /* max-height: calc(100vh - 48px); */
-}
-
-.settings-nav .app-title {
-    margin: 0 0 8px 0;
-    color: #0a5a2e;
-    font-size: 22px;
-    letter-spacing: 0.5px;
-}
-
-.nav-item {
-    display: block;
-    width: 100%;
-    text-align: left;
-    padding: 12px 14px;
-    background: #fff;
-    border: none;
-    border-radius: 14px;
-    font-size: 16px;
-    cursor: pointer;
-    box-shadow: 0 0 5px rgba(0,0,0,0.08);
-    transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
-}
-.nav-item:hover { transform: translateX(2px); }
-.nav-item.is-active {
-    background: #e7f5ee;
-    box-shadow: 0 0 0 2px rgba(17, 143, 84, 0.25) inset;
-}
-
-.settings-content {
-    background: rgba(255, 255, 255, 0.93);
-    border-radius: 25px;
-    padding: 28px 32px;
-    box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.3);
-    overflow: auto;
-    max-height: calc(100vh - 48px);
-}
-
-.profile-avatar {
-    display: flex;
-    justify-content: center;
-    margin: 6px 0 8px;
-}
-
-.avatar-large {
-    width: 96px;
-    height: 96px;   
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #0a5a2e;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    background-color: #f2f2f2;
-}
-
-.settings-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 18px;
-    padding: 0 10px;
-}
-
-.header-left {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #0a5a2e;
-    margin: 0;
-}
-
-.header-right {
-    font-size: 0.95rem;
-    color: #444;
-    margin: 0;
-}
-
-.settings-subtitle {
-    color: #444;
-    margin: 6px 0 0;
-    font-size: 14px;
-}
-
-/* .panel { display: none; }
-.panel.is-visible { display: block;} --> */
-
-
-.card {
-    background: #fff;
-    border-radius: 20px;
-    padding: 18px 16px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-}
-
-.info-bubbles {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 16px;
-}
-
-.info-bubble {
-    flex: 1 1 150px;
-    padding: 12px 14px;
-    border-radius: 16px;
-    background: #f4faf6;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    border: 1px solid rgba(17, 143, 84, 0.15);
-}
-
-.bubble-label {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #666;
-    margin-bottom: 4px;
-}
-
-.bubble-value {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #0a5a2e;
-}
-
-.form-grid { max-width: 720px; margin: 0 auto; }
-.field { margin-bottom: 16px; text-align: left; }
-.field label { display: block; margin-bottom: 6px; font-weight: 600; }
-
-.actions {display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-.status { font-size: 14px; color: #0a5a2e; }
-
-.login-input {
-  display: block;
-  width: 100%;
-  padding: 13px; 
-  margin-bottom: 22px; 
-  border: none; /* removes black outline */
-  border-radius: 10px;
-  font-size: 17px; 
-  background-color: #fff;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  transition: all 0.25s ease;
-}
-
-.login-input:focus {
-  outline: none;
-  box-shadow: 0 0 10px rgba(17, 143, 84, 0.4);
-}
-
-select.login-input {
-  cursor: pointer; /* removes browser default blue outline */
-  background-color: #fefefe; /*  smooth green glow */
-}
-
-.login-submit {
-  background-color: #0a5a2e;
-  color: white;
-  border: none;
-  border-radius: 25px;
-  padding: 15px 50px; 
-  font-size: 22px;
-  cursor: pointer;
-  transition: 0.3s;
-  margin-top: 10px; 
-}
-
-.login-submit:hover {
-  background-color: #118f54;
-  transform: scale(1.05);
-}
-
-.login-links {
-  margin-top: 30px; 
-  font-size: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  flex-wrap: wrap;
-}
-
-.login-links a {
-  color: #0a5a2e;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.login-links a:hover {
-  text-decoration: underline;
-  color: #118f54;
-}
-
-@media (max-width: 900px) {
-  .settings-layout { grid-template-columns: 1fr; padding: 16px; }
-  .settings-nav, .settings-content { max-height: none; }
-}
-
-@media (max-width: 500px) {
-    .settings-content { padding: 20px; }
-    .login-input { padding: 12px; font-size: 16px; }
-    .login-submit { width: 100%; padding: 14px; font-size: 20px; }
-}
-
-/* --- Smooth fade animation for settings panels --- */
-/* Start hidden panels fully transparent */
-
-.panel {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
-  display: none; /* ensure hidden ones don't take space */
-}
-
-/* When a panel becomes visible */
-.panel.is-visible {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Inventory Panel Styles */
-.inventory-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-height: calc(100vh - 150px); 
-  overflow-y: auto;
-}
-
-.donations-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-height: calc(100vh - 150px);
-  overflow-y: auto;
-}
-
-.inventory-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 16px;
-  background: #fdfdfd;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  gap: 16px;
-}
-
-
-.inventory-item.is-expired {
-  opacity: 0.45;
-  filter: grayscale(1);
-}
-
-
-.item-timer{
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #444;
-  margin-top: 2px;
-}
-.inventory-item.is-expired .item-timer{
-  color: #777;
-}
-
-.item-image {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 10px;
-}
-
-.item-details {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.item-description {
-  font-weight: 600;
-  font-size: 1rem;
-  color: #0a5a2e;
-}
-
-.item-price {
-  font-weight: bold;
-  color: #118f54;
-}
-
-.item-quantity {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.item-subdescription {
-  font-size: 0.9rem;
-  color: #555;
-}
-
-.item-allergy {
-  font-size: 0.78rem;
-  color: #a85a00;
-  margin-top: 2px;
-  font-style: italic;
-}
-
-.selected-allergy-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: #f4faf6;
-  border: 1px solid rgba(17, 143, 84, 0.18);
-  color: #0a5a2e;
-  border-radius: 999px;
-  padding: 6px 10px;
-  margin: 4px 6px 0 0;
-  font-size: 0.85rem;
-}
-
-.selected-allergy-chip button {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  font-size: 14px;
-  color: #b3261e;
-  padding: 0;
-}
-
-
-.quantity-btn {
-  width: 32px;
-  height: 32px;
-  border: none;
-  border-radius: 6px;
-  background-color: #0a5a2e;
-  color: white;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-.quantity-btn:hover {
-  background-color: #118f54;
-}
-
-.quantity-input {
-  width: 50px;
-  text-align: center;
-  font-size: 16px;
-  padding: 6px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-/* ---- Modal ---- */
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  overflow-y: auto;
-  z-index: 9999;
-}
-
-.modal.is-open { display: flex; }
-
-.modal-card {
-  width: min(720px, 100%);
-  max-height: 90vh;
-  overflow-y: auto;
-  background: rgba(255,255,255,0.97);
-  border-radius: 22px;
-  padding: 18px 18px 22px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.35);
-}
-
-.modal-header {
-  display:flex;
-  justify-content: space-between;
-  align-items:center;
-  margin-bottom: 12px;
-}
-
-.modal-close {
-  border: none;
-  background: transparent;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 8px 10px;
-  border-radius: 10px;
-}
-.modal-close:hover { background: rgba(0,0,0,0.06); }
-
-/* ---- Dropzone ---- */
-.dropzone {
-  border: 2px dashed rgba(17, 143, 84, 0.45);
-  border-radius: 18px;
-  padding: 18px;
-  margin: 10px 0 16px;
-  background: #f4faf6;
-  cursor: pointer;
-  position: relative;
-  min-height: 160px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-}
-.dropzone.is-dragover {
-  background: #e7f5ee;
-  border-color: #118f54;
-}
-
-.image-preview {
-  display:none;
-  max-width: 100%;
-  max-height: 240px;
-  border-radius: 14px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-}
-.dropzone.has-image .dropzone-text { display:none; }
-.dropzone.has-image .image-preview { display:block; }
-
-/* ---- Validation Styles ---- */
-.login-input.is-invalid {
-  box-shadow: 0 0 0 2px rgba(220, 30, 30, 0.65) inset, 0 0 10px rgba(220, 30, 30, 0.2);
-}
-.dropzone.is-invalid {
-  border-color: rgba(220, 30, 30, 0.8);
-  background: rgba(255, 220, 220, 0.55);
-}
-
-.item-action-btn {
-  border: none;
-  border-radius: 10px;
-  padding: 8px 12px;
-  cursor: pointer;
-  background: #0a5a2e;
-  color: #fff;
-  font-size: 14px;
-}
-.item-action-btn:hover { background: #118f54; }
-
-.item-action-btn.delete-btn {
-  background: #b3261e;
-}
-.item-action-btn.delete-btn:hover {
-  background: #d93025;
-}
-
-/* Small helper for new action buttons */
-.item-actions {
-  display:flex;
-  gap: 10px;
-  align-items:center;
-  flex-wrap: wrap;
-}
-
-.title-pickup {
-    font-size: 40px; 
-    color: #0a5a2e;
-    margin: 0; 
-    font-weight: 900;
-    letter-spacing: 3px;
-    text-shadow:
-      0 3px 0 #c8e1c8,
-      0 6px 0 #a8d1a8,
-      0 9px 10px rgba(0, 0, 0, 0.25);
-    overflow: hidden;
-}
-
-.title-link {
-    text-decoration: none;
-    color: inherit
-} /*This takes off the underline for links*/
-
-.nav-item-with-link {
-    display: block;
-    width: 100%;
-    text-align: left;
-    padding: 12px 14px;
-    background: #fff;
-    border: none;
-    border-radius: 14px;
-    font-size: 16px;
-    font-weight: normal;   
-    cursor: pointer;
-    box-shadow: 0 0 5px rgba(0,0,0,0.08);
-    transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
-    text-decoration: none; /* removes underline */
-    color: inherit;        /* matches other buttons */
-}
-
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100dvh;
+      background: url("../img/S6.png") no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Arial', sans-serif;
+    }
+
+    /* ═══════════════════════════════════════════
+       DESKTOP LAYOUT  (≥ 900px) — unchanged look
+    ═══════════════════════════════════════════ */
+    @media (min-width: 900px) {
+      .settings-layout {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 24px;
+        height: 100vh;
+        padding: 24px;
+      }
+
+      .settings-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        overflow: auto;
+      }
+
+      /* hide mobile-only elements on desktop */
+      .mobile-header { display: none; }
+      .mobile-bottom-nav { display: none; }
+    }
+
+    /* ═══════════════════════════════════════════
+       MOBILE LAYOUT  (< 900px)
+    ═══════════════════════════════════════════ */
+    @media (max-width: 899px) {
+      /* Full-page flex column */
+      .settings-layout {
+        display: flex;
+        flex-direction: column;
+        min-height: 100dvh;
+        padding: 0;
+        gap: 0;
+      }
+
+      /* Sidebar becomes a top strip — hidden, replaced by bottom nav */
+      .settings-nav {
+        display: none;
+      }
+
+      /* Content area fills space between header and bottom nav */
+      .settings-content {
+        flex: 1;
+        border-radius: 0;
+        padding: 16px;
+        max-height: none;
+        overflow: visible;
+        /* add bottom padding so content isn't hidden behind bottom nav */
+        padding-bottom: 80px;
+      }
+
+      /* ── Mobile top header ── */
+      .mobile-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 16px;
+        background: rgba(255,255,255,0.93);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        flex-shrink: 0;
+      }
+
+      .mobile-header .title-pickup {
+        font-size: clamp(22px, 7vw, 32px);
+        margin: 0;
+      }
+
+      .mobile-header .header-right-mobile {
+        font-size: 14px;
+        color: #444;
+        font-weight: bold;
+        text-align: right;
+        max-width: 50%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* ── Bottom navigation ── */
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 64px;
+        background: rgba(255,255,255,0.97);
+        box-shadow: 0 -2px 16px rgba(0,0,0,0.15);
+        z-index: 200;
+        border-top: 1px solid rgba(17,143,84,0.15);
+      }
+
+      .mobile-bottom-nav .nav-item {
+        flex: 1;
+        border: none;
+        background: transparent;
+        font-size: 11px;
+        color: #666;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        padding: 8px 4px;
+        transition: color 0.2s;
+        text-decoration: none;
+        font-family: inherit;
+        border-radius: 0;
+        box-shadow: none;
+        width: auto;
+        text-align: center;
+      }
+
+      .mobile-bottom-nav .nav-item .nav-icon {
+        font-size: 20px;
+        line-height: 1;
+      }
+
+      .mobile-bottom-nav .nav-item.is-active {
+        color: #0a5a2e;
+        background: rgba(17,143,84,0.06);
+        box-shadow: none;
+      }
+
+      .mobile-bottom-nav .nav-item:hover {
+        transform: none;
+        color: #118f54;
+      }
+
+      /* Collapse the desktop header inside content on mobile */
+      .settings-header {
+        margin-bottom: 12px;
+        padding: 0;
+      }
+
+      /* info bubbles stack better on mobile */
+      .info-bubble { flex: 1 1 120px; }
+
+      /* inventory items: wrap action buttons below details on small screens */
+      .inventory-item {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .item-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+
+      /* modal takes full screen on mobile */
+      .modal { padding: 0; align-items: flex-end; }
+      .modal-card {
+        width: 100%;
+        max-height: 92dvh;
+        border-radius: 22px 22px 0 0;
+      }
+
+      /* buttons full-width on mobile */
+      .login-submit {
+        width: 100%;
+        padding: 14px;
+        font-size: 18px;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      /* orders stack cleanly */
+      .card + .card { margin-top: 16px; }
+    }
+
+    /* ═══════════════════════════════════════════
+       SHARED STYLES (both breakpoints)
+    ═══════════════════════════════════════════ */
+    .settings-nav {
+      background: rgba(255,255,255,0.93);
+      border-radius: 25px;
+      padding: 24px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+    }
+
+    .settings-nav .app-title {
+      margin: 0 0 8px;
+      color: #0a5a2e;
+      font-size: 22px;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-item {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 12px 14px;
+      background: #fff;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0,0,0,0.08);
+      transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+    }
+    .nav-item:hover { transform: translateX(2px); }
+    .nav-item.is-active {
+      background: #e7f5ee;
+      box-shadow: 0 0 0 2px rgba(17,143,84,0.25) inset;
+    }
+
+    .settings-content {
+      background: rgba(255,255,255,0.93);
+      border-radius: 25px;
+      padding: 28px 32px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+      overflow: auto;
+      max-height: calc(100vh - 48px);
+    }
+
+    .profile-avatar { display: flex; justify-content: center; margin: 6px 0 8px; }
+    .avatar-large {
+      width: 96px; height: 96px;
+      border-radius: 50%; object-fit: cover;
+      border: 3px solid #0a5a2e;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      background-color: #f2f2f2;
+    }
+
+    .settings-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      padding: 0 10px;
+    }
+    .header-left { font-size: 1.5rem; font-weight: bold; color: #0a5a2e; margin: 0; }
+    .header-right { font-size: 0.95rem; color: #444; margin: 0; }
+    .settings-subtitle { color: #444; margin: 6px 0 0; font-size: 14px; }
+
+    .panel {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      display: none;
+    }
+    .panel.is-visible { display: block; opacity: 1; transform: translateY(0); }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 18px 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    .info-bubbles { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px; }
+    .info-bubble {
+      flex: 1 1 150px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: #f4faf6;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      border: 1px solid rgba(17,143,84,0.15);
+    }
+    .bubble-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: #666; margin-bottom: 4px; }
+    .bubble-value { font-size: 1.1rem; font-weight: 700; color: #0a5a2e; }
+
+    .form-grid { max-width: 720px; margin: 0 auto; }
+    .field { margin-bottom: 16px; text-align: left; }
+    .field label { display: block; margin-bottom: 6px; font-weight: 600; }
+
+    .actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .status { font-size: 14px; color: #0a5a2e; }
+
+    .login-input {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      margin-bottom: 22px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;     /* 16px prevents iOS auto-zoom */
+      font-family: inherit;
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      transition: all 0.25s ease;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .login-input:focus { outline: none; box-shadow: 0 0 10px rgba(17,143,84,0.4); }
+    .login-input.is-invalid {
+      box-shadow: 0 0 0 2px rgba(220,30,30,0.65) inset, 0 0 10px rgba(220,30,30,0.2);
+    }
+
+    select.login-input {
+      cursor: pointer;
+      background-color: #fefefe;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%230a5a2e' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    .login-submit {
+      background-color: #0a5a2e;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 15px 50px;
+      font-size: 22px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+    .login-submit:hover { background-color: #118f54; transform: scale(1.05); }
+
+    .login-links {
+      margin-top: 30px;
+      font-size: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .login-links a { color: #0a5a2e; text-decoration: none; transition: color 0.2s ease; }
+    .login-links a:hover { text-decoration: underline; color: #118f54; }
+
+    .inventory-list, .donations-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-height: calc(100vh - 150px);
+      overflow-y: auto;
+    }
+
+    .inventory-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      background: #fdfdfd;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      gap: 16px;
+    }
+    .inventory-item.is-expired { opacity: 0.45; filter: grayscale(1); }
+    .item-timer { font-size: 0.85rem; font-weight: 600; color: #444; margin-top: 2px; }
+    .inventory-item.is-expired .item-timer { color: #777; }
+
+    .item-image { width: 80px; height: 80px; object-fit: cover; border-radius: 10px; }
+
+    .item-details { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .item-description { font-weight: 600; font-size: 1rem; color: #0a5a2e; }
+    .item-price { font-weight: bold; color: #118f54; }
+    .item-quantity { display: flex; align-items: center; gap: 8px; }
+    .item-subdescription { font-size: 0.9rem; color: #555; }
+    .item-allergy { font-size: 0.78rem; color: #a85a00; margin-top: 2px; font-style: italic; }
+
+    .selected-allergy-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #f4faf6;
+      border: 1px solid rgba(17,143,84,0.18);
+      color: #0a5a2e;
+      border-radius: 999px;
+      padding: 6px 10px;
+      margin: 4px 6px 0 0;
+      font-size: 0.85rem;
+    }
+    .selected-allergy-chip button {
+      border: none; background: transparent; cursor: pointer; font-size: 14px; color: #b3261e; padding: 0;
+    }
+
+    .quantity-btn {
+      width: 32px; height: 32px;
+      border: none; border-radius: 6px;
+      background-color: #0a5a2e; color: white;
+      font-size: 18px; cursor: pointer;
+    }
+    .quantity-btn:hover { background-color: #118f54; }
+
+    .quantity-input {
+      width: 50px; text-align: center; font-size: 16px;
+      padding: 6px; border: 1px solid #ccc; border-radius: 6px;
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      align-items: center; justify-content: center;
+      padding: 20px;
+      overflow-y: auto;
+      z-index: 9999;
+    }
+    .modal.is-open { display: flex; }
+    .modal-card {
+      width: min(720px, 100%);
+      max-height: 90vh;
+      overflow-y: auto;
+      background: rgba(255,255,255,0.97);
+      border-radius: 22px;
+      padding: 18px 18px 22px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .modal-close { border: none; background: transparent; font-size: 20px; cursor: pointer; padding: 8px 10px; border-radius: 10px; }
+    .modal-close:hover { background: rgba(0,0,0,0.06); }
+
+    .dropzone {
+      border: 2px dashed rgba(17,143,84,0.45);
+      border-radius: 18px;
+      padding: 18px;
+      margin: 10px 0 16px;
+      background: #f4faf6;
+      cursor: pointer;
+      position: relative;
+      min-height: 160px;
+      display: flex; align-items: center; justify-content: center; text-align: center;
+    }
+    .dropzone.is-dragover { background: #e7f5ee; border-color: #118f54; }
+    .dropzone.is-invalid { border-color: rgba(220,30,30,0.8); background: rgba(255,220,220,0.55); }
+
+    .image-preview { display: none; max-width: 100%; max-height: 240px; border-radius: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+    .dropzone.has-image .dropzone-text { display: none; }
+    .dropzone.has-image .image-preview { display: block; }
+
+    .item-action-btn {
+      border: none; border-radius: 10px; padding: 8px 12px;
+      cursor: pointer; background: #0a5a2e; color: #fff; font-size: 14px;
+    }
+    .item-action-btn:hover { background: #118f54; }
+    .item-action-btn.delete-btn { background: #b3261e; }
+    .item-action-btn.delete-btn:hover { background: #d93025; }
+
+    .item-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+    .title-pickup {
+      font-size: 40px; color: #0a5a2e; margin: 0;
+      font-weight: 900; letter-spacing: 3px;
+      text-shadow: 0 3px 0 #c8e1c8, 0 6px 0 #a8d1a8, 0 9px 10px rgba(0,0,0,0.25);
+    }
+    .title-link { text-decoration: none; color: inherit; }
+
+    .nav-item-with-link {
+      display: block; width: 100%; text-align: left;
+      padding: 12px 14px; background: #fff; border: none;
+      border-radius: 14px; font-size: 16px; font-weight: normal;
+      cursor: pointer; box-shadow: 0 0 5px rgba(0,0,0,0.08);
+      transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+      text-decoration: none; color: inherit;
+    }
   </style>
 </head>
 <body>
-  <div class ="settings-layout">
+
+  <!-- ── Mobile top header (hidden on desktop) ── -->
+  <header class="mobile-header">
+    <a href="../html/index.html" class="title-link">
+      <h1 class="title-pickup">SAVOR</h1>
+    </a>
+    <div class="header-right-mobile" id="header-right-mobile">Loading...</div>
+  </header>
+
+  <div class="settings-layout">
+
+    <!-- ── Desktop sidebar nav ── -->
     <aside class="settings-nav" aria-label="Settings sections">
-      <a href="../html/index.html" class= "title-link">
-            <h1 class="title-pickup">SAVOR</h1>
-        </a>
+      <a href="../html/index.html" class="title-link">
+        <h1 class="title-pickup">SAVOR</h1>
+      </a>
       <nav role="tablist" aria-orientation="vertical">
-        <button type="button" class="nav-item is-active" role="tab" aria-selected="true" aria-controls="panel-profile" id="tab-profile">Home</button>
-        
-        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-security" id="tab-security">Inventory</button>
-        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-donations" id="tab-donations">Donations</button>
-        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-payment" id="tab-payment">Orders & Sales</button>
-        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-settings" id="tab-settings">Restaurant Info</button>
+        <button type="button" class="nav-item is-active" role="tab" aria-selected="true"  aria-controls="panel-profile"   id="tab-profile">Home</button>
+        <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-security"  id="tab-security">Inventory</button>
+        <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-donations" id="tab-donations">Donations</button>
+        <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-payment"   id="tab-payment">Orders &amp; Sales</button>
+        <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-settings"  id="tab-settings">Restaurant Info</button>
         <a href="../html/user_acc.html" class="nav-item nav-item-with-link">Profile Settings</a>
       </nav>
     </aside>
 
+    <!-- ── Main content ── -->
     <main class="settings-content">
-
-      <!--<div class="profile-avatar">
-        <img src="../img/user_icon.png" alt="User Avatar" class="avatar-large"/>
-      </div> -->
 
       <header class="settings-header">
         <h2 class="header-left">Dashboard</h2>
         <p class="header-right" id="header-right">Restaurant Name Here</p>
       </header>
 
+      <!-- Home panel -->
       <section id="panel-profile" class="panel is-visible" role="tabpanel" aria-labelledby="tab-profile">
         <section class="card" aria-labelledby="profile-basics-heading">
-        <h3 id="profile-basics-heading"><!-- Home --></h3>
-        <div class="info-bubbles">
+          <h3 id="profile-basics-heading"></h3>
+          <div class="info-bubbles">
             <div class="info-bubble">
-                <div class="bubble-label">Active Listings</div>
-                <div class="bubble-value">0</div>
+              <div class="bubble-label">Active Listings</div>
+              <div class="bubble-value">0</div>
             </div>
-        </div>
-
-        <div class="info-bubbles">
+          </div>
+          <div class="info-bubbles">
             <div class="info-bubble">
-                <div class="bubble-label">Total Sales Today</div>
-                <div class="bubble-value">$0.00</div>
+              <div class="bubble-label">Total Sales Today</div>
+              <div class="bubble-value">$0.00</div>
             </div>
-        </div>
-
-        <div class="info-bubbles">
+          </div>
+          <div class="info-bubbles">
             <div class="info-bubble">
-                <div class="bubble-label">Expiring Soon</div>
-                <div class="bubble-value">0</div>
+              <div class="bubble-label">Expiring Soon</div>
+              <div class="bubble-value">0</div>
             </div>
-        </div>
-
-        <div class="info-bubbles">
+          </div>
+          <div class="info-bubbles">
             <div class="info-bubble">
-                <div class="bubble-label">Popular Items</div>
-                <ul class="bubble-list">
-                    <li>1. Null</li>
-                    <li>2. Null</li>
-                    <li>3. Null</li>
-                </ul>
+              <div class="bubble-label">Popular Items</div>
+              <ul class="bubble-list">
+                <li>1. Null</li><li>2. Null</li><li>3. Null</li>
+              </ul>
             </div>
-        </div>
-
-        <form id="profileBasicsForm" class="form-grid" autocomplete="on">
-          <!-- <div class="field">
-            <label for="firstName">First Name</label>
-            <input type="text" id="firstName" name="firstName" class="login-input"/>
           </div>
-          <div class="field">
-            <label for="lastName">Last Name</label>
-            <input type="text" id="lastName" name="lastName" class="login-input"/>
-          </div>
-          <div class="field">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" class="login-input"/>
-          </div>
-          <div class="field">
-            <label for="birthDate">Birthdate</label>
-            <input type="date" id="birthDate" name="birthDate" class="login-input"/>
-          </div>
-          <div class="field">
-            <label for="phoneNumber">Phone Number</label>
-            <input type="tel" id="phoneNumber" name="phoneNumber" class="login-input"/>
-          </div>
-          <div class="actions">
-            <button type="submit" class="login-submit">Save Changes</button>
-            <div id="profileBasicsStatus" class="status" aria-live="polite"></div>
-          </div> -->
-        </form>
+          <form id="profileBasicsForm" class="form-grid" autocomplete="on"></form>
         </section>
-      </section> 
+      </section>
 
+      <!-- Inventory panel -->
       <section id="panel-security" class="panel" role="tabpanel" aria-labelledby="tab-security" hidden>
         <section class="card" aria-labelledby="security-heading">
           <div class="inventory-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
             <h3 id="security-heading">Inventory</h3>
-            <button id="add-item-btn" class="login-submit" style="padding:8px 20px; font-size:16px;">Add Item</button>
+            <button id="add-item-btn" class="login-submit" style="padding:8px 20px; font-size:16px; width:auto; margin-top:0;">Add Item</button>
           </div>
-      
           <div class="inventory-list">
-            <!-- Example item block -->
             <div class="inventory-item">
               <img src="../img/placeholder.png" alt="Item Image" class="item-image"/>
               <div class="item-details">
-                <div class="item-description">Sample Item </div>
+                <div class="item-description">Sample Item</div>
                 <div class="item-price">$12.99</div>
               </div>
               <div class="item-quantity">
@@ -644,160 +562,88 @@ select.login-input {
                 <button class="quantity-btn plus">+</button>
               </div>
             </div>
-            <!-- Repeat inventory-item blocks as needed -->
           </div>
         </section>
       </section>
-      
+
+      <!-- Donations panel -->
       <section id="panel-donations" class="panel" role="tabpanel" aria-labelledby="tab-donations" hidden>
         <section class="card" aria-labelledby="donations-heading">
           <div class="inventory-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
             <h3 id="donations-heading">Donations</h3>
           </div>
-
-          <div class="donations-list">
-            <!-- Donation items load here -->
-          </div>
+          <div class="donations-list"></div>
         </section>
-      
       </section>
+
+      <!-- Orders panel -->
       <section id="panel-payment" class="panel" role="tabpanel" aria-labelledby="tab-payment" hidden>
         <section class="card" aria-labelledby="payment-heading">
-          <h3 id="payment-heading"><!--Order & Sales--></h3>
+          <h3 id="payment-heading"></h3>
           <form id="paymentForm" class="form-grid" autocomplete="off">
             <div class="field">
-               <section class="card">
+              <section class="card">
                 <h3>Pending Orders</h3>
-                  <div id="pending-orders">
-                    <h3>Loading</h3>
-                  </div>
+                <div id="pending-orders"><h3>Loading</h3></div>
               </section>
-              
-              <section class = "card">
+              <section class="card">
                 <h3>Completed Orders</h3>
-                  <div id = "completed-orders">
-                    <h3>Loading</h3>
-                  </div>
+                <div id="completed-orders"><h3>Loading</h3></div>
               </section>
             </div>
           </form>
         </section>
       </section>
 
+      <!-- Restaurant Info panel -->
       <section id="panel-settings" class="panel" role="tabpanel" aria-labelledby="tab-settings" hidden>
         <section class="card" aria-labelledby="Restaurant-Settings-heading">
-        <h3 id="Restaurant-Settings-heading"><!--Restaurant Settings--></h3>
-        <form id="profileBasicsForm" class="form-grid" autocomplete="on">
-          <div class="field">
-            <label for="firstName">Restaurant Name</label>
-            <input type="text" id="restName" name="restName" class="login-input"/>
-          </div>
-          <div class="field">
-            <label for="lastName">Manager</label>
-            <input type="text" id="fullName" name="fullName" class="login-input"/>
-          </div>
-          <div class="field">
-            <label for="phoneNumber">Phone Number</label>
-            <input type="tel" id="phoneNumber" name="phoneNumber" class="login-input"/>
-          </div>
-<div class="field">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" class="login-input"/>
-          </div>
-          <div class="field">
-            <label for="street1">Street Address</label>
-            <input
-              type="text"
-              id="street1"
-              name="street1"
-              class="login-input"
-              autocomplete="address-line1"
-              placeholder="123 Main St"
-            />
-          </div>
-          <div class="field">
-          <label for="street2">Apartment / Suite (optional)</label>
-          <input
-            type="text"
-            id="street2"
-            name="street2"
-            class="login-input"
-            autocomplete="address-line2"
-            placeholder="Suite 200"
-          />
-          </div>
-          <div class="field">
-          <label for="city">City</label>
-          <input
-            type="text"
-            id="city"
-            name="city"
-            class="login-input"
-            autocomplete="address-level2"
-            placeholder="Los Angeles"
-          />
-          </div>
-          <div class="field">
-          <label for="state">State</label>
-          <input
-            type="text"
-            id="state"
-            name="state"
-            class="login-input"
-            autocomplete="address-level1"
-            placeholder="CA"
-          />
-          </div>
-
-        <div class="field">
-          <label for="zip">ZIP Code</label>
-          <input
-            type="text"
-            id="zip"
-            name="zip"
-            class="login-input"
-            autocomplete="postal-code"
-            placeholder="90001"
-          />
-        </div>
-        <div class="field">
-          <label for="country">Country</label>
-          <input
-            type="text"
-            id="country"
-            name="country"
-            class="login-input"
-            autocomplete="country-name"
-            placeholder="United States"
-          />
-        </div>
-
-          <!--add account type in the future-->
-          <div class="actions">
-            <button type="button" class="login-submit" onclick="saveResChanges(event)">Save Changes</button>
-            <div id="profileBasicsStatus" class="status" aria-live="polite"></div>
-          </div>
-        </form>
-        </section>
-      </section>
-
-      
-
-      <!--<section id="panel-locations" class="panel" role="tabpanel" aria-labelledby="tab-locations" hidden>
-        <section class="card" aria-labelledby="locations-heading">
-          <a href="../html/user_acc.html">Profile Settings</a>
-          <h3 id="locations-heading">Saved Locations</h3>
-          <form id="locationsForm" class="form-grid" autocomplete="off">
-            <div class="field">
-              <label>Add Link to user account but for restaurant owners</label>
+          <h3 id="Restaurant-Settings-heading"></h3>
+          <form id="profileBasicsForm" class="form-grid" autocomplete="on">
+            <div class="field"><label>Restaurant Name</label><input type="text"  id="restName"     name="restName"     class="login-input"/></div>
+            <div class="field"><label>Manager</label>         <input type="text"  id="fullName"     name="fullName"     class="login-input"/></div>
+            <div class="field"><label>Phone Number</label>    <input type="tel"   id="phoneNumber"  name="phoneNumber"  class="login-input" autocomplete="tel" inputmode="tel"/></div>
+            <div class="field"><label>Email</label>           <input type="email" id="email"        name="email"        class="login-input" autocomplete="email" inputmode="email"/></div>
+            <div class="field"><label>Street Address</label>  <input type="text"  id="street1"      name="street1"      class="login-input" autocomplete="address-line1"  placeholder="123 Main St"/></div>
+            <div class="field"><label>Apt / Suite (optional)</label><input type="text" id="street2" name="street2"      class="login-input" autocomplete="address-line2"  placeholder="Suite 200"/></div>
+            <div class="field"><label>City</label>            <input type="text"  id="city"         name="city"         class="login-input" autocomplete="address-level2" placeholder="Los Angeles"/></div>
+            <div class="field"><label>State</label>           <input type="text"  id="state"        name="state"        class="login-input" autocomplete="address-level1" placeholder="CA"/></div>
+            <div class="field"><label>ZIP Code</label>        <input type="text"  id="zip"          name="zip"          class="login-input" autocomplete="postal-code"    placeholder="90001" inputmode="numeric"/></div>
+            <div class="field"><label>Country</label>         <input type="text"  id="country"      name="country"      class="login-input" autocomplete="country-name"   placeholder="United States"/></div>
+            <div class="actions">
+              <button type="button" class="login-submit" onclick="saveResChanges(event)">Save Changes</button>
+              <div id="profileBasicsStatus" class="status" aria-live="polite"></div>
             </div>
-          </form> 
+          </form>
         </section>
       </section>
-    </main>
-   </div> -->
 
-  <!-- ADD ITEM MODAL (paste this block right here) -->
+    </main>
+  </div>
+
+  <!-- ── Mobile bottom navigation (hidden on desktop) ── -->
+  <nav class="mobile-bottom-nav" aria-label="Main navigation">
+    <button type="button" class="nav-item is-active" role="tab" aria-selected="true"  aria-controls="panel-profile"   id="mob-tab-profile">
+      <span class="nav-icon">🏠</span>Home
+    </button>
+    <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-security"  id="mob-tab-security">
+      <span class="nav-icon">📦</span>Inventory
+    </button>
+    <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-donations" id="mob-tab-donations">
+      <span class="nav-icon">🤝</span>Donations
+    </button>
+    <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-payment"   id="mob-tab-payment">
+      <span class="nav-icon">🧾</span>Orders
+    </button>
+    <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-settings"  id="mob-tab-settings">
+      <span class="nav-icon">⚙️</span>Info
+    </button>
+    <a href="../html/user_acc.html" class="nav-item" id="mob-tab-useracc">
+      <span class="nav-icon">⚙️</span>Profile
+    </a>
+  </nav>
+
+  <!-- Add / Edit Item Modal -->
   <div id="addItemModal" class="modal" aria-hidden="true">
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="addItemTitle">
       <div class="modal-header">
@@ -819,12 +665,10 @@ select.login-input {
           <label for="itemName">Name</label>
           <input id="itemName" class="login-input" type="text" placeholder="e.g., Chocolate Cake" />
         </div>
-
         <div class="field">
           <label for="itemDescription">Description</label>
           <input id="itemDescription" class="login-input" type="text" placeholder="e.g., A sweet indulgence" />
         </div>
-        
         <div class="field">
           <label for="itemAllergy">Allergies</label>
           <select id="itemAllergy" class="login-input">
@@ -834,35 +678,26 @@ select.login-input {
             <option value="Wheat allergy">Wheat allergy</option>
             <option value="Other">Other</option>
           </select>
-        
           <div id="otherAllergyField" style="display:none;">
             <input id="itemOtherAllergy" class="login-input" type="text" placeholder="Enter specific allergy" />
           </div>
-        
-          <button type="button" id="addAllergyBtn" class="item-action-btn" style="margin-top:8px;">
-            Add Allergy
-          </button>
-        
+          <button type="button" id="addAllergyBtn" class="item-action-btn" style="margin-top:8px;">Add Allergy</button>
           <div id="selectedAllergiesList" style="margin-top:12px;"></div>
         </div>
-        
         <div class="field">
           <label for="itemQuantity">Quantity</label>
-          <input id="itemQuantity" class="login-input" type="number" min="0" step="1" placeholder="e.g., 12" />
+          <input id="itemQuantity" class="login-input" type="number" min="0" step="1" placeholder="e.g., 12" inputmode="numeric"/>
         </div>
-
         <div class="field">
           <label for="itemPrice">Price</label>
-          <input id="itemPrice" class="login-input" type="number" min="0" step="0.01" placeholder="e.g., 11.50" />
+          <input id="itemPrice" class="login-input" type="number" min="0" step="0.01" placeholder="e.g., 11.50" inputmode="decimal"/>
         </div>
-
         <div class="field">
           <label for="itemExpireMins">Expires in (optional)</label>
-          <input id="itemExpireMins" class="login-input" type="number" min="1" step="1" placeholder="e.g., 60" />
+          <input id="itemExpireMins" class="login-input" type="number" min="1" step="1" placeholder="e.g., 60" inputmode="numeric"/>
         </div>
-
         <div class="actions">
-          <button type="button" id="saveItemBtn" class="login-submit">Save Item</button>
+          <button type="button" id="saveItemBtn"   class="login-submit">Save Item</button>
           <button type="button" id="cancelItemBtn" class="login-submit" style="background:#777;">Cancel</button>
           <div id="addItemStatus" class="status" aria-live="polite"></div>
         </div>
@@ -870,1181 +705,640 @@ select.login-input {
     </div>
   </div>
 
-<script type ="module">
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, set, get, push, update, remove } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
+    const firebaseConfig = { databaseURL: "https://savordatabase-default-rtdb.firebaseio.com" };
+    const app = initializeApp(firebaseConfig);
+    const savorDB = getDatabase(app);
 
- import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
- import { getDatabase, ref, set, get, push, update, remove } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+    let restTarget = '';
 
-console.log("Script loaded");
-
-//Consts and Vars
-// Firebase setup
-
-const firebaseConfig = {
-  databaseURL: "https://savordatabase-default-rtdb.firebaseio.com"
-};
-const app = initializeApp(firebaseConfig);
-const savorDB = getDatabase(app);
-
-let restTarget = '';
-
-
-
-document.addEventListener('DOMContentLoaded', async () => {
-  const loggedUser = localStorage.getItem("loggedInUser");
-
-if (!loggedUser) {
-  console.warn("No logged in user found.");
-  return;
-}
-
-try {
-  const userRef = ref(savorDB, `user/${loggedUser}`);
-  const userSnap = await get(userRef);
-  const userData = userSnap.val();
-
-  if (!userData || !userData.rest) {
-    console.warn("No restaurant found for user.");
-    return;
-  }
-
-  restTarget = userData.rest;
-
-  const header = document.getElementById('header-right');
-  if (header) {
-    header.textContent = restTarget;
-  }
-} catch (err) {
-  console.error("Error loading user:", err);
-  return;
-}
-  // Only run on pages that have the settings layout
-  const nav = document.querySelector('.settings-nav');
-  const content = document.querySelector('.settings-content');
-  if (!nav || !content) return;
-
-  const tabs = Array.from(nav.querySelectorAll('[role="tab"]'));
-  const panels = Array.from(document.querySelectorAll('.panel'));
-
-    // Fix: you used inventoryTab later but never defined it
-    const inventoryTab = document.getElementById('tab-security');
-const donationsTab = document.getElementById('tab-donations');
-
-// Keep items in memory
-let inventoryItems = [];
-let donationItems = [];
-
-
-let editMode = false;
-let editingItemId = '';
-let editingExistingImage = '';
-let currentEditCollection = 'menu';
-
-// ---- Expiration helpers ----
-function nextDayEndTimestamp() {
-  const d = new Date();
-  d.setDate(d.getDate() + 1);
-  d.setHours(23, 59, 0, 0); // tomorrow 11:59pm
-  return d.getTime();
-}
-
-// if expire mins blank -> tomorrow 11:59pm
-// if expire mins provided -> now + mins
-function computeExpiresAt(expireMinsRaw) {
-  const raw = String(expireMinsRaw ?? '').trim();
-  if (raw === '') return nextDayEndTimestamp();
-  const mins = Number(raw);
-  return Date.now() + mins * 60 * 1000;
-}
-
-// when reviving an item, use stored expireMins; if null, default to tomorrow 11:59pm
-function resetExpiresAtFromItem(item) {
-  if (item?.expireMins == null) return nextDayEndTimestamp();
-  return Date.now() + Number(item.expireMins) * 60 * 1000;
-}
-
-// ---- Timer formatting ----
-function formatMs(ms) {
-  if (ms < 0) ms = 0;
-  const totalSeconds = Math.floor(ms / 1000);
-
-  const hrs = Math.floor(totalSeconds / 3600);
-  const mins = Math.floor((totalSeconds % 3600) / 60);
-  const secs = totalSeconds % 60;
-
-  const pad = n => String(n).padStart(2, '0');
-  return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
-}
-
-let countdownInterval = null;
-function startCountdownUI() {
-  if (countdownInterval) clearInterval(countdownInterval);
-
-  countdownInterval = setInterval(() => {
-    const now = Date.now();
-
-    document.querySelectorAll('.item-timer[data-timer-id]').forEach(el => {
-      const id = el.getAttribute('data-timer-id');
-      const item = inventoryItems.find(x => String(x.id) === String(id));
-      if (!item) return;
-
-      if (item.status === "expired") {
-        el.textContent = "Expired (sent to donations)";
-        return;
-      }
-
-      if (!item.expiresAt) {
-        el.textContent = "No expiration set";
-        return;
-      }
-
-      const left = item.expiresAt - now;
-
-      if (left <= 0) {
-        el.textContent = "Expiring...";
-      } else {
-        el.textContent = `Expires in: ${formatMs(left)}`;
-      }
-    });
-  }, 1000);
-}
-  
-  function showPanel(tabEl) {
-    // Update tab states
-    tabs.forEach(btn => {
-      const isActive = btn === tabEl;
-      btn.classList.toggle('is-active', isActive);
-      btn.setAttribute('aria-selected', String(isActive));
-      btn.setAttribute('tabindex', isActive ? '0' : '-1');
-      // Ensure nav buttons never submit forms
-      if (!btn.getAttribute('type')) btn.setAttribute('type', 'button');
-    });
-
-    // Hide all panels
-    panels.forEach(panel => {
-      panel.hidden = true;
-      panel.classList.remove('is-visible');
-    });
-
-    // Show target panel
-    const targetId = tabEl.getAttribute('aria-controls');
-    const target = document.getElementById(targetId);
-    if (target) {
-      target.hidden = false;
-      target.classList.add('is-visible');
-
-      // Move focus to first heading for accessibility
-      const heading = target.querySelector('h1, h2, h3, h4, [role="heading"]');
-      if (heading) {
-        // Make sure it can receive focus momentarily
-        if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
-        heading.focus();
-      }
-    }
-  }
-
-  // Wire click + keyboard navigation
-  tabs.forEach((btn, index) => {
-    btn.addEventListener('click', () => showPanel(btn));
-    btn.addEventListener('keydown', e => {
-      const prevKeys = ['ArrowUp', 'ArrowLeft'];
-      const nextKeys = ['ArrowDown', 'ArrowRight'];
-      if (prevKeys.includes(e.key)) {
-        e.preventDefault();
-        const prev = tabs[(index - 1 + tabs.length) % tabs.length];
-        prev.focus();
-        showPanel(prev);
-      } else if (nextKeys.includes(e.key)) {
-        e.preventDefault();
-        const next = tabs[(index + 1) % tabs.length];
-        next.focus();
-        showPanel(next);
-      }
-    });
-  });
-
-  
-  // Initialize: use the one marked .is-active, or fall back to the first
-  const initial = tabs.find(t => t.classList.contains('is-active')) || tabs[0];
-  if (initial) showPanel(initial);
-
-  // --- Inventory functionality ---
-  const inventoryPanel = document.getElementById('panel-security');
-  if (inventoryPanel) {
-    inventoryPanel.addEventListener('click', async e => {
-
-      // Delete button
-      if (e.target.classList.contains('delete-btn')) {
-        const itemDiv = e.target.closest('.inventory-item');
-        const id = itemDiv?.dataset?.id || '';
-        if (!id) return;
-
-        const ok = confirm('Delete this item?');
-        if (!ok) return;
-
-        try {
-          await remove(ref(savorDB, `rest/${restTarget}/menu/${id}`));
-          await loadInventory('firebase');
-        } catch (err) {
-          console.error(err);
-          alert('Error deleting item (check Rules).');
-        }
-        return;
-      }
-
-      // Edit button
-      if (e.target.classList.contains('edit-btn')) {
-        const itemDiv = e.target.closest('.inventory-item');
-        const id = itemDiv?.dataset?.id || '';
-        if (!id) return;
-
-        const item = inventoryItems.find(x => String(x.id) === String(id));
-        if (!item) return;
-
-        openEditModal(item);
-        return;
-      }
-
-      // Quantity + / -
-      if (!e.target.classList.contains('quantity-btn')) return;
-      const itemDiv = e.target.closest('.inventory-item');
-      const input = itemDiv.querySelector('.quantity-input');
-      let value = parseInt(input.value);
-      if (e.target.classList.contains('plus')) value++;
-      if (e.target.classList.contains('minus') && value > 0) value--;
-      input.value = value;
-
-      // Save quantity to Firebase (only if item has id)
-      const id = itemDiv?.dataset?.id || '';
-      if (id) {
-        try {
-          const item = inventoryItems.find(x => String(x.id) === String(id));
-
-const patch = { quantity: value, updatedAt: Date.now() };
-
-
-if (item && item.status === "expired" && value > 0) {
-  patch.status = "active";
-  patch.expiresAt = resetExpiresAtFromItem(item);
-}
-
-await update(ref(savorDB, `rest/${restTarget}/menu/${id}`), patch);
-await loadInventory('firebase');
-        } catch (err) {
-          console.error(err);
-        }
-      }
-    });
-
-    inventoryPanel.addEventListener('input', async e => {
-      if (!e.target.classList.contains('quantity-input')) return;
-      let value = parseInt(e.target.value);
-      if (isNaN(value) || value < 0) value = 0;
-      e.target.value = value;
-
-      // Save quantity to Firebase (only if item has id)
-      const itemDiv = e.target.closest('.inventory-item');
-      const id = itemDiv?.dataset?.id || '';
-      if (id) {
-        try {
-          const item = inventoryItems.find(x => String(x.id) === String(id));
-
-const patch = { quantity: value, updatedAt: Date.now() };
-
-
-if (item && item.status === "expired" && value > 0) {
-  patch.status = "active";
-  patch.expiresAt = resetExpiresAtFromItem(item);
-}
-
-await update(ref(savorDB, `rest/${restTarget}/menu/${id}`), patch);
-await loadInventory('firebase');
-        } catch (err) {
-          console.error(err);
-        }
-      }
-    });
-
-  }
-  // Inventory loader (JSON or Firebase) ---
-
-  const donationsPanel = document.getElementById('panel-donations');
-if (donationsPanel) {
-  donationsPanel.addEventListener('click', async e => {
-
-    if (e.target.classList.contains('delete-donation-btn')) {
-      const itemDiv = e.target.closest('.inventory-item');
-      const id = itemDiv?.dataset?.id || '';
-      if (!id) return;
-
-      const ok = confirm('Delete this donation item?');
-      if (!ok) return;
+    document.addEventListener('DOMContentLoaded', async () => {
+      const loggedUser = localStorage.getItem("loggedInUser");
+      if (!loggedUser) { console.warn("No logged in user found."); return; }
 
       try {
-        await remove(ref(savorDB, `rest/${restTarget}/donations/${id}`));
-        await loadDonations();
-      } catch (err) {
-        console.error(err);
-        alert('Error deleting donation item.');
+        const userRef = ref(savorDB, `user/${loggedUser}`);
+        const userSnap = await get(userRef);
+        const userData = userSnap.val();
+        if (!userData || !userData.rest) { console.warn("No restaurant found for user."); return; }
+
+        restTarget = userData.rest;
+        const header = document.getElementById('header-right');
+        if (header) header.textContent = restTarget;
+        // sync mobile header
+        const mobileHeader = document.getElementById('header-right-mobile');
+        if (mobileHeader) mobileHeader.textContent = restTarget;
+      } catch (err) { console.error("Error loading user:", err); return; }
+
+      const nav = document.querySelector('.settings-nav');
+      const content = document.querySelector('.settings-content');
+      if (!nav || !content) return;
+
+      // Collect ALL tab buttons (desktop sidebar + mobile bottom nav)
+      const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+      const panels = Array.from(document.querySelectorAll('.panel'));
+
+      const inventoryTab = document.getElementById('tab-security');
+      const donationsTab = document.getElementById('tab-donations');
+
+      let inventoryItems = [];
+      let donationItems = [];
+      let editMode = false;
+      let editingItemId = '';
+      let editingExistingImage = '';
+      let currentEditCollection = 'menu';
+
+      function nextDayEndTimestamp() {
+        const d = new Date();
+        d.setDate(d.getDate() + 1);
+        d.setHours(23, 59, 0, 0);
+        return d.getTime();
       }
-      return;
-    }
 
-    if (e.target.classList.contains('edit-donation-btn')) {
-      const itemDiv = e.target.closest('.inventory-item');
-      const id = itemDiv?.dataset?.id || '';
-      if (!id) return;
+      function computeExpiresAt(expireMinsRaw) {
+        const raw = String(expireMinsRaw ?? '').trim();
+        if (raw === '') return nextDayEndTimestamp();
+        const mins = Number(raw);
+        return Date.now() + mins * 60 * 1000;
+      }
 
-      const item = donationItems.find(x => String(x.id) === String(id));
-      if (!item) return;
+      function resetExpiresAtFromItem(item) {
+        if (item?.expireMins == null) return nextDayEndTimestamp();
+        return Date.now() + Number(item.expireMins) * 60 * 1000;
+      }
 
-      openDonationEditModal(item);
-      return;
-    }
+      function formatMs(ms) {
+        if (ms < 0) ms = 0;
+        const totalSeconds = Math.floor(ms / 1000);
+        const hrs = Math.floor(totalSeconds / 3600);
+        const mins = Math.floor((totalSeconds % 3600) / 60);
+        const secs = totalSeconds % 60;
+        const pad = n => String(n).padStart(2, '0');
+        return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+      }
 
-    if (!e.target.classList.contains('quantity-btn')) return;
+      let countdownInterval = null;
+      function startCountdownUI() {
+        if (countdownInterval) clearInterval(countdownInterval);
+        countdownInterval = setInterval(() => {
+          const now = Date.now();
+          document.querySelectorAll('.item-timer[data-timer-id]').forEach(el => {
+            const id = el.getAttribute('data-timer-id');
+            const item = inventoryItems.find(x => String(x.id) === String(id));
+            if (!item) return;
+            if (item.status === "expired") { el.textContent = "Expired (sent to donations)"; return; }
+            if (!item.expiresAt) { el.textContent = "No expiration set"; return; }
+            const left = item.expiresAt - now;
+            el.textContent = left <= 0 ? "Expiring..." : `Expires in: ${formatMs(left)}`;
+          });
+        }, 1000);
+      }
 
-    const itemDiv = e.target.closest('.inventory-item');
-    const input = itemDiv.querySelector('.quantity-input');
-    let value = parseInt(input.value);
-
-    if (e.target.classList.contains('plus')) value++;
-    if (e.target.classList.contains('minus') && value > 0) value--;
-
-    input.value = value;
-
-    const id = itemDiv?.dataset?.id || '';
-    if (id) {
-      try {
-        await update(ref(savorDB, `rest/${restTarget}/donations/${id}`), {
-          quantity: value,
-          updatedAt: Date.now()
+      function showPanel(tabEl) {
+        // sync both desktop and mobile tab states for the same panel
+        const targetPanelId = tabEl.getAttribute('aria-controls');
+        tabs.forEach(btn => {
+          const isActive = btn.getAttribute('aria-controls') === targetPanelId;
+          btn.classList.toggle('is-active', isActive);
+          btn.setAttribute('aria-selected', String(isActive));
+          btn.setAttribute('tabindex', isActive ? '0' : '-1');
+          if (!btn.getAttribute('type')) btn.setAttribute('type', 'button');
         });
-        await loadDonations();
-      } catch (err) {
-        console.error(err);
+
+        panels.forEach(panel => { panel.hidden = true; panel.classList.remove('is-visible'); });
+
+        const target = document.getElementById(targetPanelId);
+        if (target) {
+          target.hidden = false;
+          target.classList.add('is-visible');
+          const heading = target.querySelector('h1, h2, h3, h4, [role="heading"]');
+          if (heading) { if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1'); heading.focus(); }
+        }
       }
-    }
-  });
 
-  donationsPanel.addEventListener('input', async e => {
-    if (!e.target.classList.contains('quantity-input')) return;
-
-    let value = parseInt(e.target.value);
-    if (isNaN(value) || value < 0) value = 0;
-    e.target.value = value;
-
-    const itemDiv = e.target.closest('.inventory-item');
-    const id = itemDiv?.dataset?.id || '';
-
-    if (id) {
-      try {
-        await update(ref(savorDB, `rest/${restTarget}/donations/${id}`), {
-          quantity: value,
-          updatedAt: Date.now()
+      tabs.forEach((btn, index) => {
+        btn.addEventListener('click', () => showPanel(btn));
+        btn.addEventListener('keydown', e => {
+          const prevKeys = ['ArrowUp', 'ArrowLeft'];
+          const nextKeys = ['ArrowDown', 'ArrowRight'];
+          // only arrow-navigate within the same nav group
+          const sameGroupTabs = tabs.filter(t => t.closest('nav') === btn.closest('nav') || t.closest('.mobile-bottom-nav') === btn.closest('.mobile-bottom-nav'));
+          const idx = sameGroupTabs.indexOf(btn);
+          if (prevKeys.includes(e.key)) {
+            e.preventDefault();
+            const prev = sameGroupTabs[(idx - 1 + sameGroupTabs.length) % sameGroupTabs.length];
+            prev.focus(); showPanel(prev);
+          } else if (nextKeys.includes(e.key)) {
+            e.preventDefault();
+            const next = sameGroupTabs[(idx + 1) % sameGroupTabs.length];
+            next.focus(); showPanel(next);
+          }
         });
-        await loadDonations();
-      } catch (err) {
-        console.error(err);
-      }
-    }
-  });
-}
-
-  async function loadInventory(source = 'json') { // default to json
-     let items = [];
-     if (source === 'json') {
-       try {
-         const res = await fetch('../inventory.json'); // <--  local JSON path
-         items = await res.json();
-       } catch (err) {
-         console.error('Error loading JSON inventory:', err);
-       }
-      } else if (source === 'firebase') {
-  try {
-    const snapshot = await get(ref(savorDB, `rest/${restTarget}/menu`));
-    if (snapshot.exists()) {
-      const data = snapshot.val();
-      items = Object.entries(data).map(([id, item]) => ({ id, ...item }));
-    } else {
-      items = [];
-    }
-
-    
-    await sweepExpiredItems(items);
-
-    
-    const snapshot2 = await get(ref(savorDB, `rest/${restTarget}/menu`));
-    if (snapshot2.exists()) {
-      const data2 = snapshot2.val();
-      items = Object.entries(data2).map(([id, item]) => ({ id, ...item }));
-    } else {
-      items = [];
-    }
-
-  } catch (err) {
-    console.error('Error loading Firebase inventory:', err);
-    items = [];
-  }
-}
-
-inventoryItems = Array.isArray(items) ? items : [];
-populateInventory(inventoryItems);
-
-
-   }
-
-   async function loadDonations() {
-  let items = [];
-
-  try {
-    const snapshot = await get(ref(savorDB, `rest/${restTarget}/donations`));
-    if (snapshot.exists()) {
-      const data = snapshot.val();
-      items = Object.entries(data).map(([id, item]) => ({ id, ...item }));
-    } else {
-      items = [];
-    }
-  } catch (err) {
-    console.error('Error loading Firebase donations:', err);
-    items = [];
-  }
-
-  donationItems = Array.isArray(items) ? items : [];
-  populateDonations(donationItems);
-}
-
-   //  Function to render inventory items ---
-   function populateInventory(items) {
-  const list = document.querySelector('.inventory-list');
-  if (!list) return;
-  list.innerHTML = '';
-
-  const sorted = [...items].sort((a, b) => {
-    const aExpired = a.status === "expired";
-    const bExpired = b.status === "expired";
-    if (aExpired !== bExpired) return aExpired ? 1 : -1; // expired bottom
-    return (b.updatedAt || 0) - (a.updatedAt || 0);
-  });
-
-  sorted.forEach(item => {
-    const div = document.createElement('div');
-    div.classList.add('inventory-item');
-    if (item.status === "expired") div.classList.add('is-expired');
-
-    div.dataset.id = item.id || '';
-
-    div.innerHTML = `
-      <img src="${item.image || '../img/placeholder.png'}" alt="Item Image" class="item-image"/>
-      <div class="item-details">
-        <div class="item-description">${item.name || 'Unnamed Item'}</div>
-<div class="item-subdescription">${item.description || ''}</div>
-${Array.isArray(item.allergies) && item.allergies.length
-  ? `<div class="item-allergy">Contains: ${item.allergies.join(', ')}</div>`
-  : (item.allergy ? `<div class="item-allergy">Contains: ${item.allergy}</div>` : '')
-}
-<div class="item-timer" data-timer-id="${item.id || ''}">Loading...</div>
-        <div class="item-price">$${(typeof item.price === 'number' ? item.price : Number(item.price || 0)).toFixed(2)}</div>
-      </div>
-
-      <div class="item-quantity">
-        <button class="quantity-btn minus">-</button>
-        <input type="number" class="quantity-input" value="${item.quantity ?? 0}" min="0"/>
-        <button class="quantity-btn plus">+</button>
-      </div>
-
-      <div class="item-actions">
-        <button type="button" class="item-action-btn edit-btn">Edit</button>
-        <button type="button" class="item-action-btn delete-btn">Delete</button>
-      </div>
-    `;
-
-    list.appendChild(div);
-  });
-
-  // start el coutndown timers
-  startCountdownUI();
-}
-
-function populateDonations(items) {
-  const list = document.querySelector('.donations-list');
-  if (!list) return;
-
-  list.innerHTML = '';
-
-  const sorted = [...items].sort((a, b) => {
-    return (b.updatedAt || 0) - (a.updatedAt || 0);
-  });
-
-  sorted.forEach(item => {
-    if(item.name === "rootKeeper"){return}
-    else
-  {
-    const div = document.createElement('div');
-    div.classList.add('inventory-item');
-    div.dataset.id = item.id || '';
-
-    div.innerHTML = `
-      <img src="${item.image || '../img/placeholder.png'}" alt="Item Image" class="item-image"/>
-      <div class="item-details">
-        <div class="item-description">${item.name || 'Unnamed Item'}</div>
-<div class="item-subdescription">${item.description || ''}</div>
-${Array.isArray(item.allergies) && item.allergies.length
-  ? `<div class="item-allergy">Contains: ${item.allergies.join(', ')}</div>`
-  : (item.allergy ? `<div class="item-allergy">Contains: ${item.allergy}</div>` : '')
-}
-<div class="item-price">$${(typeof item.price === 'number' ? item.price : Number(item.price || 0)).toFixed(2)}</div>
-      </div>
-
-      <div class="item-quantity">
-        <button class="quantity-btn minus">-</button>
-        <input type="number" class="quantity-input" value="${item.quantity ?? 0}" min="0"/>
-        <button class="quantity-btn plus">+</button>
-      </div>
-
-      <div class="item-actions">
-        <button type="button" class="item-action-btn edit-donation-btn">Edit</button>
-        <button type="button" class="item-action-btn delete-btn delete-donation-btn">Delete</button>
-      </div>
-    `;
-
-    list.appendChild(div);
-  }
-  });
-  
-}
-
-
-async function moveExpiredToDonations(item) {
-  if (!item?.id) return;
-
-  const now = Date.now();
-  const donationsRef = ref(savorDB, `rest/${restTarget}/donations`);
-  const snapshot = await get(donationsRef);
-
-  let existingDonationId = null;
-  let existingDonation = null;
-
-  if (snapshot.exists()) {
-    snapshot.forEach(child => {
-      const donationItem = child.val();
-
-      if (
-        donationItem.name &&
-        item.name &&
-        donationItem.name.toLowerCase().trim() === item.name.toLowerCase().trim()
-      ) {
-        existingDonationId = child.key;
-        existingDonation = donationItem;
-      }
-    });
-  }
-
-  if (existingDonationId) {
-    await update(ref(savorDB, `rest/${restTarget}/donations/${existingDonationId}`), {
-      quantity: Number(existingDonation.quantity || 0) + Number(item.quantity || 0),
-      movedToDonationsAt: now,
-      donationExpiresAt: now + 24 * 60 * 60 * 1000,
-      updatedAt: now,
-      status: "donation"
-    });
-  } else {
-    const donationPayload = {
-      ...item,
-      status: "donation",
-      movedToDonationsAt: now,
-      donationExpiresAt: now + 24 * 60 * 60 * 1000
-    };
-
-    await set(ref(savorDB, `rest/${restTarget}/donations/${item.id}`), donationPayload);
-  }
-
-  await update(ref(savorDB, `rest/${restTarget}/menu/${item.id}`), {
-    quantity: 0,
-    status: "expired",
-    expiredAt: now,
-    updatedAt: now
-  });
-}  
-
-
-async function sweepExpiredItems(items) {
-  const now = Date.now();
-  for (const item of items) {
-    if (
-      (item.status ?? "active") === "active" &&
-      (item.quantity ?? 0) > 0 &&
-      (item.expiresAt ?? 0) <= now
-    ) {
-      await moveExpiredToDonations(item);
-    }
-  }
-}
-
-let expirationTimer = null;
-function startExpirationWatcher() {
-  if (expirationTimer) clearInterval(expirationTimer);
-
-  expirationTimer = setInterval(async () => {
-    try {
-      const snapshot = await get(ref(savorDB, `rest/${restTarget}/menu`));
-      if (!snapshot.exists()) return;
-
-      const data = snapshot.val();
-      const items = Object.entries(data).map(([id, it]) => ({ id, ...it }));
-
-      await sweepExpiredItems(items);
-      await loadInventory('firebase');
-    } catch (err) {
-      console.error("Expiration watcher error:", err);
-    }
-  }, 30 * 1000); // every 30 seconds
-}
-
-   const modal = document.getElementById('addItemModal');
-    const closeModalBtn = document.getElementById('closeAddItemModal');
-    const cancelBtn = document.getElementById('cancelItemBtn');
-    const saveBtn = document.getElementById('saveItemBtn');
-    const statusEl = document.getElementById('addItemStatus');
-
-    const dropZone = document.getElementById('imageDropZone');
-    const fileInput = document.getElementById('itemImageInput');
-    const previewImg = document.getElementById('imagePreview');
-
-    const nameInput = document.getElementById('itemName');
-const descInput = document.getElementById('itemDescription');
-const allergySelect = document.getElementById('itemAllergy');
-const otherAllergyField = document.getElementById('otherAllergyField');
-const otherAllergyInput = document.getElementById('itemOtherAllergy');
-const addAllergyBtn = document.getElementById('addAllergyBtn');
-const selectedAllergiesList = document.getElementById('selectedAllergiesList');
-const qtyInput = document.getElementById('itemQuantity');
-const priceInput = document.getElementById('itemPrice');
-const expireInput = document.getElementById('itemExpireMins');
-const titleEl = document.getElementById('addItemTitle');
-
-let selectedAllergies = [];
-
-    let imageDataUrl = '';
-
-    allergySelect.addEventListener('change', () => {
-  if (allergySelect.value === 'Other') {
-    otherAllergyField.style.display = 'block';
-  } else {
-    otherAllergyField.style.display = 'none';
-    otherAllergyInput.value = '';
-  }
-});
-
-function renderSelectedAllergies() {
-  selectedAllergiesList.innerHTML = '';
-
-  selectedAllergies.forEach((allergy, index) => {
-    const chip = document.createElement('span');
-    chip.className = 'selected-allergy-chip';
-    chip.innerHTML = `
-      ${allergy}
-      <button type="button" data-index="${index}">✕</button>
-    `;
-    selectedAllergiesList.appendChild(chip);
-  });
-}
-
-addAllergyBtn.addEventListener('click', () => {
-  let value = allergySelect.value.trim();
-
-  if (!value) return;
-
-  if (value === 'Other') {
-    value = otherAllergyInput.value.trim();
-    if (!value) {
-      otherAllergyInput.classList.add('is-invalid');
-      return;
-    }
-  }
-
-  if (!selectedAllergies.includes(value)) {
-    selectedAllergies.push(value);
-    renderSelectedAllergies();
-  }
-
-  allergySelect.value = '';
-  otherAllergyInput.value = '';
-  otherAllergyField.style.display = 'none';
-  otherAllergyInput.classList.remove('is-invalid');
-});
-
-selectedAllergiesList.addEventListener('click', e => {
-  if (e.target.tagName !== 'BUTTON') return;
-
-  const index = Number(e.target.dataset.index);
-  selectedAllergies.splice(index, 1);
-  renderSelectedAllergies();
-});
-
-
-
-    function clearValidation() {
-  [nameInput, descInput, otherAllergyInput, qtyInput, priceInput, expireInput].forEach(i => i.classList.remove('is-invalid'));
-  dropZone.classList.remove('is-invalid');
-}
-
-function resetForm() {
-  nameInput.value = '';
-  descInput.value = '';
-  allergySelect.value = '';
-  otherAllergyInput.value = '';
-  otherAllergyField.style.display = 'none';
-  selectedAllergies = [];
-  renderSelectedAllergies();
-  qtyInput.value = '';
-  priceInput.value = '';
-  expireInput.value = '';
-  imageDataUrl = '';
-  previewImg.src = '';
-  dropZone.classList.remove('has-image');
-  clearValidation();
-
-  editMode = false;
-  editingItemId = '';
-  editingExistingImage = '';
-  titleEl.textContent = 'Add Inventory Item';
-  saveBtn.textContent = 'Save Item';
-}
-function openModal() {
-  resetForm();   // clears old values including allergy + image
-  editMode = false;
-  editingItemId = '';
-  editingExistingImage = '';
-  currentEditCollection = 'menu';
-  titleEl.textContent = 'Add Inventory Item';
-  saveBtn.textContent = 'Save Item';
-
-  modal.classList.add('is-open');
-  modal.setAttribute('aria-hidden', 'false');
-  statusEl.textContent = '';
-  clearValidation();
-}
-
-function openEditModal(item) {
-  editMode = true;
-  editingItemId = item.id || '';
-  editingExistingImage = item.image || '';
-  currentEditCollection = 'menu';
-
-  titleEl.textContent = 'Edit Inventory Item';
-  saveBtn.textContent = 'Update Item';
-
-  nameInput.value = item.name || '';
-  descInput.value = item.description || '';
-
-  selectedAllergies = Array.isArray(item.allergies)
-    ? [...item.allergies]
-    : (item.allergy ? [item.allergy] : []);
-
-  renderSelectedAllergies();
-
-  allergySelect.value = '';
-  otherAllergyField.style.display = 'none';
-  otherAllergyInput.value = '';
-
-  qtyInput.value = String(item.quantity ?? 0);
-  priceInput.value = String(item.price ?? 0);
-  expireInput.value = item.expireMins == null ? '' : String(item.expireMins);
-
-  imageDataUrl = '';
-  if (editingExistingImage) {
-    previewImg.src = editingExistingImage;
-    dropZone.classList.add('has-image');
-  } else {
-    previewImg.src = '';
-    dropZone.classList.remove('has-image');
-  }
-
-  modal.classList.add('is-open');
-  modal.setAttribute('aria-hidden', 'false');
-  statusEl.textContent = '';
-  clearValidation();
-}
-
-
-function openDonationEditModal(item) {
-  editMode = true;
-  editingItemId = item.id || '';
-  editingExistingImage = item.image || '';
-  currentEditCollection = 'donations';
-
-  titleEl.textContent = 'Edit Donation Item';
-  saveBtn.textContent = 'Update Item';
-
-  nameInput.value = item.name || '';
-  descInput.value = item.description || '';
-
-  selectedAllergies = Array.isArray(item.allergies)
-    ? [...item.allergies]
-    : (item.allergy ? [item.allergy] : []);
-
-  renderSelectedAllergies();
-
-  allergySelect.value = '';
-  otherAllergyField.style.display = 'none';
-  otherAllergyInput.value = '';
-
-  qtyInput.value = String(item.quantity ?? 0);
-  priceInput.value = String(item.price ?? 0);
-  expireInput.value = '';
-
-  imageDataUrl = '';
-  if (editingExistingImage) {
-    previewImg.src = editingExistingImage;
-    dropZone.classList.add('has-image');
-  } else {
-    previewImg.src = '';
-    dropZone.classList.remove('has-image');
-  }
-
-  modal.classList.add('is-open');
-  modal.setAttribute('aria-hidden', 'false');
-  statusEl.textContent = '';
-  clearValidation();
-}
-
-    function closeModal() {
-      modal.classList.remove('is-open');
-      modal.setAttribute('aria-hidden', 'true');
-      resetForm();
-    }
-
-    function validateForm() {
-      clearValidation();
-      let ok = true;
-
-      if (!nameInput.value.trim()) { nameInput.classList.add('is-invalid'); ok = false; }
-      if (!descInput.value.trim()) { descInput.classList.add('is-invalid'); ok = false; }
-
-      const qty = qtyInput.value.trim();
-      if (qty === '' || Number.isNaN(Number(qty)) || Number(qty) < 0) { qtyInput.classList.add('is-invalid'); ok = false; }
-
-      const price = priceInput.value.trim();
-      if (price === '' || Number.isNaN(Number(price)) || Number(price) < 0) { priceInput.classList.add('is-invalid'); ok = false; }
-
-      const exp = expireInput.value.trim();
-
-if (exp !== '' && (Number.isNaN(Number(exp)) || Number(exp) <= 0)) {
-  expireInput.classList.add('is-invalid');
-  ok = false;
-}
-
-if (allergySelect.value === 'Other' && !otherAllergyInput.value.trim()) {
-  otherAllergyInput.classList.add('is-invalid');
-  ok = false;
-}
-     
-      if (!editMode) {
-        if (!imageDataUrl) { dropZone.classList.add('is-invalid'); ok = false; }
-      } else {
-        if (!imageDataUrl && !editingExistingImage) { dropZone.classList.add('is-invalid'); ok = false; }
+      });
+
+      const initial = tabs.find(t => t.classList.contains('is-active')) || tabs[0];
+      if (initial) showPanel(initial);
+
+      // Inventory panel events
+      const inventoryPanel = document.getElementById('panel-security');
+      if (inventoryPanel) {
+        inventoryPanel.addEventListener('click', async e => {
+          if (e.target.classList.contains('delete-btn')) {
+            const itemDiv = e.target.closest('.inventory-item');
+            const id = itemDiv?.dataset?.id || '';
+            if (!id) return;
+            if (!confirm('Delete this item?')) return;
+            try { await remove(ref(savorDB, `rest/${restTarget}/menu/${id}`)); await loadInventory('firebase'); }
+            catch (err) { console.error(err); alert('Error deleting item (check Rules).'); }
+            return;
+          }
+          if (e.target.classList.contains('edit-btn')) {
+            const itemDiv = e.target.closest('.inventory-item');
+            const id = itemDiv?.dataset?.id || '';
+            if (!id) return;
+            const item = inventoryItems.find(x => String(x.id) === String(id));
+            if (!item) return;
+            openEditModal(item); return;
+          }
+          if (!e.target.classList.contains('quantity-btn')) return;
+          const itemDiv = e.target.closest('.inventory-item');
+          const input = itemDiv.querySelector('.quantity-input');
+          let value = parseInt(input.value);
+          if (e.target.classList.contains('plus')) value++;
+          if (e.target.classList.contains('minus') && value > 0) value--;
+          input.value = value;
+          const id = itemDiv?.dataset?.id || '';
+          if (id) {
+            try {
+              const item = inventoryItems.find(x => String(x.id) === String(id));
+              const patch = { quantity: value, updatedAt: Date.now() };
+              if (item && item.status === "expired" && value > 0) { patch.status = "active"; patch.expiresAt = resetExpiresAtFromItem(item); }
+              await update(ref(savorDB, `rest/${restTarget}/menu/${id}`), patch);
+              await loadInventory('firebase');
+            } catch (err) { console.error(err); }
+          }
+        });
+
+        inventoryPanel.addEventListener('input', async e => {
+          if (!e.target.classList.contains('quantity-input')) return;
+          let value = parseInt(e.target.value);
+          if (isNaN(value) || value < 0) value = 0;
+          e.target.value = value;
+          const itemDiv = e.target.closest('.inventory-item');
+          const id = itemDiv?.dataset?.id || '';
+          if (id) {
+            try {
+              const item = inventoryItems.find(x => String(x.id) === String(id));
+              const patch = { quantity: value, updatedAt: Date.now() };
+              if (item && item.status === "expired" && value > 0) { patch.status = "active"; patch.expiresAt = resetExpiresAtFromItem(item); }
+              await update(ref(savorDB, `rest/${restTarget}/menu/${id}`), patch);
+              await loadInventory('firebase');
+            } catch (err) { console.error(err); }
+          }
+        });
       }
 
-      return ok;
-    }
+      // Donations panel events
+      const donationsPanel = document.getElementById('panel-donations');
+      if (donationsPanel) {
+        donationsPanel.addEventListener('click', async e => {
+          if (e.target.classList.contains('delete-donation-btn')) {
+            const itemDiv = e.target.closest('.inventory-item');
+            const id = itemDiv?.dataset?.id || '';
+            if (!id) return;
+            if (!confirm('Delete this donation item?')) return;
+            try { await remove(ref(savorDB, `rest/${restTarget}/donations/${id}`)); await loadDonations(); }
+            catch (err) { console.error(err); alert('Error deleting donation item.'); }
+            return;
+          }
+          if (e.target.classList.contains('edit-donation-btn')) {
+            const itemDiv = e.target.closest('.inventory-item');
+            const id = itemDiv?.dataset?.id || '';
+            if (!id) return;
+            const item = donationItems.find(x => String(x.id) === String(id));
+            if (!item) return;
+            openDonationEditModal(item); return;
+          }
+          if (!e.target.classList.contains('quantity-btn')) return;
+          const itemDiv = e.target.closest('.inventory-item');
+          const input = itemDiv.querySelector('.quantity-input');
+          let value = parseInt(input.value);
+          if (e.target.classList.contains('plus')) value++;
+          if (e.target.classList.contains('minus') && value > 0) value--;
+          input.value = value;
+          const id = itemDiv?.dataset?.id || '';
+          if (id) {
+            try { await update(ref(savorDB, `rest/${restTarget}/donations/${id}`), { quantity: value, updatedAt: Date.now() }); await loadDonations(); }
+            catch (err) { console.error(err); }
+          }
+        });
 
-    function setImageFromFile(file) {
-      if (!file || !file.type.startsWith('image/')) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        imageDataUrl = String(reader.result || '');
-        previewImg.src = imageDataUrl;
-        dropZone.classList.add('has-image');
+        donationsPanel.addEventListener('input', async e => {
+          if (!e.target.classList.contains('quantity-input')) return;
+          let value = parseInt(e.target.value);
+          if (isNaN(value) || value < 0) value = 0;
+          e.target.value = value;
+          const itemDiv = e.target.closest('.inventory-item');
+          const id = itemDiv?.dataset?.id || '';
+          if (id) {
+            try { await update(ref(savorDB, `rest/${restTarget}/donations/${id}`), { quantity: value, updatedAt: Date.now() }); await loadDonations(); }
+            catch (err) { console.error(err); }
+          }
+        });
+      }
+
+      async function loadInventory(source = 'json') {
+        let items = [];
+        if (source === 'json') {
+          try { const res = await fetch('../inventory.json'); items = await res.json(); }
+          catch (err) { console.error('Error loading JSON inventory:', err); }
+        } else if (source === 'firebase') {
+          try {
+            const snapshot = await get(ref(savorDB, `rest/${restTarget}/menu`));
+            items = snapshot.exists() ? Object.entries(snapshot.val()).map(([id, item]) => ({ id, ...item })) : [];
+            await sweepExpiredItems(items);
+            const snapshot2 = await get(ref(savorDB, `rest/${restTarget}/menu`));
+            items = snapshot2.exists() ? Object.entries(snapshot2.val()).map(([id, item]) => ({ id, ...item })) : [];
+          } catch (err) { console.error('Error loading Firebase inventory:', err); items = []; }
+        }
+        inventoryItems = Array.isArray(items) ? items : [];
+        populateInventory(inventoryItems);
+      }
+
+      async function loadDonations() {
+        let items = [];
+        try {
+          const snapshot = await get(ref(savorDB, `rest/${restTarget}/donations`));
+          items = snapshot.exists() ? Object.entries(snapshot.val()).map(([id, item]) => ({ id, ...item })) : [];
+        } catch (err) { console.error('Error loading Firebase donations:', err); items = []; }
+        donationItems = Array.isArray(items) ? items : [];
+        populateDonations(donationItems);
+      }
+
+      function populateInventory(items) {
+        const list = document.querySelector('.inventory-list');
+        if (!list) return;
+        list.innerHTML = '';
+        const sorted = [...items].sort((a, b) => {
+          const aExpired = a.status === "expired", bExpired = b.status === "expired";
+          if (aExpired !== bExpired) return aExpired ? 1 : -1;
+          return (b.updatedAt || 0) - (a.updatedAt || 0);
+        });
+        sorted.forEach(item => {
+          const div = document.createElement('div');
+          div.classList.add('inventory-item');
+          if (item.status === "expired") div.classList.add('is-expired');
+          div.dataset.id = item.id || '';
+          div.innerHTML = `
+            <img src="${item.image || '../img/placeholder.png'}" alt="Item Image" class="item-image"/>
+            <div class="item-details">
+              <div class="item-description">${item.name || 'Unnamed Item'}</div>
+              <div class="item-subdescription">${item.description || ''}</div>
+              ${Array.isArray(item.allergies) && item.allergies.length ? `<div class="item-allergy">Contains: ${item.allergies.join(', ')}</div>` : (item.allergy ? `<div class="item-allergy">Contains: ${item.allergy}</div>` : '')}
+              <div class="item-timer" data-timer-id="${item.id || ''}">Loading...</div>
+              <div class="item-price">$${(typeof item.price === 'number' ? item.price : Number(item.price || 0)).toFixed(2)}</div>
+            </div>
+            <div class="item-quantity">
+              <button class="quantity-btn minus">-</button>
+              <input type="number" class="quantity-input" value="${item.quantity ?? 0}" min="0"/>
+              <button class="quantity-btn plus">+</button>
+            </div>
+            <div class="item-actions">
+              <button type="button" class="item-action-btn edit-btn">Edit</button>
+              <button type="button" class="item-action-btn delete-btn">Delete</button>
+            </div>`;
+          list.appendChild(div);
+        });
+        startCountdownUI();
+      }
+
+      function populateDonations(items) {
+        const list = document.querySelector('.donations-list');
+        if (!list) return;
+        list.innerHTML = '';
+        const sorted = [...items].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+        sorted.forEach(item => {
+          if (item.name === "rootKeeper") return;
+          const div = document.createElement('div');
+          div.classList.add('inventory-item');
+          div.dataset.id = item.id || '';
+          div.innerHTML = `
+            <img src="${item.image || '../img/placeholder.png'}" alt="Item Image" class="item-image"/>
+            <div class="item-details">
+              <div class="item-description">${item.name || 'Unnamed Item'}</div>
+              <div class="item-subdescription">${item.description || ''}</div>
+              ${Array.isArray(item.allergies) && item.allergies.length ? `<div class="item-allergy">Contains: ${item.allergies.join(', ')}</div>` : (item.allergy ? `<div class="item-allergy">Contains: ${item.allergy}</div>` : '')}
+              <div class="item-price">$${(typeof item.price === 'number' ? item.price : Number(item.price || 0)).toFixed(2)}</div>
+            </div>
+            <div class="item-quantity">
+              <button class="quantity-btn minus">-</button>
+              <input type="number" class="quantity-input" value="${item.quantity ?? 0}" min="0"/>
+              <button class="quantity-btn plus">+</button>
+            </div>
+            <div class="item-actions">
+              <button type="button" class="item-action-btn edit-donation-btn">Edit</button>
+              <button type="button" class="item-action-btn delete-btn delete-donation-btn">Delete</button>
+            </div>`;
+          list.appendChild(div);
+        });
+      }
+
+      async function moveExpiredToDonations(item) {
+        if (!item?.id) return;
+        const now = Date.now();
+        const donationsRef = ref(savorDB, `rest/${restTarget}/donations`);
+        const snapshot = await get(donationsRef);
+        let existingDonationId = null, existingDonation = null;
+        if (snapshot.exists()) {
+          snapshot.forEach(child => {
+            const d = child.val();
+            if (d.name && item.name && d.name.toLowerCase().trim() === item.name.toLowerCase().trim()) {
+              existingDonationId = child.key; existingDonation = d;
+            }
+          });
+        }
+        if (existingDonationId) {
+          await update(ref(savorDB, `rest/${restTarget}/donations/${existingDonationId}`), {
+            quantity: Number(existingDonation.quantity || 0) + Number(item.quantity || 0),
+            movedToDonationsAt: now, donationExpiresAt: now + 24 * 60 * 60 * 1000, updatedAt: now, status: "donation"
+          });
+        } else {
+          await set(ref(savorDB, `rest/${restTarget}/donations/${item.id}`), {
+            ...item, status: "donation", movedToDonationsAt: now, donationExpiresAt: now + 24 * 60 * 60 * 1000
+          });
+        }
+        await update(ref(savorDB, `rest/${restTarget}/menu/${item.id}`), {
+          quantity: 0, status: "expired", expiredAt: now, updatedAt: now
+        });
+      }
+
+      async function sweepExpiredItems(items) {
+        const now = Date.now();
+        for (const item of items) {
+          if ((item.status ?? "active") === "active" && (item.quantity ?? 0) > 0 && (item.expiresAt ?? 0) <= now) {
+            await moveExpiredToDonations(item);
+          }
+        }
+      }
+
+      let expirationTimer = null;
+      function startExpirationWatcher() {
+        if (expirationTimer) clearInterval(expirationTimer);
+        expirationTimer = setInterval(async () => {
+          try {
+            const snapshot = await get(ref(savorDB, `rest/${restTarget}/menu`));
+            if (!snapshot.exists()) return;
+            const items = Object.entries(snapshot.val()).map(([id, it]) => ({ id, ...it }));
+            await sweepExpiredItems(items);
+            await loadInventory('firebase');
+          } catch (err) { console.error("Expiration watcher error:", err); }
+        }, 30 * 1000);
+      }
+
+      const modal = document.getElementById('addItemModal');
+      const closeModalBtn = document.getElementById('closeAddItemModal');
+      const cancelBtn = document.getElementById('cancelItemBtn');
+      const saveBtn = document.getElementById('saveItemBtn');
+      const statusEl = document.getElementById('addItemStatus');
+      const dropZone = document.getElementById('imageDropZone');
+      const fileInput = document.getElementById('itemImageInput');
+      const previewImg = document.getElementById('imagePreview');
+      const nameInput = document.getElementById('itemName');
+      const descInput = document.getElementById('itemDescription');
+      const allergySelect = document.getElementById('itemAllergy');
+      const otherAllergyField = document.getElementById('otherAllergyField');
+      const otherAllergyInput = document.getElementById('itemOtherAllergy');
+      const addAllergyBtn = document.getElementById('addAllergyBtn');
+      const selectedAllergiesList = document.getElementById('selectedAllergiesList');
+      const qtyInput = document.getElementById('itemQuantity');
+      const priceInput = document.getElementById('itemPrice');
+      const expireInput = document.getElementById('itemExpireMins');
+      const titleEl = document.getElementById('addItemTitle');
+      let selectedAllergies = [];
+      let imageDataUrl = '';
+
+      allergySelect.addEventListener('change', () => {
+        otherAllergyField.style.display = allergySelect.value === 'Other' ? 'block' : 'none';
+        if (allergySelect.value !== 'Other') otherAllergyInput.value = '';
+      });
+
+      function renderSelectedAllergies() {
+        selectedAllergiesList.innerHTML = '';
+        selectedAllergies.forEach((allergy, index) => {
+          const chip = document.createElement('span');
+          chip.className = 'selected-allergy-chip';
+          chip.innerHTML = `${allergy}<button type="button" data-index="${index}">✕</button>`;
+          selectedAllergiesList.appendChild(chip);
+        });
+      }
+
+      addAllergyBtn.addEventListener('click', () => {
+        let value = allergySelect.value.trim();
+        if (!value) return;
+        if (value === 'Other') {
+          value = otherAllergyInput.value.trim();
+          if (!value) { otherAllergyInput.classList.add('is-invalid'); return; }
+        }
+        if (!selectedAllergies.includes(value)) { selectedAllergies.push(value); renderSelectedAllergies(); }
+        allergySelect.value = ''; otherAllergyInput.value = '';
+        otherAllergyField.style.display = 'none';
+        otherAllergyInput.classList.remove('is-invalid');
+      });
+
+      selectedAllergiesList.addEventListener('click', e => {
+        if (e.target.tagName !== 'BUTTON') return;
+        selectedAllergies.splice(Number(e.target.dataset.index), 1);
+        renderSelectedAllergies();
+      });
+
+      function clearValidation() {
+        [nameInput, descInput, otherAllergyInput, qtyInput, priceInput, expireInput].forEach(i => i.classList.remove('is-invalid'));
         dropZone.classList.remove('is-invalid');
-      };
-      reader.readAsDataURL(file);
+      }
+
+      function resetForm() {
+        nameInput.value = ''; descInput.value = ''; allergySelect.value = ''; otherAllergyInput.value = '';
+        otherAllergyField.style.display = 'none'; selectedAllergies = []; renderSelectedAllergies();
+        qtyInput.value = ''; priceInput.value = ''; expireInput.value = '';
+        imageDataUrl = ''; previewImg.src = ''; dropZone.classList.remove('has-image');
+        clearValidation(); editMode = false; editingItemId = ''; editingExistingImage = '';
+        titleEl.textContent = 'Add Inventory Item'; saveBtn.textContent = 'Save Item';
+      }
+
+      function openModal() {
+        resetForm(); editMode = false; editingItemId = ''; editingExistingImage = '';
+        currentEditCollection = 'menu'; titleEl.textContent = 'Add Inventory Item'; saveBtn.textContent = 'Save Item';
+        modal.classList.add('is-open'); modal.setAttribute('aria-hidden', 'false'); statusEl.textContent = ''; clearValidation();
+      }
+
+      function openEditModal(item) {
+        editMode = true; editingItemId = item.id || ''; editingExistingImage = item.image || ''; currentEditCollection = 'menu';
+        titleEl.textContent = 'Edit Inventory Item'; saveBtn.textContent = 'Update Item';
+        nameInput.value = item.name || ''; descInput.value = item.description || '';
+        selectedAllergies = Array.isArray(item.allergies) ? [...item.allergies] : (item.allergy ? [item.allergy] : []);
+        renderSelectedAllergies(); allergySelect.value = ''; otherAllergyField.style.display = 'none'; otherAllergyInput.value = '';
+        qtyInput.value = String(item.quantity ?? 0); priceInput.value = String(item.price ?? 0);
+        expireInput.value = item.expireMins == null ? '' : String(item.expireMins);
+        imageDataUrl = '';
+        if (editingExistingImage) { previewImg.src = editingExistingImage; dropZone.classList.add('has-image'); }
+        else { previewImg.src = ''; dropZone.classList.remove('has-image'); }
+        modal.classList.add('is-open'); modal.setAttribute('aria-hidden', 'false'); statusEl.textContent = ''; clearValidation();
+      }
+
+      function openDonationEditModal(item) {
+        editMode = true; editingItemId = item.id || ''; editingExistingImage = item.image || ''; currentEditCollection = 'donations';
+        titleEl.textContent = 'Edit Donation Item'; saveBtn.textContent = 'Update Item';
+        nameInput.value = item.name || ''; descInput.value = item.description || '';
+        selectedAllergies = Array.isArray(item.allergies) ? [...item.allergies] : (item.allergy ? [item.allergy] : []);
+        renderSelectedAllergies(); allergySelect.value = ''; otherAllergyField.style.display = 'none'; otherAllergyInput.value = '';
+        qtyInput.value = String(item.quantity ?? 0); priceInput.value = String(item.price ?? 0); expireInput.value = '';
+        imageDataUrl = '';
+        if (editingExistingImage) { previewImg.src = editingExistingImage; dropZone.classList.add('has-image'); }
+        else { previewImg.src = ''; dropZone.classList.remove('has-image'); }
+        modal.classList.add('is-open'); modal.setAttribute('aria-hidden', 'false'); statusEl.textContent = ''; clearValidation();
+      }
+
+      function validateForm() {
+        clearValidation(); let ok = true;
+        if (!nameInput.value.trim()) { nameInput.classList.add('is-invalid'); ok = false; }
+        if (!descInput.value.trim()) { descInput.classList.add('is-invalid'); ok = false; }
+        const qty = qtyInput.value.trim();
+        if (qty === '' || Number.isNaN(Number(qty)) || Number(qty) < 0) { qtyInput.classList.add('is-invalid'); ok = false; }
+        const price = priceInput.value.trim();
+        if (price === '' || Number.isNaN(Number(price)) || Number(price) < 0) { priceInput.classList.add('is-invalid'); ok = false; }
+        const exp = expireInput.value.trim();
+        if (exp !== '' && (Number.isNaN(Number(exp)) || Number(exp) <= 0)) { expireInput.classList.add('is-invalid'); ok = false; }
+        if (allergySelect.value === 'Other' && !otherAllergyInput.value.trim()) { otherAllergyInput.classList.add('is-invalid'); ok = false; }
+        if (!editMode) { if (!imageDataUrl) { dropZone.classList.add('is-invalid'); ok = false; } }
+        else { if (!imageDataUrl && !editingExistingImage) { dropZone.classList.add('is-invalid'); ok = false; } }
+        return ok;
+      }
+
+      function setImageFromFile(file) {
+        if (!file || !file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = () => { imageDataUrl = String(reader.result || ''); previewImg.src = imageDataUrl; dropZone.classList.add('has-image'); dropZone.classList.remove('is-invalid'); };
+        reader.readAsDataURL(file);
+      }
+
+      dropZone.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', () => setImageFromFile(fileInput.files?.[0]));
+      dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('is-dragover'); });
+      dropZone.addEventListener('dragleave', () => dropZone.classList.remove('is-dragover'));
+      dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('is-dragover'); setImageFromFile(e.dataTransfer.files?.[0]); });
+
+      closeModalBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+
+      function closeModal() { modal.classList.remove('is-open'); modal.setAttribute('aria-hidden', 'true'); resetForm(); }
+
+      saveBtn.addEventListener('click', async () => {
+        if (!validateForm()) { statusEl.textContent = 'Please fill in the highlighted fields.'; return; }
+        const finalImage = imageDataUrl || editingExistingImage || '';
+        const now = Date.now();
+        const expireMinsRaw = expireInput.value.trim();
+        const expireMins = expireMinsRaw === '' ? null : Number(expireMinsRaw);
+        let payload = {
+          name: nameInput.value.trim(), image: finalImage, description: descInput.value.trim(),
+          allergies: [...selectedAllergies], quantity: Number(qtyInput.value),
+          price: Number(priceInput.value), updatedAt: now
+        };
+        if (currentEditCollection === 'menu') {
+          payload = { ...payload, expireMins, expiresAt: computeExpiresAt(expireMinsRaw), status: "active" };
+        }
+        try {
+          if (!editMode) {
+            const newItemRef = push(ref(savorDB, `rest/${restTarget}/menu`));
+            await set(newItemRef, { ...payload, createdAt: now });
+            statusEl.textContent = 'Saved to Firebase!'; closeModal();
+            await loadInventory('firebase'); return;
+          }
+          if (!editingItemId) { statusEl.textContent = 'Missing item id.'; return; }
+          await update(ref(savorDB, `rest/${restTarget}/${currentEditCollection}/${editingItemId}`), payload);
+          statusEl.textContent = 'Updated in Firebase!'; closeModal();
+          if (currentEditCollection === 'menu') await loadInventory('firebase');
+          else await loadDonations();
+        } catch (err) { console.error(err); statusEl.textContent = 'Error saving to Firebase (check Rules).'; }
+      });
+
+      loadInventory('firebase');
+      loadDonations();
+      startExpirationWatcher();
+
+      if (inventoryTab) inventoryTab.addEventListener('click', () => loadInventory('firebase'));
+      if (donationsTab) donationsTab.addEventListener('click', () => loadDonations());
+
+    }); // end DOMContentLoaded
+
+    const state = { pendOrders: [], compOrders: [] };
+
+    async function organizeOrders() {
+      state.pendOrders = []; state.compOrders = [];
+      const loggedUser = localStorage.getItem("loggedInUser");
+      const orderRefs = ref(savorDB, `order`);
+      const snapshot = await get(orderRefs);
+      const userRef = ref(savorDB, `user/${loggedUser}`);
+      const userSnap = await get(userRef);
+      const userData = userSnap.val();
+      restTarget = userData.rest;
+      if (!snapshot.exists()) return;
+      snapshot.forEach(child => {
+        const order = child.val();
+        if (order.rest !== restTarget) return;
+        const orderObj = { id: child.key, rest: order.rest, totalPrice: order.totalPrice, status: order.status };
+        if (order.status === "pending") state.pendOrders.push(orderObj);
+        else state.compOrders.push(orderObj);
+      });
     }
 
-    // Dropzone click -> file picker
-    dropZone.addEventListener('click', () => fileInput.click());
-    fileInput.addEventListener('change', () => setImageFromFile(fileInput.files?.[0]));
-
-    // Drag + drop
-    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('is-dragover'); });
-    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('is-dragover'));
-    dropZone.addEventListener('drop', e => {
-      e.preventDefault();
-      dropZone.classList.remove('is-dragover');
-      setImageFromFile(e.dataTransfer.files?.[0]);
-    });
-
-    // Close buttons + backdrop close
-    closeModalBtn.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-
-    // Download updated inventory.json (browser can't write to ../inventory.json directly)
-    function downloadInventoryJson(items) {
-      const json = JSON.stringify(items, null, 2);
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'inventory.json';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-
-      URL.revokeObjectURL(url);
+    async function renderOrders() {
+      const pendingOrdersTab = document.getElementById("pending-orders");
+      const completeOrdersTab = document.getElementById("completed-orders");
+      pendingOrdersTab.innerHTML = ""; completeOrdersTab.innerHTML = "";
+      state.pendOrders.forEach(ord => {
+        const pendOrder = document.createElement("section");
+        pendOrder.className = "card"; pendOrder.id = "orderPend";
+        pendOrder.addEventListener("click", () => { sessionStorage.setItem("currOrder", ord.id); pickupOrder(); });
+        pendOrder.innerHTML = `<div class="hd"><div class="row"><div class="title">#${ord.id}</div><div class="rest">${ord.rest}</div><div class="totalPrice">${ord.totalPrice}</div></div></div>`;
+        pendingOrdersTab.appendChild(pendOrder);
+      });
+      state.compOrders.forEach(ord => {
+        const compOrder = document.createElement("section");
+        compOrder.className = "card"; compOrder.id = "orderComp";
+        compOrder.addEventListener("click", () => { sessionStorage.setItem("currOrder", ord.id); viewOrder(); });
+        compOrder.innerHTML = `<div class="hd"><div class="row"><div class="title">#${ord.id}</div><div class="rest">${ord.rest}</div><div class="totalPrice">${ord.totalPrice}</div></div></div>`;
+        completeOrdersTab.appendChild(compOrder);
+      });
     }
 
-    // Hook Add Item button (IMPORTANT: after openModal exists)
-    const addBtn = document.getElementById('add-item-btn');
-    if (addBtn) addBtn.addEventListener('click', openModal);
-
-    // Save item
-    saveBtn.addEventListener('click', async () => {
-  if (!validateForm()) {
-    statusEl.textContent = 'Please fill in the highlighted fields.';
-    return;
-  }
-
-  // Decide which image to save:
-  // - If user picked a new one: imageDataUrl
-  // - Else if editing: keep old editingExistingImage
-  // - Else (add mode): must have imageDataUrl because validation
-  const finalImage = imageDataUrl || editingExistingImage || '';
-
-  const now = Date.now();
-
-const expireMinsRaw = expireInput.value.trim();
-const expireMins = expireMinsRaw === '' ? null : Number(expireMinsRaw);
-
-
-
-let payload = {
-  name: nameInput.value.trim(),
-  image: finalImage,
-  description: descInput.value.trim(),
-  allergies: [...selectedAllergies],
-  quantity: Number(qtyInput.value),
-  price: Number(priceInput.value),
-  updatedAt: now
-};
-
-if (currentEditCollection === 'menu') {
-  payload = {
-    ...payload,
-    expireMins,
-    expiresAt: computeExpiresAt(expireMinsRaw),
-    status: "active"
-  };
-}
-
-  try {
-    if (!editMode) {
-      const newItem = {
-  ...payload,
-  createdAt: now
-};
-
-      // Save to: /rest/restTarget/menu/<autoId>
-      const newItemRef = push(ref(savorDB, `rest/${restTarget}/menu`));
-      await set(newItemRef, newItem);
-
-      statusEl.textContent = 'Saved to Firebase!';
-      closeModal();
-
-      // Reload from Firebase so UI matches DB
-      await loadInventory('firebase');
-      return;
-    }
-
-    // EDIT MODE
-    if (!editingItemId) {
-      statusEl.textContent = 'Missing item id.';
-      return;
-    }
-
-    await update(ref(savorDB, `rest/${restTarget}/${currentEditCollection}/${editingItemId}`), payload);
-
-statusEl.textContent = 'Updated in Firebase!';
-closeModal();
-
-if (currentEditCollection === 'menu') {
-  await loadInventory('firebase');
-} else {
-  await loadDonations();
-}
-
-
-  } catch (err) {
-    console.error(err);
-    statusEl.textContent = 'Error saving to Firebase (check Rules).';
-  }
-});
-
-
- 
-
-
-loadInventory('firebase');
-loadDonations();
-startExpirationWatcher();
-
-if (inventoryTab) inventoryTab.addEventListener('click', () => loadInventory('firebase'));
-if (donationsTab) donationsTab.addEventListener('click', () => loadDonations());
-
-});
-
-const state = {
-  pendOrders: [],
-  compOrders: []
-}
-
-async function organizeOrders() {
-
-  state.pendOrders = [];
-state.compOrders = [];
-
-  const loggedUser = localStorage.getItem("loggedInUser");
-  const orderRefs = ref(savorDB, `order`);
-  const snapshot = await get(orderRefs);
-  const userRef = ref(savorDB, `user/${loggedUser}`);
-  const userSnap = await get(userRef);
-  const userData = userSnap.val();
-  restTarget = userData.rest; 
-
-  if(!snapshot.exists()) return;
-
-  
-  snapshot.forEach(child => {
-    const order = child.val();
-
-    if (order.rest !== restTarget) return;
-
-    const orderObj = {
-      id: child.key,
-      rest: order.rest,
-      totalPrice: order.totalPrice,
-      status: order.status
+    window.saveResChanges = function (event) {
+      event.preventDefault();
+      const restname = restTarget;
+      if (!restname) { alert("No restaurant found!"); return; }
+      const email     = document.getElementById('email').value.trim();
+      const manager   = document.getElementById('fullName').value.trim();
+      const phoneNum  = document.getElementById('phoneNumber').value.trim();
+      const city      = document.getElementById('city').value.trim();
+      const country   = document.getElementById('country').value.trim();
+      const state     = document.getElementById('state').value.trim();
+      const street    = document.getElementById('street1').value.trim();
+      const suite     = document.getElementById('street2').value.trim();
+      const zipCode   = document.getElementById('zip').value.trim();
+      const infoRef   = ref(savorDB, `rest/${restname}/Info`);
+      update(infoRef, {
+        "Email:": email, "Manager:": manager, "phoneNum:": phoneNum,
+        Address: { "City:": city, "Country:": country, "State:": state, "Street:": street, "Suite:": suite, "Zip Code:": zipCode }
+      })
+        .then(() => alert("Restaurant updated successfully!"))
+        .catch(err => { console.error(err); alert("Error saving restaurant."); });
     };
 
-    if (order.status === "pending") {
-      state.pendOrders.push(orderObj);
-    } else {
-      state.compOrders.push(orderObj);
-    }
-  });
-  
-}
+    (async () => { await organizeOrders(); renderOrders(); })();
 
-async function renderOrders() {
-  const pendingOrdersTab = document.getElementById("pending-orders");
-  const completeOrdersTab = document.getElementById("completed-orders");
-  
-  pendingOrdersTab.innerHTML = "";
-  completeOrdersTab.innerHTML = "";
-
-state.pendOrders.forEach(ord => {
-  const pendOrder = document.createElement("section");
-  pendOrder.className = "card";
-  pendOrder.id = "orderPend";
-
-  pendOrder.addEventListener("click", () => {
-    console.log("Pending order clicked:", ord.id);
-    sessionStorage.setItem("currOrder", ord.id);
-    pickupOrder();
-  });
-
-  pendOrder.innerHTML = `
-
-  <div class="hd">
-  <div class="row">
-    <div class="title">#${ord.id}</div>
-    <div class="rest">${ord.rest}</div>
-    <div class="totalPrice">${ord.totalPrice}</div>
-  </div>
-</div>
-
-      
-  `
-  pendingOrdersTab.appendChild(pendOrder);
-})
-
-state.compOrders.forEach(ord => {
-  const compOrder = document.createElement("section");
-  compOrder.className = "card";
-  compOrder.id = "orderComp"
-
-  compOrder.addEventListener("click", () => {
-    console.log("Complete order clicked:", ord.id);
-    sessionStorage.setItem("currOrder", ord.id);
-    viewOrder();
-  });
-
-  compOrder.innerHTML = `
-  <div class = "hd">
-    <div class = "row">
-      <div class = "title">#${ord.id}</div>
-      <div class = "rest">${ord.rest}</div>
-      <div class = "totalPrice">${ord.totalPrice}</div>
-    </div>
-  </div>
-  `
-  completeOrdersTab.appendChild(compOrder);
-})
-  
-}
-
-window.saveResChanges = function (event) {
-  event.preventDefault(); // STOP form from reloading the page
-
-
-  const restname = restTarget;
-
-  if (!restname) {
-    alert("No restaurant found!");
-    return;
-  }
-
-  const email = document.getElementById('email').value.trim();
-  const manager = document.getElementById('fullName').value.trim();
-  const phoneNum = document.getElementById('phoneNumber').value.trim();
-
-  const city = document.getElementById('city').value.trim();
-  const country = document.getElementById('country').value.trim();
-  const state = document.getElementById('state').value.trim();
-  const street = document.getElementById('street1').value.trim();
-  const suite = document.getElementById('street2').value.trim();
-  const zipCode = document.getElementById('zip').value.trim();
-
-  const infoRef = ref(savorDB, `rest/${restname}/Info`);
-
-  update(infoRef, {
-    "Email:": email,
-    "Manager:": manager,
-    "phoneNum:": phoneNum,
-    Address: {
-      "City:": city,
-      "Country:": country,
-      "State:": state,
-      "Street:": street,
-      "Suite:": suite,
-      "Zip Code:": zipCode
-    }
-  })
-    .then(() => alert("Restaurant updated successfully!"))
-    .catch(err => {
-      console.error(err);
-      alert("Error saving restaurant.");
-    });
-};
-
-
-(async () => {
-  await organizeOrders();
-  renderOrders();
-})();
-
-</script>
+  </script>
 </body>
 </html>
