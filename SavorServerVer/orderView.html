@@ -15,7 +15,7 @@
       margin: 0;
       padding: 0;
       min-height: 100dvh;
-      background: url("../img/S6.png") no-repeat center center fixed;
+      background: url("/S6.png") no-repeat center center fixed;
       background-size: cover;
       font-family: 'Arial Rounded MT Bold', sans-serif;
       display: flex;
@@ -184,11 +184,11 @@
 
   <!-- Sticky top bar -->
   <div class="title-bar">
-    <a href="../html/index.html" class="title-link">
+    <a href="/index.html" class="title-link">
       <h1 class="title-pickup" onclick="clearStorage()">SAVOR</h1>
     </a>
-    <a href="../html/user_acc.html" class="settings-btn">
-      <img src="../img/cog.png" alt="Settings" class="settings-icon" onclick="clearStorage()">
+    <a href="/user_acc.html" class="settings-btn">
+      <img src="/cog.png" alt="Settings" class="settings-icon" onclick="clearStorage()">
     </a>
   </div>
 
@@ -352,15 +352,66 @@
     }
 
     async function getDirections() {
-      const currOrderS  = sessionStorage.getItem("currOrder");
-      const orderRestSnap = await get(ref(savorDB, `order/${currOrderS}/rest`));
-      const restName    = orderRestSnap.val();
-      const restSnap    = await get(ref(savorDB, `rest/${restName}`));
-      const r           = restSnap.val();
-      fetchAddress(r.lat, r.lng).then(address => {
-        window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`, '_blank');
-      });
-    }
+  const currOrderS = sessionStorage.getItem("currOrder");
+  const orderRestSnap = await get(ref(savorDB, `order/${currOrderS}/rest`));
+  const restName = orderRestSnap.val();
+  const restSnap = await get(ref(savorDB, `rest/${restName}`));
+  const r = restSnap.val();
+
+  const { lat, lng } = r;
+
+  // Use coordinates directly — no fetchAddress needed, works on all browsers
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isAndroid = /Android/.test(navigator.userAgent);
+
+  if (isIOS) {
+    // Try Apple Maps deep link first (opens Maps app on iOS)
+    // Fallback: Google Maps app via comgooglemaps://, then browser
+    const appleMapsUrl = `maps://?daddr=${lat},${lng}`;
+    const googleMapsAppUrl = `comgooglemaps://?daddr=${lat},${lng}`;
+    const googleMapsBrowserUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+
+    // Try to open Google Maps app; if not installed, fall back to Apple Maps, then browser
+    const start = Date.now();
+    window.location.href = googleMapsAppUrl;
+
+    setTimeout(() => {
+      if (Date.now() - start < 1500) {
+        // Google Maps app didn't open, try Apple Maps
+        window.location.href = appleMapsUrl;
+      }
+    }, 500);
+
+    setTimeout(() => {
+      if (Date.now() - start < 2000) {
+        // Neither app opened, fall back to browser
+        window.open(googleMapsBrowserUrl, '_blank');
+      }
+    }, 1000);
+
+  } else if (isAndroid) {
+    // Android: use geo: URI which prompts user to choose their maps app
+    // Falls back to Google Maps browser if no app handles it
+    const geoUrl = `geo:${lat},${lng}?q=${lat},${lng}`;
+    const googleMapsBrowserUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+
+    const start = Date.now();
+    window.location.href = geoUrl;
+
+    setTimeout(() => {
+      if (Date.now() - start < 1500) {
+        window.open(googleMapsBrowserUrl, '_blank');
+      }
+    }, 1000);
+
+  } else {
+    // Desktop: open in browser tab, works on Chrome, Safari, Firefox, Edge
+    window.open(
+      `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+      '_blank'
+    );
+  }
+}
 
     document.getElementById("direction-btn").addEventListener("click", getDirections);
 
@@ -377,7 +428,7 @@
 
       await update(orderRef, { status: "Completed" });
       clearStorage();
-      window.location.href = "../html/user_acc.html";
+      window.location.href = "/user_acc.html";
     });
 
     loadOrder();

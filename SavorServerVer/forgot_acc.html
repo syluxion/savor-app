@@ -3,15 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Reset Password - S4VOR</title>
+  <title>Forgot Account - S4VOR</title>
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       padding: 0;
       min-height: 100dvh;
-      background: url("../img/S6.png") no-repeat center center fixed;
+      background: url("/S6.png") no-repeat center center fixed;
       background-size: cover;
       font-family: 'Arial Rounded MT Bold', sans-serif;
       display: flex;
@@ -27,7 +29,10 @@
       flex-shrink: 0;
     }
 
-    .title-link { text-decoration: none; color: inherit; }
+    .title-link {
+      text-decoration: none;
+      color: inherit;
+    }
 
     .title-pickup {
       font-size: clamp(28px, 10vw, 40px);
@@ -53,9 +58,9 @@
 
     /* ── Card ── */
     .login-box {
-      background: rgba(255,255,255,0.93);
+      background: rgba(255, 255, 255, 0.93);
       border-radius: 25px;
-      padding: 32px 24px;
+      padding: 36px 24px;
       box-shadow: 0 6px 25px rgba(0,0,0,0.3);
       text-align: center;
       width: 100%;
@@ -69,12 +74,12 @@
       line-height: 1.5;
     }
 
-    /* ── Inputs ── */
+    /* ── Input ── */
     .login-input {
       display: block;
       width: 100%;
       padding: 14px 13px;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
       border: none;
       border-radius: 10px;
       font-size: 16px;        /* prevents iOS auto-zoom */
@@ -85,6 +90,7 @@
       -webkit-appearance: none;
       appearance: none;
     }
+
     .login-input:focus {
       outline: none;
       box-shadow: 0 0 10px rgba(17,143,84,0.4);
@@ -98,14 +104,15 @@
       border-radius: 25px;
       width: 100%;
       padding: 15px;
-      font-size: 18px;
+      font-size: 17px;
       font-family: inherit;
       font-weight: bold;
       letter-spacing: 0.5px;
       cursor: pointer;
-      transition: 0.3s;
+      transition: all 0.3s ease;
       margin-top: 4px;
     }
+
     .login-submit:hover  { background-color: #118f54; transform: scale(1.03); }
     .login-submit:active { transform: scale(0.97); background-color: #0d7f40; }
 
@@ -118,21 +125,40 @@
       gap: 32px;
       flex-wrap: wrap;
     }
-    .login-links a { color: #0a5a2e; text-decoration: none; transition: color 0.2s ease; }
-    .login-links a:hover { text-decoration: underline; color: #118f54; }
+
+    .login-links a {
+      color: #0a5a2e;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .login-links a:hover {
+      text-decoration: underline;
+      color: #118f54;
+    }
 
     /* ── Tablet / desktop ── */
     @media (min-width: 520px) {
-      .login-box { padding: 45px 52px; }
-      .login-submit { width: auto; padding: 14px 50px; font-size: 20px; }
-      .login-links { font-size: 18px; }
+      .login-box {
+        padding: 45px 52px;
+      }
+
+      .login-submit {
+        width: auto;
+        padding: 14px 40px;
+        font-size: 20px;
+      }
+
+      .login-links {
+        font-size: 18px;
+      }
     }
   </style>
 </head>
 <body>
 
   <div class="title-overlay">
-    <a href="../html/index.html" class="title-link">
+    <a href="/index.html" class="title-link">
       <h1 class="title-pickup">SAVOR</h1>
     </a>
   </div>
@@ -140,34 +166,18 @@
   <div class="login-overlay">
     <div class="login-box">
 
-      <p class="card-heading">Enter your username and choose a new password.</p>
+      <p class="card-heading">Enter your email address and we'll send you a recovery link.</p>
 
       <input
-        type="text"
+        type="email"
         class="login-input"
-        id="username"
-        placeholder="Username"
-        autocomplete="username"
-        inputmode="text"
-      >
-      <input
-        type="password"
-        class="login-input"
-        id="password"
-        placeholder="New Password"
-        autocomplete="new-password"
-        enterkeyhint="next"
-      >
-      <input
-        type="password"
-        class="login-input"
-        id="confirmPassword"
-        placeholder="Re-enter New Password"
-        autocomplete="new-password"
-        enterkeyhint="go"
+        id="email"
+        placeholder="Email"
+        autocomplete="email"
+        inputmode="email"
       >
 
-      <button class="login-submit" onclick="resetPass()">Reset Password</button>
+      <button id="sendEmailBtn" class="login-submit">SEND RECOVERY EMAIL</button>
 
       <div class="login-links">
         <a href="login.html">Back to Login</a>
@@ -176,45 +186,38 @@
     </div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
-    const firebaseConfig = { databaseURL: "https://savordatabase-default-rtdb.firebaseio.com" };
-    const app = initializeApp(firebaseConfig);
-    const savorDB = getDatabase(app);
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
 
-    window.resetPass = function () {
-      const currentUser     = document.getElementById('username').value.trim();
-      const currentPassword = document.getElementById('password').value.trim();
-      const confirmPassword = document.getElementById('confirmPassword').value.trim();
+      emailjs.init({ publicKey: "OpgxQEcmI8I90SyHp" });
 
-      if (!currentUser) {
-        alert("Please enter your username.");
-        return;
-      }
+      document.getElementById("sendEmailBtn").addEventListener("click", async () => {
+        const userEmail = document.getElementById("email").value.trim();
 
-      if (!currentPassword) {
-        alert("Please enter a new password.");
-        return;
-      }
+        if (!userEmail) {
+          alert("Please enter an email address.");
+          return;
+        }
 
-      if (currentPassword !== confirmPassword) {
-        alert("Passwords do not match. Please re-enter them.");
-        return;
-      }
+        const params = {
+          to_email: userEmail,
+          message: "This is a test email!"
+        };
 
-      const passRef = ref(savorDB, `user/${currentUser}/password`);
-      set(passRef, confirmPassword)
-        .then(() => {
-          alert("Password updated successfully!");
-          window.location.href = "login.html";
-        })
-        .catch(err => {
-          console.error("Error updating password:", err);
-          alert("Failed to update password.");
-        });
-    };
+        try {
+          const res = await emailjs.send("service_1ijw1gl", "template_ob8fjmu", params);
+          console.log("Email sent:", res);
+          alert("Recovery email sent!");
+        } catch (err) {
+          console.error("Email failed:", err);
+          alert("Email failed to send.");
+        }
+      });
+
+    });
   </script>
+
 </body>
 </html>

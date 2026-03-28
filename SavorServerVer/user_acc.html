@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Food Bank Account - Savor</title>
+  <title>Profile Settings - Savor</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -11,7 +11,7 @@
       margin: 0;
       padding: 0;
       min-height: 100dvh;
-      background: url("../img/S6.png") no-repeat center center fixed;
+      background: url("/S6.png") no-repeat center center fixed;
       background-size: cover;
       font-family: 'Arial Rounded MT Bold', sans-serif;
     }
@@ -92,10 +92,14 @@
         box-shadow: 0 -2px 16px rgba(0,0,0,0.15);
         z-index: 200;
         border-top: 1px solid rgba(17,143,84,0.15);
+        overflow-x: auto;
+        scrollbar-width: none;
       }
+      .mobile-bottom-nav::-webkit-scrollbar { display: none; }
 
       .mobile-bottom-nav .mob-nav-item {
         flex: 1;
+        min-width: 56px;
         border: none;
         background: transparent;
         font-size: 10px;
@@ -118,14 +122,15 @@
         background: rgba(17,143,84,0.06);
       }
 
-      .mobile-bottom-nav .mob-nav-item.danger      { color: #b3261e; }
+      .mobile-bottom-nav .mob-nav-item.danger { color: #b3261e; }
       .mobile-bottom-nav .mob-nav-item.danger.is-active { background: rgba(179,38,30,0.06); }
 
       .settings-header { margin-bottom: 12px; }
-      .login-submit    { width: 100%; padding: 14px; font-size: 18px; }
-      .actions         { flex-direction: column; }
 
-      /* Payment expiry + CVV side by side */
+      .login-submit { width: 100%; padding: 14px; font-size: 18px; }
+      .actions { flex-direction: column; }
+
+      /* Payment expiry+cvv side by side */
       .field-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -162,7 +167,7 @@
       box-shadow: 0 0 5px rgba(0,0,0,0.08);
       transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
     }
-    .nav-item:hover    { transform: translateX(2px); }
+    .nav-item:hover { transform: translateX(2px); }
     .nav-item.is-active { background: #e7f5ee; box-shadow: 0 0 0 2px rgba(17,143,84,0.25) inset; }
     .nav-item.danger-item { color: #b3261e; }
 
@@ -184,8 +189,8 @@
       background-color: #f2f2f2;
     }
 
-    .settings-header    { text-align: center; margin-bottom: 18px; }
-    .settings-subtitle  { color: #444; margin: 6px 0 0; font-size: 14px; }
+    .settings-header { text-align: center; margin-bottom: 18px; }
+    .settings-subtitle { color: #444; margin: 6px 0 0; font-size: 14px; }
 
     .panel {
       opacity: 0;
@@ -207,7 +212,7 @@
     .field label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; }
 
     .actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-    .status  { font-size: 14px; color: #0a5a2e; }
+    .status { font-size: 14px; color: #0a5a2e; }
 
     .login-input {
       display: block;
@@ -216,7 +221,7 @@
       margin-bottom: 0;
       border: none;
       border-radius: 10px;
-      font-size: 16px;
+      font-size: 16px;       /* prevents iOS auto-zoom */
       font-family: inherit;
       background-color: #fff;
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
@@ -225,6 +230,8 @@
       appearance: none;
     }
     .login-input:focus { outline: none; box-shadow: 0 0 10px rgba(17,143,84,0.4); }
+
+    .field .login-input { margin-bottom: 0; }
 
     .login-submit {
       background-color: #0a5a2e;
@@ -250,11 +257,11 @@
     }
     .title-link { text-decoration: none; color: inherit; }
 
-    .row  { display: flex; justify-content: space-between; align-items: center; }
-    .hd   { width: 100%; }
-    .title       { font-weight: 700; color: #0a5a2e; }
-    .rest        { flex: 1; text-align: center; font-size: 0.9rem; }
-    .totalPrice  { text-align: right; font-size: 0.9rem; }
+    .row { display: flex; justify-content: space-between; align-items: center; }
+    .hd  { width: 100%; }
+    .title { font-weight: 700; color: #0a5a2e; }
+    .rest  { flex: 1; text-align: center; font-size: 0.9rem; }
+    .totalPrice { text-align: right; font-size: 0.9rem; }
 
     #pending-orders .card,
     #completed-orders .card {
@@ -270,7 +277,7 @@
 
   <!-- Mobile top header -->
   <header class="mobile-header">
-    <a href="../html/index.html" class="title-link">
+    <a href="/index.html" class="title-link">
       <h1 class="title-pickup">SAVOR</h1>
     </a>
     <div class="header-user" id="header-username">My Account</div>
@@ -280,7 +287,7 @@
 
     <!-- Desktop sidebar -->
     <aside class="settings-nav" aria-label="Settings sections">
-      <a href="../html/index.html" class="title-link">
+      <a href="/index.html" class="title-link">
         <h1 class="title-pickup">SAVOR</h1>
       </a>
       <nav role="tablist" aria-orientation="vertical" id="sidebar">
@@ -297,7 +304,7 @@
     <main class="settings-content">
 
       <div class="profile-avatar">
-        <img src="../img/user_icon.png" alt="User Avatar" class="avatar-large"/>
+        <img src="/user_icon.png" alt="User Avatar" class="avatar-large"/>
       </div>
 
       <header class="settings-header">
@@ -381,10 +388,8 @@
         </section>
       </section>
 
-      <!-- Logout panel (action handled in JS) -->
+      <!-- Hidden panels for logout/delete (actions handled in JS) -->
       <section id="panel-logout" class="panel" role="tabpanel" aria-labelledby="tab-logout" hidden></section>
-
-      <!-- ADD after panel-logout section: -->
       <section id="panel-delete" class="panel" role="tabpanel" aria-labelledby="tab-delete" hidden></section>
 
     </main>
@@ -417,34 +422,40 @@
     import { getDatabase, ref, set, get, update, remove } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
     const firebaseConfig = { databaseURL: "https://savordatabase-default-rtdb.firebaseio.com" };
-    const app     = initializeApp(firebaseConfig);
+    const app    = initializeApp(firebaseConfig);
     const savorDB = getDatabase(app);
 
     const state = { pendOrders: [], compOrders: [] };
-    const loggedUser = localStorage.getItem("loggedInUser");
 
-    // Show username in mobile header
+    // Show logged-in username in mobile header
+    const loggedUser = localStorage.getItem("loggedInUser");
     if (loggedUser) {
       const el = document.getElementById("header-username");
       if (el) el.textContent = loggedUser;
     }
 
-    // ── Panel system ──
-    function getAllPanels() { return Array.from(document.querySelectorAll('.panel')); }
+    // ── Tab/panel system ──
+    // Collect ALL tab triggers: desktop sidebar + mobile bottom nav panel buttons
+    function getAllPanelTabs() {
+      return Array.from(document.querySelectorAll('[role="tab"], [data-panel]'));
+    }
+
+    const panels = () => Array.from(document.querySelectorAll('.panel'));
 
     function showPanelById(panelId) {
-      getAllPanels().forEach(p => { p.hidden = true; p.classList.remove('is-visible'); });
+      panels().forEach(p => { p.hidden = true; p.classList.remove('is-visible'); });
+
       const target = document.getElementById(panelId);
       if (target) { target.hidden = false; target.classList.add('is-visible'); }
 
-      // sync desktop sidebar
+      // sync desktop sidebar active state
       document.querySelectorAll('#sidebar [role="tab"]').forEach(btn => {
-        const active = btn.getAttribute('aria-controls') === panelId;
-        btn.classList.toggle('is-active', active);
-        btn.setAttribute('aria-selected', String(active));
+        const isActive = btn.getAttribute('aria-controls') === panelId;
+        btn.classList.toggle('is-active', isActive);
+        btn.setAttribute('aria-selected', String(isActive));
       });
 
-      // sync mobile bottom nav
+      // sync mobile bottom nav active state
       document.querySelectorAll('.mob-nav-item[data-panel]').forEach(btn => {
         btn.classList.toggle('is-active', btn.dataset.panel === panelId);
       });
@@ -452,15 +463,17 @@
 
     function showPanel(tabEl) {
       const panelId = tabEl.getAttribute('aria-controls') || tabEl.dataset.panel;
-      if (panelId) showPanelById(panelId);
+      if (!panelId) return;
+      showPanelById(panelId);
     }
 
     // Desktop sidebar click delegation
     document.getElementById('sidebar').addEventListener('click', e => {
       const tab = e.target.closest('[role="tab"]');
       if (!tab) return;
-      if (tab.id === 'tab-logout') { window.logoutUser(); return; }
-      if (tab.id === 'tab-delete') { confirmDelete(); return; }  // ADD this line
+      const id = tab.id;
+      if (id === 'tab-logout') { window.logoutUser(); return; }
+      if (id === 'tab-delete') { confirmDelete(); return; }
       showPanel(tab);
     });
 
@@ -486,19 +499,19 @@
       btn.addEventListener('click', () => showPanel(btn));
     });
     document.getElementById('mob-logout')?.addEventListener('click', () => window.logoutUser());
-    document.getElementById('mob-delete')?.addEventListener('click', () => confirmDelete());
+document.getElementById('mob-delete')?.addEventListener('click', () => confirmDelete());
 
-    // Init
+    // Init: show first panel
     const initial = document.querySelector('#sidebar .is-active') || document.querySelector('#sidebar [role="tab"]');
     if (initial) showPanel(initial);
 
     // ── Save personal info ──
     window.saveAccountChanges1 = function (event) {
       event.preventDefault();
-      const email     = document.getElementById('email').value.trim();
-      const firstName = document.getElementById('firstName').value.trim();
-      const lastName  = document.getElementById('lastName').value.trim();
-      const birthDate = document.getElementById('birthdate').value.trim();
+      const email      = document.getElementById('email').value.trim();
+      const firstName  = document.getElementById('firstName').value.trim();
+      const lastName   = document.getElementById('lastName').value.trim();
+      const birthDate  = document.getElementById('birthdate').value.trim();
 
       if (!loggedUser) { alert("No logged in user!"); return; }
 
@@ -517,7 +530,7 @@
       const expiry     = document.getElementById('expiry').value.trim();
       const cvv        = document.getElementById('cvv').value.trim();
 
-      if (!loggedUser)                                 { alert("No logged in user!"); return; }
+      if (!loggedUser)                              { alert("No logged in user!"); return; }
       if (!cardName || !cardNumber || !expiry || !cvv) { alert("Please fill in all payment fields."); return; }
 
       update(ref(savorDB, `user/${loggedUser}`), { cardName, cardNumber, expiry, cvv })
@@ -536,18 +549,72 @@
       window.location.href = "index.html";
     };
 
-    // ── Update password ──
+    // ── Password update ──
     window.updatePass = function (event) {
       event.preventDefault();
       const newPassword     = document.getElementById('newPassword').value.trim();
       const confirmPassword = document.getElementById('confirmPassword').value.trim();
 
-      if (newPassword !== confirmPassword) { alert("Passwords do not match. Please re-enter them."); return; }
+      if (newPassword !== confirmPassword) { alert("Passwords do not match."); return; }
 
       set(ref(savorDB, `user/${loggedUser}/password`), newPassword)
         .then(() => alert("Password updated successfully!"))
         .catch(err => { console.error(err); alert("Failed to update password."); });
     };
+
+    // ── Account type check (business dashboard button) ──
+    async function checkType() {
+      const userRef  = ref(savorDB, `user/${loggedUser}`);
+      const userSnap = await get(userRef);
+      const userVal  = userSnap.val();
+  
+      console.log("accountType:", userVal?.accountType); // ADD THIS
+      console.log("full user data:", userVal);           // ADD THIS
+
+      if (userVal?.accountType === "fb" || userVal?.accountType === "business") {
+        // Desktop sidebar
+        const dashBtn = document.createElement("button");
+        dashBtn.type = "button";
+        dashBtn.className = "nav-item";
+        dashBtn.setAttribute("role", "tab");
+        dashBtn.setAttribute("aria-selected", "false");
+        dashBtn.setAttribute("aria-controls", "panel-back");
+        dashBtn.id = "tab-back";
+        dashBtn.textContent = "Business Dashboard";
+        dashBtn.addEventListener("click", backPage);
+        document.getElementById("sidebar").appendChild(dashBtn);
+
+        // Mobile bottom nav
+        const mobBtn = document.createElement("button");
+        mobBtn.type = "button";
+        mobBtn.className = "mob-nav-item";
+        mobBtn.innerHTML = `<span class="nav-icon">🏪</span>Dashboard`;
+        mobBtn.addEventListener("click", backPage);
+        document.querySelector(".mobile-bottom-nav").appendChild(mobBtn);
+      }
+    }
+
+    async function backPage() {
+      const userSnap = await get(ref(savorDB, `user/${loggedUser}`));
+      const userVal  = userSnap.val();
+      if (userVal?.accountType === "fb")       window.location.href = "fb_acc.html";
+      else if (userVal?.accountType === "business") window.location.href = "res_dash.html";
+    }
+
+    // ── Delete account ──
+    function confirmDelete() {
+      if (confirm("Are you sure you want to delete your account?")) deleteAccount();
+    }
+
+    async function deleteAccount() {
+      try {
+        await remove(ref(savorDB, `user/${loggedUser}`));
+        localStorage.removeItem("loggedInUser");
+        window.location.href = "index.html";
+      } catch (err) {
+        console.error("Error deleting account:", err);
+      }
+    }
 
     // ── Orders ──
     async function organizeOrders() {
@@ -586,42 +653,6 @@
         compEl.appendChild(sec);
       });
     }
-
-    function confirmDelete() {
-    if (confirm("Are you sure you want to delete your account?")) deleteAccount();
-  }
-
-  async function deleteAccount() {
-    try {
-      const { remove } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js");
-    await remove(ref(savorDB, `user/${loggedUser}`));
-      localStorage.removeItem("loggedInUser");
-      window.location.href = "index.html";
-    } catch (err) { console.error("Error deleting account:", err); }
-  }
-
-  async function checkType() { 
-    const userSnap = await get(ref(savorDB, `user/${loggedUser}`));
-    const userVal  = userSnap.val();
-      if (userVal?.accountType === "fb" || userVal?.accountType === "business" || userVal?.rest) {
-        const dashBtn = document.createElement("button");
-        dashBtn.type = "button";
-        dashBtn.className = "nav-item";
-        dashBtn.setAttribute("role", "tab");
-        dashBtn.setAttribute("aria-selected", "false");
-        dashBtn.setAttribute("aria-controls", "panel-back");
-        dashBtn.textContent = "Business Dashboard";
-        dashBtn.addEventListener("click", () => window.location.href = "res_dash.html");
-        document.getElementById("sidebar").appendChild(dashBtn);
-
-        const mobBtn = document.createElement("button");
-        mobBtn.type = "button";
-        mobBtn.className = "mob-nav-item";
-        mobBtn.innerHTML = `<span class="nav-icon">🏪</span>Dashboard`;
-        mobBtn.addEventListener("click", () => window.location.href = "res_dash.html");
-        document.querySelector(".mobile-bottom-nav").appendChild(mobBtn);
-      }
-  }
 
     (async () => {
       await organizeOrders();
