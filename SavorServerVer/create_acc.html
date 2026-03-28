@@ -13,7 +13,7 @@
       margin: 0;
       padding: 0;
       min-height: 100dvh;
-      background: url("../img/S6.png") no-repeat center center fixed;
+      background: url("/S6.png") no-repeat center center fixed;
       background-size: cover;
       font-family: 'Arial Rounded MT Bold', sans-serif;
       display: flex;
@@ -173,7 +173,7 @@
 <body>
 
   <div class="title-overlay">
-    <a href="../html/index.html" class="title-link">
+    <a href="/index.html" class="title-link">
       <h1 class="title-pickup">SAVOR</h1>
     </a>
   </div>
@@ -244,17 +244,37 @@
       const userRef = ref(savorDB, `user/${username}`);
       localStorage.setItem("loggedInUser", username);
 
-      set(userRef, { password, email, accountType, firstName, lastName, birthDate })
+      if(sessionStorage.getItem("currOrder"))
+      {
+        const order = sessionStorage.getItem("currOrder");
+        const orderRef = ref(savorDB,`order/${order}`)
+        update(orderRef, {user: username});
+        set(userRef, { password, email, accountType, firstName, lastName, birthDate })
         .then(() => {
           alert(`User "${username}" created successfully!`);
           window.location.href = accountType === "user"
-            ? "../html/index.html"
-            : "../html/createRest.html";
+            ? "/index.html"
+            : "/createRest.html";
         })
         .catch(err => {
           console.error("Error creating user:", err);
           alert("Failed to create user.");
         });
+      }
+      else
+      {
+        set(userRef, { password, email, accountType, firstName, lastName, birthDate })
+        .then(() => {
+          alert(`User "${username}" created successfully!`);
+          window.location.href = accountType === "user"
+            ? "/index.html"
+            : "/createRest.html";
+        })
+        .catch(err => {
+          console.error("Error creating user:", err);
+          alert("Failed to create user.");
+        });
+      }
     };
   </script>
 </body>

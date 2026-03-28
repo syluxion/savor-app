@@ -11,7 +11,7 @@
       margin: 0;
       padding: 0;
       min-height: 100dvh;
-      background: url("../img/S5.png") no-repeat center center fixed;
+      background: url("/S5.png") no-repeat center center fixed;
       background-size: cover;
       font-family: 'Arial Rounded MT Bold', sans-serif;
       display: flex;
@@ -170,7 +170,7 @@
 
   <!-- Logo -->
   <div class="title-overlay">
-    <a href="../html/index.html" class="title-link">
+    <a href="/index.html" class="title-link">
       <h1 class="title-pickup">SAVOR</h1>
     </a>
   </div>
@@ -216,7 +216,7 @@
     const savorDB = getDatabase(app);
 
     window.backPress = function () {
-      window.location.href = "../html/index.html";
+      window.location.href = "/index.html";
     };
 
     window.submitLogin = function () {
@@ -236,7 +236,7 @@
             const storedPassword = snapshot.val();
             if (storedPassword === password) {
               localStorage.setItem("loggedInUser", username);
-              window.location.href = "../html/index.html";
+              window.location.href = "/index.html";
             } else {
               alert('Incorrect password');
             }
@@ -248,11 +248,11 @@
     };
 
     window.createAcc = function () {
-      window.location.href = "../html/create_acc.html";
+      window.location.href = "/create_acc.html";
     };
 
     window.forgotAcc = function () {
-      window.location.href = "../html/forgot_acc.html";
+      window.location.href = "/forgot_acc.html";
     };
 
     document.addEventListener('keydown', (event) => {

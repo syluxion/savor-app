@@ -11,7 +11,7 @@
       margin: 0;
       padding: 0;
       min-height: 100dvh;
-      background: url("../img/S6.png") no-repeat center center fixed;
+      background: url("/S6.png") no-repeat center center fixed;
       background-size: cover;
       font-family: 'Arial Rounded MT Bold', sans-serif;
       display: flex;
@@ -294,12 +294,12 @@
     // Hide email field for logged-in users (they have one on file)
     const loggedUser = localStorage.getItem("loggedInUser");
     if (loggedUser) {
-      const guestEmailField = document.getElementById("guest-email-field");
+      const guestEmailField = document.getElementById("email");
       if (guestEmailField) guestEmailField.style.display = "none";
     }
 
     window.finishOrder = function () {
-      window.location.href = "../html/orderView.html";
+      window.location.href = "/orderView.html";
     };
 
     window.loadOrder = async function () {
@@ -308,7 +308,10 @@
       const snapshot = await get(itemRef);
       if (!snapshot.exists()) return [];
       const itemsArr = [];
-      snapshot.forEach(child => itemsArr.push({ id: child.key, ...child.val() }));
+      snapshot.forEach(child => {
+        const data = child.val();
+        itemsArr.push({ id: child.key, name: data.name, unitPrice: data.unitPrice, qty: data.qty });
+      });
       return itemsArr;
     };
 
@@ -331,8 +334,13 @@
         const expiry     = document.getElementById('expiry').value.trim();
         const cvv        = document.getElementById('cvv').value.trim();
         const orderId    = sessionStorage.getItem("currOrder");
+        let email;
+        if(!loggedUser)
+        {
+          email = document.getElementById('email').value.trim();
+        }
 
-        if (!cardName || !cardNumber || !expiry || !cvv) {
+        if (!cardName || !cardNumber || !expiry || !cvv || !email) {
           alert("Please fill in all payment fields.");
           return reject("Missing payment info");
         }
@@ -356,6 +364,17 @@
           .catch(err => { console.error(err); reject(err); });
       });
     };
+
+    async function guestCreate()
+    {
+      if(document.getElementById("saveForLater").checked && loggedUser == null)
+      {
+        if (confirm("Create an account?"))
+        {
+          window.location.href = "/create_acc.html";
+        }
+      }
+    }
 
     async function renderCart() {
       const cartItemsEl = document.getElementById("cart-items");
@@ -428,6 +447,7 @@
       }
       if (e.target.id === "placeOrder") {
         savePaymentInfo()
+        guestCreate()
           .then(() => comfEmail())
           .then(() => finishOrder())
           .catch(err => console.error(err));

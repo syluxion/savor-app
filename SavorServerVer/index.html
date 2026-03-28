@@ -13,7 +13,7 @@
       margin: 0;
       padding: 0;
       min-height: 100dvh;
-      background: url("../img/S4.png") no-repeat center center fixed;
+      background: url("/S4.png") no-repeat center center fixed;
       background-size: cover;
       font-family: 'Arial Rounded MT Bold', sans-serif;
       overflow-x: hidden;
@@ -205,13 +205,13 @@
         const restOwner = ref(savorDB, `user/${localStorage.getItem("loggedInUser")}/rest`);
         const restOwnerSnap = await get(restOwner);
         if (!restOwnerSnap.val()) {
-          window.location.href = "../html/user_acc.html";
+          window.location.href = "/user_acc.html";
         } else {
           sessionStorage.setItem("ownedRest", restOwnerSnap.val());
-          window.location.href = "../html/res_dash.html";
+          window.location.href = "/res_dash.html";
         }
       } else {
-        window.location.href = "../html/login.html";
+        window.location.href = "/login.html";
       }
     }
 

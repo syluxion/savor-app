@@ -394,7 +394,7 @@
 
     // ── Navigation ──
     window.loginPress = function () { window.location.href = 'login.html'; };
-    window.backPress  = function () { sessionStorage.removeItem("query"); window.location.href = '../html/index.html'; };
+    window.backPress  = function () { sessionStorage.removeItem("query"); window.location.href = '/index.html'; };
     window.resPage    = function () { window.location.href = 'checkoutmenu.html'; };
 
     // ── Mobile sidebar toggle ──
@@ -526,9 +526,7 @@
 
         document.getElementById("fb-dir-btn").onclick = () => {
           sessionStorage.setItem("currRest", r.id);
-          fetchAddress(r.lat, r.lng).then(address => {
-            window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`, '_blank');
-          });
+          getDirections();
         };
       } else {
         const box = document.getElementById("restaurant-info-box");
@@ -548,6 +546,67 @@
         };
       }
     }
+
+    async function getDirections() {
+  const restName = sessionStorage.getItem("currRest");
+  const restRef = ref(savorDB, `rest/${restName}`);
+  const restSnap = await get (restRef);
+  const r = restSnap.val();
+
+  const { lat, lng } = r;
+
+  // Use coordinates directly — no fetchAddress needed, works on all browsers
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isAndroid = /Android/.test(navigator.userAgent);
+
+  if (isIOS) {
+    // Try Apple Maps deep link first (opens Maps app on iOS)
+    // Fallback: Google Maps app via comgooglemaps://, then browser
+    const appleMapsUrl = `maps://?daddr=${lat},${lng}`;
+    const googleMapsAppUrl = `comgooglemaps://?daddr=${lat},${lng}`;
+    const googleMapsBrowserUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+
+    // Try to open Google Maps app; if not installed, fall back to Apple Maps, then browser
+    const start = Date.now();
+    window.location.href = googleMapsAppUrl;
+
+    setTimeout(() => {
+      if (Date.now() - start < 1500) {
+        // Google Maps app didn't open, try Apple Maps
+        window.location.href = appleMapsUrl;
+      }
+    }, 500);
+
+    setTimeout(() => {
+      if (Date.now() - start < 2000) {
+        // Neither app opened, fall back to browser
+        window.open(googleMapsBrowserUrl, '_blank');
+      }
+    }, 1000);
+
+  } else if (isAndroid) {
+    // Android: use geo: URI which prompts user to choose their maps app
+    // Falls back to Google Maps browser if no app handles it
+    const geoUrl = `geo:${lat},${lng}?q=${lat},${lng}`;
+    const googleMapsBrowserUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+
+    const start = Date.now();
+    window.location.href = geoUrl;
+
+    setTimeout(() => {
+      if (Date.now() - start < 1500) {
+        window.open(googleMapsBrowserUrl, '_blank');
+      }
+    }, 1000);
+
+  } else {
+    // Desktop: open in browser tab, works on Chrome, Safari, Firefox, Edge
+    window.open(
+      `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+      '_blank'
+    );
+  }
+}
 
     // ── Search ──
     const searchInput = document.getElementById("searchInput");
