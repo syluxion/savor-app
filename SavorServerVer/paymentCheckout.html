@@ -340,9 +340,14 @@
           email = document.getElementById('email').value.trim();
         }
 
-        if (!cardName || !cardNumber || !expiry || !cvv || !email) {
+        if (!cardName || !cardNumber || !expiry || !cvv){
           alert("Please fill in all payment fields.");
           return reject("Missing payment info");
+        }
+
+        if(!loggedUser && !email){
+          alert("Please provide an email for order confirmation.");
+          return reject("Missing email");
         }
 
         if (!orderId) {

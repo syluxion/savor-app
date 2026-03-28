@@ -562,38 +562,6 @@ document.getElementById('mob-delete')?.addEventListener('click', () => confirmDe
         .catch(err => { console.error(err); alert("Failed to update password."); });
     };
 
-    // ── Account type check (business dashboard button) ──
-    async function checkType() {
-      const userRef  = ref(savorDB, `user/${loggedUser}`);
-      const userSnap = await get(userRef);
-      const userVal  = userSnap.val();
-  
-      console.log("accountType:", userVal?.accountType); // ADD THIS
-      console.log("full user data:", userVal);           // ADD THIS
-
-      if (userVal?.accountType === "fb" || userVal?.accountType === "business") {
-        // Desktop sidebar
-        const dashBtn = document.createElement("button");
-        dashBtn.type = "button";
-        dashBtn.className = "nav-item";
-        dashBtn.setAttribute("role", "tab");
-        dashBtn.setAttribute("aria-selected", "false");
-        dashBtn.setAttribute("aria-controls", "panel-back");
-        dashBtn.id = "tab-back";
-        dashBtn.textContent = "Business Dashboard";
-        dashBtn.addEventListener("click", backPage);
-        document.getElementById("sidebar").appendChild(dashBtn);
-
-        // Mobile bottom nav
-        const mobBtn = document.createElement("button");
-        mobBtn.type = "button";
-        mobBtn.className = "mob-nav-item";
-        mobBtn.innerHTML = `<span class="nav-icon">🏪</span>Dashboard`;
-        mobBtn.addEventListener("click", backPage);
-        document.querySelector(".mobile-bottom-nav").appendChild(mobBtn);
-      }
-    }
-
     async function backPage() {
       const userSnap = await get(ref(savorDB, `user/${loggedUser}`));
       const userVal  = userSnap.val();
@@ -657,7 +625,6 @@ document.getElementById('mob-delete')?.addEventListener('click', () => confirmDe
     (async () => {
       await organizeOrders();
       renderOrders();
-      checkType();
     })();
   </script>
 </body>
