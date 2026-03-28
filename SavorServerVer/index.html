@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -49,8 +50,15 @@
       white-space: nowrap;
     }
 
-    .login-btn:hover  { background-color: #118f54; box-shadow: 0 0 20px rgba(16,128,64,0.6); }
-    .login-btn:active { transform: scale(0.95); background-color: #0d7f40; }
+    .login-btn:hover {
+      background-color: #118f54;
+      box-shadow: 0 0 20px rgba(16, 128, 64, 0.6);
+    }
+
+    .login-btn:active {
+      transform: scale(0.95);
+      background-color: #0d7f40;
+    }
 
     /* ── Logo / Title ── */
     .title {
@@ -64,36 +72,51 @@
       text-shadow:
         0 3px 0 #c8e1c8,
         0 6px 0 #a8d1a8,
-        0 9px 10px rgba(0,0,0,0.25);
+        0 9px 10px rgba(0, 0, 0, 0.25);
       position: relative;
       overflow: hidden;
       animation: pulse 4s ease-in-out infinite;
     }
 
     @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50%       { transform: scale(1.03); }
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.03);
+      }
     }
 
     .title::after {
       content: "";
       position: absolute;
-      top: 0; left: -75%;
-      width: 50%; height: 100%;
-      background: linear-gradient(
-        120deg,
-        rgba(255,255,255,0.1) 0%,
-        rgba(255,255,255,0.6) 50%,
-        rgba(255,255,255,0.1) 100%
-      );
+      top: 0;
+      left: -75%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(120deg,
+          rgba(255, 255, 255, 0.1) 0%,
+          rgba(255, 255, 255, 0.6) 50%,
+          rgba(255, 255, 255, 0.1) 100%);
       transform: skewX(-20deg);
       animation: shine 6s infinite;
     }
 
     @keyframes shine {
-      0%   { left: -75%; }
-      50%  { left: 125%; }
-      100% { left: 125%; }
+      0% {
+        left: -75%;
+      }
+
+      50% {
+        left: 125%;
+      }
+
+      100% {
+        left: 125%;
+      }
     }
 
     /* ── Search area ── */
@@ -111,17 +134,18 @@
       padding: 16px 22px;
       border-radius: 40px;
       border: none;
-      font-size: 16px;          /* 16px prevents iOS auto-zoom */
+      font-size: 16px;
+      /* 16px prevents iOS auto-zoom */
       font-family: inherit;
       outline: none;
-      background: rgba(255,255,255,0.88);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
       transition: box-shadow 0.2s ease;
       -webkit-appearance: none;
     }
 
     .search-box:focus {
-      box-shadow: 0 0 22px rgba(16,128,64,0.65);
+      box-shadow: 0 0 22px rgba(16, 128, 64, 0.65);
     }
 
     .search-btn {
@@ -136,12 +160,20 @@
       font-weight: bold;
       letter-spacing: 1px;
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
       transition: all 0.25s ease;
     }
 
-    .search-btn:hover  { transform: scale(1.03); background-color: #118f54; box-shadow: 0 0 22px rgba(16,128,64,0.65); }
-    .search-btn:active { transform: scale(0.96); background-color: #0d7f40; }
+    .search-btn:hover {
+      transform: scale(1.03);
+      background-color: #118f54;
+      box-shadow: 0 0 22px rgba(16, 128, 64, 0.65);
+    }
+
+    .search-btn:active {
+      transform: scale(0.96);
+      background-color: #0d7f40;
+    }
 
     /* ── Tablet / desktop: restore side-by-side search layout ── */
     @media (min-width: 600px) {
@@ -169,6 +201,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- Fixed account button -->
@@ -178,13 +211,8 @@
     <h1 class="title">SAVOR</h1>
 
     <div class="search-container">
-      <input
-        type="text"
-        id="searchInput"
-        class="search-box"
-        placeholder="Search restaurants or food…"
-        enterkeyhint="search"
-      />
+      <input type="text" id="searchInput" class="search-box" placeholder="Search restaurants or food…"
+        enterkeyhint="search" />
       <button class="search-btn" onclick="searchRestaurants()">SEARCH</button>
     </div>
   </div>
@@ -201,17 +229,27 @@
     const savorDB = getDatabase(app);
 
     async function handleLogin() {
-      if (localStorage.getItem("loggedInUser")) {
-        const restOwner = ref(savorDB, `user/${localStorage.getItem("loggedInUser")}/rest`);
-        const restOwnerSnap = await get(restOwner);
-        if (!restOwnerSnap.val()) {
-          window.location.href = "/user_acc.html";
-        } else {
-          sessionStorage.setItem("ownedRest", restOwnerSnap.val());
-          window.location.href = "/res_dash.html";
-        }
-      } else {
+      const userId = localStorage.getItem("loggedInUser");
+      if (!userId){
         window.location.href = "/login.html";
+        return;
+      };
+
+      const userSnap = await get(ref(savorDB, `user/${userId}`));
+      const userData = userSnap.val();
+      const type = userData?.accountType;
+
+      if (type === "fb") {
+        sessionStorage.setItem("ownedRest", userData.rest ?? "");
+        window.location.href = "/fb_acc.html";
+      }
+      else if (type === "business") {
+        sessionStorage.setItem("ownedRest", userData.rest ?? "");
+        window.location.href = "/res_dash.html";
+      }
+      else
+      {
+        window.location.href = "/user_acc.html";
       }
     }
 
@@ -232,4 +270,5 @@
     document.getElementById("login-btn").addEventListener("click", handleLogin);
   </script>
 </body>
+
 </html>

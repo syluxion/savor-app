@@ -27,7 +27,7 @@
         height: 100vh;
         padding: 24px;
       }
-      .settings-nav { display: flex; flex-direction: column; gap: 12px; }
+      .settings-nav      { display: flex; flex-direction: column; gap: 12px; }
       .mobile-header     { display: none; }
       .mobile-bottom-nav { display: none; }
     }
@@ -55,7 +55,6 @@
         padding-bottom: 80px;
       }
 
-      /* Mobile top header */
       .mobile-header {
         display: flex;
         align-items: center;
@@ -82,7 +81,6 @@
         text-align: right;
       }
 
-      /* Bottom navigation */
       .mobile-bottom-nav {
         display: flex;
         position: fixed;
@@ -118,14 +116,13 @@
         background: rgba(17,143,84,0.06);
       }
 
-      .mobile-bottom-nav .mob-nav-item.danger      { color: #b3261e; }
+      .mobile-bottom-nav .mob-nav-item.danger           { color: #b3261e; }
       .mobile-bottom-nav .mob-nav-item.danger.is-active { background: rgba(179,38,30,0.06); }
 
       .settings-header { margin-bottom: 12px; }
       .login-submit    { width: 100%; padding: 14px; font-size: 18px; }
       .actions         { flex-direction: column; }
 
-      /* Payment expiry + CVV side by side */
       .field-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -162,7 +159,7 @@
       box-shadow: 0 0 5px rgba(0,0,0,0.08);
       transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
     }
-    .nav-item:hover    { transform: translateX(2px); }
+    .nav-item:hover     { transform: translateX(2px); }
     .nav-item.is-active { background: #e7f5ee; box-shadow: 0 0 0 2px rgba(17,143,84,0.25) inset; }
     .nav-item.danger-item { color: #b3261e; }
 
@@ -184,8 +181,8 @@
       background-color: #f2f2f2;
     }
 
-    .settings-header    { text-align: center; margin-bottom: 18px; }
-    .settings-subtitle  { color: #444; margin: 6px 0 0; font-size: 14px; }
+    .settings-header   { text-align: center; margin-bottom: 18px; }
+    .settings-subtitle { color: #444; margin: 6px 0 0; font-size: 14px; }
 
     .panel {
       opacity: 0;
@@ -242,7 +239,6 @@
     .login-submit:hover  { background-color: #118f54; transform: scale(1.04); }
     .login-submit:active { transform: scale(0.97); }
 
-    /* Order cards */
     .title-pickup {
       font-size: 40px; color: #0a5a2e; margin: 0;
       font-weight: 900; letter-spacing: 3px;
@@ -250,11 +246,11 @@
     }
     .title-link { text-decoration: none; color: inherit; }
 
-    .row  { display: flex; justify-content: space-between; align-items: center; }
-    .hd   { width: 100%; }
-    .title       { font-weight: 700; color: #0a5a2e; }
-    .rest        { flex: 1; text-align: center; font-size: 0.9rem; }
-    .totalPrice  { text-align: right; font-size: 0.9rem; }
+    .row        { display: flex; justify-content: space-between; align-items: center; }
+    .hd         { width: 100%; }
+    .title      { font-weight: 700; color: #0a5a2e; }
+    .rest       { flex: 1; text-align: center; font-size: 0.9rem; }
+    .totalPrice { text-align: right; font-size: 0.9rem; }
 
     #pending-orders .card,
     #completed-orders .card {
@@ -268,7 +264,6 @@
 </head>
 <body>
 
-  <!-- Mobile top header -->
   <header class="mobile-header">
     <a href="/index.html" class="title-link">
       <h1 class="title-pickup">SAVOR</h1>
@@ -278,7 +273,6 @@
 
   <div class="settings-layout">
 
-    <!-- Desktop sidebar -->
     <aside class="settings-nav" aria-label="Settings sections">
       <a href="/index.html" class="title-link">
         <h1 class="title-pickup">SAVOR</h1>
@@ -288,12 +282,12 @@
         <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-security" id="tab-security">Security</button>
         <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-payment"  id="tab-payment">Payment Info</button>
         <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-orders"   id="tab-orders">Orders</button>
+        <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-settings" id="tab-settings">Food Bank Info</button>
         <button type="button" class="nav-item danger-item" role="tab" aria-selected="false" aria-controls="panel-logout" id="tab-logout">Logout</button>
         <button type="button" class="nav-item danger-item" role="tab" aria-selected="false" aria-controls="panel-delete" id="tab-delete">Delete Account</button>
       </nav>
     </aside>
 
-    <!-- Main content -->
     <main class="settings-content">
 
       <div class="profile-avatar">
@@ -305,21 +299,30 @@
         <p class="settings-subtitle">Manage your info and settings here.</p>
       </header>
 
-      <!-- Personal Info -->
       <section id="panel-profile" class="panel is-visible" role="tabpanel" aria-labelledby="tab-profile">
         <section class="card">
           <h3>Personal Info</h3>
           <form id="profileBasicsForm" class="form-grid" autocomplete="on">
-            <div class="field"><label for="firstName">First Name</label>
-              <input type="text"  id="firstName"   name="firstName"   class="login-input" autocomplete="given-name"/></div>
-            <div class="field"><label for="lastName">Last Name</label>
-              <input type="text"  id="lastName"    name="lastName"    class="login-input" autocomplete="family-name"/></div>
-            <div class="field"><label for="email">Email</label>
-              <input type="email" id="email"       name="email"       class="login-input" autocomplete="email" inputmode="email"/></div>
-            <div class="field"><label for="birthdate">Birthdate</label>
-              <input type="date"  id="birthdate"   name="birthdate"   class="login-input"/></div>
-            <div class="field"><label for="phoneNumber">Phone Number</label>
-              <input type="tel"   id="phoneNumber" name="phoneNumber" class="login-input" autocomplete="tel" inputmode="tel"/></div>
+            <div class="field">
+              <label for="firstName">First Name</label>
+              <input type="text"  id="firstName"   name="firstName"   class="login-input" autocomplete="given-name"/>
+            </div>
+            <div class="field">
+              <label for="lastName">Last Name</label>
+              <input type="text"  id="lastName"    name="lastName"    class="login-input" autocomplete="family-name"/>
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input type="email" id="email"       name="email"       class="login-input" autocomplete="email" inputmode="email"/>
+            </div>
+            <div class="field">
+              <label for="birthdate">Birthdate</label>
+              <input type="date"  id="birthdate"   name="birthdate"   class="login-input"/>
+            </div>
+            <div class="field">
+              <label for="phoneNumber">Phone Number</label>
+              <input type="tel"   id="phoneNumber" name="phoneNumber" class="login-input" autocomplete="tel" inputmode="tel"/>
+            </div>
             <div class="actions">
               <button type="submit" class="login-submit" onclick="saveAccountChanges1(event)">Save Changes</button>
               <div id="profileBasicsStatus" class="status" aria-live="polite"></div>
@@ -328,17 +331,22 @@
         </section>
       </section>
 
-      <!-- Security -->
       <section id="panel-security" class="panel" role="tabpanel" aria-labelledby="tab-security" hidden>
         <section class="card">
           <h3>Security</h3>
           <form id="securityForm" class="form-grid" autocomplete="off">
-            <div class="field"><label for="currentPassword">Current Password</label>
-              <input type="password" id="currentPassword" name="currentPassword" class="login-input" autocomplete="current-password"/></div>
-            <div class="field"><label for="newPassword">New Password</label>
-              <input type="password" id="newPassword"     name="newPassword"     class="login-input" autocomplete="new-password"/></div>
-            <div class="field"><label for="confirmPassword">Confirm New Password</label>
-              <input type="password" id="confirmPassword" name="confirmPassword" class="login-input" autocomplete="new-password"/></div>
+            <div class="field">
+              <label for="currentPassword">Current Password</label>
+              <input type="password" id="currentPassword" name="currentPassword" class="login-input" autocomplete="current-password"/>
+            </div>
+            <div class="field">
+              <label for="newPassword">New Password</label>
+              <input type="password" id="newPassword"     name="newPassword"     class="login-input" autocomplete="new-password"/>
+            </div>
+            <div class="field">
+              <label for="confirmPassword">Confirm New Password</label>
+              <input type="password" id="confirmPassword" name="confirmPassword" class="login-input" autocomplete="new-password"/>
+            </div>
             <div class="actions">
               <button type="submit" class="login-submit" onclick="updatePass(event)">Update Password</button>
               <div id="securityStatus" class="status" aria-live="polite"></div>
@@ -347,20 +355,27 @@
         </section>
       </section>
 
-      <!-- Payment Info -->
       <section id="panel-payment" class="panel" role="tabpanel" aria-labelledby="tab-payment" hidden>
         <section class="card">
           <h3>Payment Info</h3>
           <form id="paymentForm" class="form-grid" autocomplete="off">
-            <div class="field"><label for="cardName">Cardholder Name</label>
-              <input type="text"     id="cardName"   class="login-input" placeholder="John Doe"            autocomplete="cc-name"/></div>
-            <div class="field"><label for="cardNumber">Card Number</label>
-              <input type="text"     id="cardNumber" class="login-input" placeholder="1234 5678 9012 3456" autocomplete="cc-number"  inputmode="numeric" maxlength="19"/></div>
+            <div class="field">
+              <label for="cardName">Cardholder Name</label>
+              <input type="text"     id="cardName"   class="login-input" placeholder="John Doe"            autocomplete="cc-name"/>
+            </div>
+            <div class="field">
+              <label for="cardNumber">Card Number</label>
+              <input type="text"     id="cardNumber" class="login-input" placeholder="1234 5678 9012 3456" autocomplete="cc-number" inputmode="numeric" maxlength="19"/>
+            </div>
             <div class="field-row">
-              <div class="field"><label for="expiry">Expiration</label>
-                <input type="month"    id="expiry"     class="login-input" autocomplete="cc-exp"/></div>
-              <div class="field"><label for="cvv">CVV</label>
-                <input type="password" id="cvv"        class="login-input" placeholder="123" autocomplete="cc-csc" inputmode="numeric" maxlength="4"/></div>
+              <div class="field">
+                <label for="expiry">Expiration</label>
+                <input type="month"    id="expiry" class="login-input" autocomplete="cc-exp"/>
+              </div>
+              <div class="field">
+                <label for="cvv">CVV</label>
+                <input type="password" id="cvv"    class="login-input" placeholder="123" autocomplete="cc-csc" inputmode="numeric" maxlength="4"/>
+              </div>
             </div>
             <div class="actions">
               <button type="button" class="login-submit" id="savePayment">Save Changes</button>
@@ -369,7 +384,6 @@
         </section>
       </section>
 
-      <!-- Orders -->
       <section id="panel-orders" class="panel" role="tabpanel" aria-labelledby="tab-orders" hidden>
         <section class="card">
           <h3>Pending Orders</h3>
@@ -381,16 +395,64 @@
         </section>
       </section>
 
-      <!-- Logout panel (action handled in JS) -->
-      <section id="panel-logout" class="panel" role="tabpanel" aria-labelledby="tab-logout" hidden></section>
+      <section id="panel-settings" class="panel" role="tabpanel" aria-labelledby="tab-settings" hidden>
+        <section class="card">
+          <h3>Food Bank Information</h3>
+          <form id="fbInfoForm" class="form-grid" autocomplete="on">
+            <div class="field">
+              <label>Food Bank Name</label>
+              <input type="text"  id="fb-restName"    name="restName"    class="login-input"/>
+            </div>
+            <div class="field">
+              <label>Manager</label>
+              <input type="text"  id="fb-fullName"    name="fullName"    class="login-input"/>
+            </div>
+            <div class="field">
+              <label>Phone Number</label>
+              <input type="tel"   id="fb-phoneNumber" name="phoneNumber" class="login-input" autocomplete="tel" inputmode="tel"/>
+            </div>
+            <div class="field">
+              <label>Email</label>
+              <input type="email" id="fb-email"       name="email"       class="login-input" autocomplete="email" inputmode="email"/>
+            </div>
+            <div class="field">
+              <label>Street Address</label>
+              <input type="text"  id="fb-street1"     name="street1"     class="login-input" autocomplete="address-line1" placeholder="123 Main St"/>
+            </div>
+            <div class="field">
+              <label>Apt / Suite (optional)</label>
+              <input type="text"  id="fb-street2"     name="street2"     class="login-input" autocomplete="address-line2" placeholder="Suite 200"/>
+            </div>
+            <div class="field">
+              <label>City</label>
+              <input type="text"  id="fb-city"        name="city"        class="login-input" autocomplete="address-level2" placeholder="Los Angeles"/>
+            </div>
+            <div class="field">
+              <label>State</label>
+              <input type="text"  id="fb-state"       name="state"       class="login-input" autocomplete="address-level1" placeholder="CA"/>
+            </div>
+            <div class="field">
+              <label>ZIP Code</label>
+              <input type="text"  id="fb-zip"         name="zip"         class="login-input" autocomplete="postal-code" placeholder="90001" inputmode="numeric"/>
+            </div>
+            <div class="field">
+              <label>Country</label>
+              <input type="text"  id="fb-country"     name="country"     class="login-input" autocomplete="country-name" placeholder="United States"/>
+            </div>
+            <div class="actions">
+              <button type="button" class="login-submit" onclick="saveResChanges(event)">Save Changes</button>
+              <div id="fbInfoStatus" class="status" aria-live="polite"></div>
+            </div>
+          </form>
+        </section>
+      </section>
 
-      <!-- ADD after panel-logout section: -->
+      <section id="panel-logout" class="panel" role="tabpanel" aria-labelledby="tab-logout" hidden></section>
       <section id="panel-delete" class="panel" role="tabpanel" aria-labelledby="tab-delete" hidden></section>
 
     </main>
   </div>
 
-  <!-- Mobile bottom navigation -->
   <nav class="mobile-bottom-nav" aria-label="Account navigation">
     <button type="button" class="mob-nav-item is-active" data-panel="panel-profile">
       <span class="nav-icon">👤</span>Info
@@ -403,6 +465,9 @@
     </button>
     <button type="button" class="mob-nav-item" data-panel="panel-orders">
       <span class="nav-icon">🧾</span>Orders
+    </button>
+    <button type="button" class="mob-nav-item" data-panel="panel-settings" id="mob-fb-info">
+      <span class="nav-icon">🏪</span>Food Bank Info
     </button>
     <button type="button" class="mob-nav-item danger" id="mob-logout">
       <span class="nav-icon">🚪</span>Logout
@@ -420,16 +485,14 @@
     const app     = initializeApp(firebaseConfig);
     const savorDB = getDatabase(app);
 
-    const state = { pendOrders: [], compOrders: [] };
+    const state      = { pendOrders: [], compOrders: [] };
     const loggedUser = localStorage.getItem("loggedInUser");
 
-    // Show username in mobile header
     if (loggedUser) {
       const el = document.getElementById("header-username");
       if (el) el.textContent = loggedUser;
     }
 
-    // ── Panel system ──
     function getAllPanels() { return Array.from(document.querySelectorAll('.panel')); }
 
     function showPanelById(panelId) {
@@ -437,14 +500,12 @@
       const target = document.getElementById(panelId);
       if (target) { target.hidden = false; target.classList.add('is-visible'); }
 
-      // sync desktop sidebar
       document.querySelectorAll('#sidebar [role="tab"]').forEach(btn => {
         const active = btn.getAttribute('aria-controls') === panelId;
         btn.classList.toggle('is-active', active);
         btn.setAttribute('aria-selected', String(active));
       });
 
-      // sync mobile bottom nav
       document.querySelectorAll('.mob-nav-item[data-panel]').forEach(btn => {
         btn.classList.toggle('is-active', btn.dataset.panel === panelId);
       });
@@ -455,44 +516,39 @@
       if (panelId) showPanelById(panelId);
     }
 
-    // Desktop sidebar click delegation
     document.getElementById('sidebar').addEventListener('click', e => {
       const tab = e.target.closest('[role="tab"]');
       if (!tab) return;
       if (tab.id === 'tab-logout') { window.logoutUser(); return; }
-      if (tab.id === 'tab-delete') { confirmDelete(); return; }  // ADD this line
+      if (tab.id === 'tab-delete') { confirmDelete(); return; }
       showPanel(tab);
     });
 
-    // Desktop sidebar keyboard nav
     document.getElementById('sidebar').addEventListener('keydown', e => {
       const tab = e.target.closest('[role="tab"]');
       if (!tab) return;
       const tabs = Array.from(document.querySelectorAll('#sidebar [role="tab"]'));
       const idx  = tabs.indexOf(tab);
-      if (['ArrowUp','ArrowLeft'].includes(e.key)) {
+      if (['ArrowUp', 'ArrowLeft'].includes(e.key)) {
         e.preventDefault();
         const prev = tabs[(idx - 1 + tabs.length) % tabs.length];
         prev.focus(); showPanel(prev);
-      } else if (['ArrowDown','ArrowRight'].includes(e.key)) {
+      } else if (['ArrowDown', 'ArrowRight'].includes(e.key)) {
         e.preventDefault();
         const next = tabs[(idx + 1) % tabs.length];
         next.focus(); showPanel(next);
       }
     });
 
-    // Mobile bottom nav
     document.querySelectorAll('.mob-nav-item[data-panel]').forEach(btn => {
       btn.addEventListener('click', () => showPanel(btn));
     });
     document.getElementById('mob-logout')?.addEventListener('click', () => window.logoutUser());
     document.getElementById('mob-delete')?.addEventListener('click', () => confirmDelete());
 
-    // Init
     const initial = document.querySelector('#sidebar .is-active') || document.querySelector('#sidebar [role="tab"]');
     if (initial) showPanel(initial);
 
-    // ── Save personal info ──
     window.saveAccountChanges1 = function (event) {
       event.preventDefault();
       const email     = document.getElementById('email').value.trim();
@@ -510,7 +566,6 @@
         .catch(err => { console.error(err); alert("Error saving account."); });
     };
 
-    // ── Save payment info ──
     window.savePaymentInfo = function () {
       const cardName   = document.getElementById('cardName').value.trim();
       const cardNumber = document.getElementById('cardNumber').value.trim();
@@ -525,9 +580,40 @@
         .catch(err => { console.error(err); alert("Error saving payment info."); });
     };
 
+    window.saveResChanges = function (event) {
+      event.preventDefault();
+      const restname = restTarget;
+      if (!restname) { alert("No restaurant found!"); return; }
+
+      const email    = document.getElementById('fb-email').value.trim();
+      const manager  = document.getElementById('fb-fullName').value.trim();
+      const phoneNum = document.getElementById('fb-phoneNumber').value.trim();
+      const city     = document.getElementById('fb-city').value.trim();
+      const country  = document.getElementById('fb-country').value.trim();
+      const state    = document.getElementById('fb-state').value.trim();
+      const street   = document.getElementById('fb-street1').value.trim();
+      const suite    = document.getElementById('fb-street2').value.trim();
+      const zipCode  = document.getElementById('fb-zip').value.trim();
+
+      update(ref(savorDB, `rest/${restname}/Info`), {
+        "Email:":    email,
+        "Manager:":  manager,
+        "phoneNum:": phoneNum,
+        Address: {
+          "City:":     city,
+          "Country:":  country,
+          "State:":    state,
+          "Street:":   street,
+          "Suite:":    suite,
+          "Zip Code:": zipCode
+        }
+      })
+        .then(() => alert("Restaurant updated successfully!"))
+        .catch(err => { console.error(err); alert("Error saving restaurant."); });
+    };
+
     document.getElementById("savePayment").addEventListener("click", savePaymentInfo);
 
-    // ── Navigation ──
     window.viewOrder   = function () { window.location.href = "orderView.html"; };
     window.pickupOrder = function () { window.location.href = "orderView.html"; };
 
@@ -536,7 +622,6 @@
       window.location.href = "index.html";
     };
 
-    // ── Update password ──
     window.updatePass = function (event) {
       event.preventDefault();
       const newPassword     = document.getElementById('newPassword').value.trim();
@@ -549,7 +634,6 @@
         .catch(err => { console.error(err); alert("Failed to update password."); });
     };
 
-    // ── Orders ──
     async function organizeOrders() {
       const snapshot = await get(ref(savorDB, `order`));
       if (!snapshot.exists()) return;
@@ -588,45 +672,20 @@
     }
 
     function confirmDelete() {
-    if (confirm("Are you sure you want to delete your account?")) deleteAccount();
-  }
+      if (confirm("Are you sure you want to delete your account?")) deleteAccount();
+    }
 
-  async function deleteAccount() {
-    try {
-      const { remove } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js");
-    await remove(ref(savorDB, `user/${loggedUser}`));
-      localStorage.removeItem("loggedInUser");
-      window.location.href = "index.html";
-    } catch (err) { console.error("Error deleting account:", err); }
-  }
-
-  async function checkType() { 
-    const userSnap = await get(ref(savorDB, `user/${loggedUser}`));
-    const userVal  = userSnap.val();
-      if (userVal?.accountType === "fb" || userVal?.accountType === "business" || userVal?.rest) {
-        const dashBtn = document.createElement("button");
-        dashBtn.type = "button";
-        dashBtn.className = "nav-item";
-        dashBtn.setAttribute("role", "tab");
-        dashBtn.setAttribute("aria-selected", "false");
-        dashBtn.setAttribute("aria-controls", "panel-back");
-        dashBtn.textContent = "Business Dashboard";
-        dashBtn.addEventListener("click", () => window.location.href = "res_dash.html");
-        document.getElementById("sidebar").appendChild(dashBtn);
-
-        const mobBtn = document.createElement("button");
-        mobBtn.type = "button";
-        mobBtn.className = "mob-nav-item";
-        mobBtn.innerHTML = `<span class="nav-icon">🏪</span>Dashboard`;
-        mobBtn.addEventListener("click", () => window.location.href = "res_dash.html");
-        document.querySelector(".mobile-bottom-nav").appendChild(mobBtn);
-      }
-  }
+    async function deleteAccount() {
+      try {
+        await remove(ref(savorDB, `user/${loggedUser}`));
+        localStorage.removeItem("loggedInUser");
+        window.location.href = "index.html";
+      } catch (err) { console.error("Error deleting account:", err); }
+    }
 
     (async () => {
       await organizeOrders();
       renderOrders();
-      checkType();
     })();
   </script>
 </body>
