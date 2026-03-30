@@ -375,6 +375,10 @@
 
     .item-allergy { font-size: 0.78rem; color: #a85a00; margin-top: 2px; font-style: italic; }
 
+    .mobile-bottom-nav .mob-nav-item.danger           { color: #b3261e; }
+    .mobile-bottom-nav .mob-nav-item.danger.is-active { background: rgba(179,38,30,0.06); }
+    .nav-item.danger-item { color: #b3261e; }
+
     .selected-allergy-chip {
       display: inline-flex;
       align-items: center;
@@ -1512,6 +1516,8 @@
         .catch(err => { console.error(err); alert("Failed to update password."); });
     };
 
+    document.getElementById('tab-logout')?.addEventListener('click', () => window.logoutUser());
+    document.getElementById('tab-delete')?.addEventListener('click', () => confirmDelete());
     document.getElementById('mob-logout')?.addEventListener('click', () => window.logoutUser());
     document.getElementById('mob-delete')?.addEventListener('click', () => confirmDelete());
 
