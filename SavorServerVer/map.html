@@ -266,7 +266,6 @@
       height: 110px;
       object-fit: cover;
       border-radius: 14px;
-      margin-bottom: 8px;
     }
 
     .info-card h3 {
@@ -331,6 +330,42 @@
     .leaflet-routing-error {
       display: none !important;
     }
+
+    .info-card-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 28px;
+      height: 28px;
+      background: #0a5a2e;
+      border: none;
+      border-radius: 50%;
+      font-size: 15px;
+      line-height: 1;
+      cursor: pointer;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+      z-index: 2;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+    .info-card-close:hover { background: #118f54; }
+
+    .info-img-wrap {
+      position: relative;
+      width: 100%;
+      margin-bottom: 8px;
+    }
+    .info-img-wrap img {
+      width: 100%;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 14px;
+      display: block;
+      margin-bottom: 0;
+    }
   </style>
 </head>
 <body>
@@ -360,7 +395,10 @@
 
   <!-- Restaurant info card -->
   <div class="info-card" id="restaurant-info-box">
-    <img id="info-img" alt="Restaurant image" />
+    <div class="info-img-wrap">
+      <button class="info-card-close" onclick="closeInfoCards()" aria-label="Close">✕</button>
+      <img id="info-img" alt="Restaurant image" />
+    </div>
     <h3 id="info-name"></h3>
     <div class="info-rating" id="info-rating"></div>
     <p class="info-hours" id="info-hours"></p>
@@ -370,7 +408,10 @@
 
   <!-- Food bank info card -->
   <div class="info-card" id="fb-info-box">
-    <img id="fb-info-img" alt="Food bank image" />
+    <div class="info-img-wrap">
+      <button class="info-card-close" onclick="closeInfoCards()" aria-label="Close">✕</button>
+      <img id="fb-info-img" alt="Food bank image" />
+    </div>
     <h3 id="fb-info-name"></h3>
     <div class="info-rating" id="fb-info-rating"></div>
     <p class="info-hours" id="fb-info-hours"></p>
@@ -396,6 +437,10 @@
     window.loginPress = function () { window.location.href = 'login.html'; };
     window.backPress  = function () { sessionStorage.removeItem("query"); window.location.href = '/index.html'; };
     window.resPage    = function () { window.location.href = 'checkoutmenu.html'; };
+    window.closeInfoCards = function () {
+      document.getElementById("restaurant-info-box").style.display = "none";
+      document.getElementById("fb-info-box").style.display = "none";
+    };
 
     // ── Mobile sidebar toggle ──
     const sidebar        = document.getElementById("sidebar");
