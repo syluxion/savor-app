@@ -188,6 +188,30 @@
       <input type="email"    class="login-input" id="email"           placeholder="Email"             autocomplete="email"            inputmode="email">
       <input type="password" class="login-input" id="password"        placeholder="Password"          autocomplete="new-password">
       <input type="password" class="login-input" id="confirmPassword" placeholder="Re-enter Password" autocomplete="new-password">
+<!--///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+      <select class="login-input" id="hasAllergies" onchange="toggleAllergyInput()">
+        <option value="" disabled selected>Any allergens?</option>
+        <option value="no">No</option>
+        <option value="yes">Yes</option>
+      </select>
+
+    <div id="allergyDetailsContainer" style="display: none; text-align: left; background: #f9f9f9; padding: 15px; border-radius: 10px; margin-bottom: 16px; border: 1px solid #ddd;">
+      <p style="margin-top: 0; color: #0a5a2e; font-weight: bold; font-size: 14px;">Select all that apply:</p>
+  
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+        <label style="font-size: 14px;"><input type="checkbox" name="allergy" value="Peanuts"> Peanuts</label>
+        <label style="font-size: 14px;"><input type="checkbox" name="allergy" value="Gluten"> Gluten</label>
+        <label style="font-size: 14px;"><input type="checkbox" name="allergy" value="Tree Nuts"> Tree Nuts</label>
+        <label style="font-size: 14px;"><input type="checkbox" name="allergy" value="Dairy"> Dairy</label>
+        <label style="font-size: 14px;"><input type="checkbox" name="allergy" value="Eggs"> Eggs</label>
+        <label style="font-size: 14px;"><input type="checkbox" name="allergy" value="Fish"> Fish</label>
+        <label style="font-size: 14px;"><input type="checkbox" name="allergy" value="Shellfish"> Shellfish</label>
+        <label style="font-size: 14px;"><input type="checkbox" name="allergy" value="Soy"> Soy</label>
+      </div>
+
+    <input type="text" class="login-input" id="otherAllergy" placeholder="Other (e.g. Sesame, Strawberries)" style="margin-bottom: 0; padding: 8px 10px; font-size: 14px;">
+  </div>
+<!--///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
 
       <select class="login-input" id="accountType">
         <option value="" disabled selected>Select Account Type</option>
@@ -207,13 +231,19 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+    import { getDatabase, ref, set, update} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
     const firebaseConfig = {
       databaseURL: "https://savordatabase-default-rtdb.firebaseio.com"
     };
     const app = initializeApp(firebaseConfig);
     const savorDB = getDatabase(app);
+
+    window.toggleAllergyInput = function() {
+      const selection = document.getElementById('hasAllergies').value;
+      const container = document.getElementById('allergyDetailsContainer');
+      container.style.display = (selection === 'yes') ? 'block' : 'none';
+    };
 
     window.createAccount = function () {
       const username        = document.getElementById('username').value.trim();
@@ -224,6 +254,12 @@
       const firstName       = document.getElementById('firstName').value.trim();
       const lastName        = document.getElementById('lastName').value.trim();
       const birthDate       = document.getElementById('birthDate').value.trim();
+      const hasAllergiesChoice = document.getElementById('hasAllergies').value;
+
+      if (!username || !password || !email || !accountType || hasAllergiesChoice === "") {
+        alert("Please fill in all fields and select an allergy option.");
+        return;
+      }
 
       const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/;
       if (!emailPattern.test(email)) {
@@ -241,6 +277,28 @@
         return;
       }
 
+      let selectedAllergens = "None";
+      if (hasAllergiesChoice === 'yes') {
+        const checkedNodes = document.querySelectorAll('input[name="allergy"]:checked');
+        let selected = Array.from(checkedNodes).map(cb => cb.value);
+        const other = document.getElementById('otherAllergy').value.trim();
+        if (other) selected.push(other);
+        selectedAllergens = selected.length > 0 ? selected.join(", ") : "Yes (unspecified)";
+      }  
+
+      const userData = {
+        password,
+        email,
+        accountType,
+        firstName,
+        lastName,
+        birthDate,
+        allergens: {
+          hasAllergies: hasAllergiesChoice,
+          list: selectedAllergens
+        }
+      };
+
       const userRef = ref(savorDB, `user/${username}`);
       localStorage.setItem("loggedInUser", username);
 
@@ -249,7 +307,7 @@
         const order = sessionStorage.getItem("currOrder");
         const orderRef = ref(savorDB,`order/${order}`)
         update(orderRef, {user: username});
-        set(userRef, { password, email, accountType, firstName, lastName, birthDate })
+        set(userRef, userData)
         .then(() => {
           alert(`User "${username}" created successfully!`);
           window.location.href = accountType === "user"
@@ -263,7 +321,7 @@
       }
       else
       {
-        set(userRef, { password, email, accountType, firstName, lastName, birthDate })
+        set(userRef, userData)
         .then(() => {
           alert(`User "${username}" created successfully!`);
           window.location.href = accountType === "user"
