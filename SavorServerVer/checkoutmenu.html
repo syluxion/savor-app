@@ -2,362 +2,502 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Restaurant Menu + Checkout</title>
   <style>
-    :root {
-      --bg: #f6f7fb;
-      --card: #ffffff;
-      --text: #0f172a;
-      --muted: #64748b;
-      --border: #e2e8f0;
-      --accent: #0a5a2e;
-      --accentHover: #118f54;
-      --accentText: #ffffff;
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e2e8f0;
+      --accent:#111827;
+      --accentText:#ffffff;
       --shadow: 0 8px 24px rgba(15,23,42,.08);
-      --radius: 18px;
+      --radius:18px;
     }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      color: var(--text);
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
       background: url("/S4.png") no-repeat center center fixed;
       background-size: cover;
-      /* room for fixed cart bar on mobile */
-      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .wrap{
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 28px 16px 40px;
+    }
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
+      margin-bottom: 18px;
+    }
+   
+    h1{
+  font-size: 32px;
+  font-weight: 800;
+}
+    .sub{
+      margin-top:6px;
+      color:var(--muted);
+      font-size: 14px;
     }
 
-    /* ── Sticky top header ── */
-    .top-bar {
-      position: sticky;
-      top: 0;
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 16px;
-      background: rgba(255,255,255,0.93);
-      backdrop-filter: blur(8px);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
+    .restaurant-brand-wrap{
+  flex: 1;
+  min-width: 0;
+}
 
-    .back-btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      font-size: 20px;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .back-btn:hover  { background: var(--accentHover); }
-    .back-btn:active { transform: scale(0.93); }
+.restaurant-brand-row{
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
 
-    #restName {
-      margin: 0;
-      font-size: clamp(18px, 5vw, 26px);
-      letter-spacing: -0.02em;
-      flex: 1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+.restaurant-brand-text{
+  min-width: 0;
+  flex: 1;
+}
 
-    /* Cart pill — top bar on desktop, hidden on mobile (replaced by bottom bar) */
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 12px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.8);
+#restLogo{
+  height: 140px;          /* control size with height only */
+  width: auto;           /* let width adjust automatically */
+  max-width: 140px;      /* prevents it from getting too wide */
+
+  object-fit: contain;
+  border-radius: 16px;
+  border: 2px solid rgba(10, 90, 46, 0.15);
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+
+  display: none;
+  flex-shrink: 0;
+  padding: 10px;
+}
+
+#restTagline{
+  margin-top: 10px;
+  font-size: 16px;
+  line-height: 1.55;
+  color: #334155;
+  background: rgba(255,255,255,0.78);
+  padding: 12px 16px;
+  border-radius: 14px;
+  border-left: 4px solid #0a5a2e;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  font-style: italic;
+  max-width: 980px;
+}
+
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 12px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.6);
       border-radius: 999px;
       color: var(--muted);
       font-size: 13px;
-      white-space: nowrap;
-      flex-shrink: 0;
+      white-space:nowrap;
     }
-
-    /* ── Page content ── */
-    .wrap {
-      max-width: 1160px;
-      margin: 0 auto;
-      padding: 16px 16px 100px; /* bottom padding for mobile cart bar */
-    }
-
-    .sub {
-      display: none; /* replaced by cleaner sub-header */
-    }
-
-    /* ── Two-column grid on desktop, single column on mobile ── */
-    .grid {
-      display: grid;
+    .grid{
+      display:grid;
       grid-template-columns: 1fr;
       gap: 18px;
     }
-    @media (min-width: 980px) {
-      .grid {
+    @media (min-width: 980px){
+      .grid{
         grid-template-columns: 1fr 380px;
-        align-items: start;
+        align-items:start;
       }
-      .sticky {
+      .sticky{
         position: sticky;
-        top: 70px;
+        top: 18px;
       }
-      /* hide mobile cart bar on desktop */
-      .mobile-cart-bar { display: none !important; }
-      /* show desktop pill */
-      .pill { display: inline-flex; }
-    }
-    @media (max-width: 979px) {
-      /* hide desktop checkout sidebar — use bottom sheet instead */
-      .sticky { display: none; }
-      /* hide desktop pill — use mobile bar count */
-      .pill { display: none; }
     }
 
-    /* ── Cards ── */
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      overflow: hidden;
+      overflow:hidden;
     }
-    .card .hd {
-      padding: 14px 16px 12px;
-      border-bottom: 1px solid var(--border);
-    }
-    .card .bd { padding: 16px; }
+    .card .hd{
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.18);
+  background: #0a5a2e;
+  color: #ffffff;
+}
 
-    .row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+.card .hd .title{
+  color: #ffffff;
+}
+
+.card .hd .desc{
+  color: rgba(255,255,255,0.88);
+}
+
+.card .hd .row{
+  align-items: center;
+}
+
+.card .hd .btn.ghost{
+  background: rgba(255,255,255,0.14);
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.28);
+}
+
+.card .hd .btn.ghost:hover{
+  background: rgba(255,255,255,0.22);
+
+}
+
+.item-card .hd{
+  background: #e6f7ec !important; /* light green */
+  color: #0a5a2e;
+  border-bottom: 1px solid #cfe9d7;
+}
+
+.item-card .hd .title{
+  color: #0a5a2e;
+}
+
+.item-card .hd .desc{
+  color: #3a5f4a;
+}
+
+.card .bd{
+  padding: 16px;
+  background: #f2fbf5; /* light green */
+}
+    
+    .row{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+    }
+    .title{
+      font-weight: 700;
+      font-size: 18px;
+      margin:0;
+    }
+    .desc{
+      margin:6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .tags{
+      margin-top:10px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .tag{
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      color: #334155;
+    }
+    .priceCol{
+      text-align:right;
+      min-width: 90px;
+    }
+    .from{
+      font-size:12px;
+      color: var(--muted);
+    }
+    .basePrice{
+      font-weight: 800;
+      font-size: 16px;
+      margin-top:2px;
+    }
+    .opts{
+      display:grid;
+      grid-template-columns: 1fr;
       gap: 12px;
     }
-    .title { font-weight: 700; font-size: 17px; margin: 0; }
-    .description { margin: 5px 0 0; color: var(--muted); font-size: 13px; line-height: 1.35; }
-
-    .priceCol { text-align: right; min-width: 80px; }
-    .from { font-size: 11px; color: var(--muted); }
-    .basePrice { font-weight: 800; font-size: 15px; margin-top: 2px; }
-
-    .sep { height: 1px; background: var(--border); margin: 12px 0; }
-
-    /* Qty + Add row */
-    .qtyAdd {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    @media (min-width: 480px) {
-      .qtyAdd {
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
+    @media (min-width: 720px){
+      .opts{
+        grid-template-columns: 1fr 1fr;
       }
     }
-    .qtyBox { display: flex; align-items: center; gap: 10px; }
-    .qtyBox .lbl { font-size: 13px; font-weight: 650; }
-    .qtyBox input { width: 80px; }
-
-    .yourPrice { text-align: right; }
-    .yourPrice .muted { font-size: 12px; color: var(--muted); }
-    .yourPrice .big { font-size: 17px; font-weight: 800; margin-top: 2px; }
-
-    /* Buttons */
-    .btn {
-      appearance: none;
-      border: none;
-      border-radius: 14px;
-      padding: 10px 14px;
+    .optGroup .lbl{
+      font-size: 13px;
       font-weight: 650;
-      font-family: inherit;
-      cursor: pointer;
-      font-size: 14px;
-      transition: 0.2s;
+      margin-bottom: 7px;
     }
-    .btn.primary { background: var(--accent); color: var(--accentText); }
-    .btn.primary:hover  { background: var(--accentHover); }
-    .btn.primary:active { transform: scale(0.97); }
-    .btn.ghost { background: transparent; border: 1px solid var(--border); color: #334155; }
-    .btn.ghost:hover { background: #f8fafc; }
-    .btn.block { width: 100%; padding: 14px 16px; border-radius: 18px; font-size: 15px; }
-
-    /* Inputs */
-    select, input[type="number"] {
+    select, input[type="number"]{
       width: 100%;
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px;
+      border-radius: 14px;
+      padding: 10px 10px;
       background: #fff;
       color: var(--text);
       outline: none;
-      font-size: 16px; /* prevents iOS auto-zoom */
-      font-family: inherit;
     }
-    select:focus, input[type="number"]:focus {
-      box-shadow: 0 0 0 3px rgba(10,90,46,.12);
-      border-color: #a7d4b8;
+    input[type="number"]{
+      padding: 9px 10px;
+    }
+    select:focus, input[type="number"]:focus{
+      box-shadow: 0 0 0 3px rgba(15,23,42,.08);
+      border-color: #cbd5e1;
     }
 
-    /* ── Desktop checkout sidebar ── */
-    .checkoutEmpty {
+    .addon{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding: 10px 10px;
       border: 1px solid var(--border);
+      border-radius: 14px;
       background: #fff;
+      font-size: 13px;
+      margin-top:8px;
+    }
+    .addon:first-of-type{ margin-top:0 }
+    .addonLeft{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width: 0;
+    }
+    .addonLeft label{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      cursor:pointer;
+      user-select:none;
+      min-width: 0;
+    }
+    .addonRight{
+      color: var(--muted);
+      white-space:nowrap;
+    }
+
+    .sep{
+      height:1px;
+      background: var(--border);
+      margin: 14px 0;
+    }
+
+    .qtyAdd{
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+    @media (min-width: 560px){
+      .qtyAdd{
+        flex-direction: row;
+        align-items:center;
+        justify-content:space-between;
+      }
+    }
+    .qtyBox{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+    .qtyBox .lbl{
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .qtyBox input{
+      width: 92px;
+    }
+    .yourPrice{
+      text-align:right;
+    }
+    .yourPrice .muted{ font-size: 12px; color: var(--muted); }
+    .yourPrice .big{ font-size: 18px; font-weight: 800; margin-top: 2px; }
+
+    .btn{
+      appearance:none;
+      border:none;
+      border-radius: 16px;
+      padding: 10px 14px;
+      font-weight: 650;
+      cursor:pointer;
+    }
+    .btn.primary{
+      background: var(--accent);
+      color: var(--accentText);
+    }
+    .btn.primary:hover{ filter: brightness(1.05); }
+    .btn.ghost{
+      background: transparent;
+      border: 1px solid var(--border);
+      color: #334155;
+    }
+    .btn.ghost:hover{ background: #f8fafc; }
+    .btn.block{
+      width:100%;
+      padding: 14px 16px;
+      border-radius: 18px;
+      font-size: 15px;
+    }
+
+    /* Checkout */
+    .checkoutEmpty{
+      border:1px solid var(--border);
+      background:#fff;
       border-radius: 18px;
       padding: 14px;
       color: var(--muted);
       font-size: 13px;
     }
-    .cartLines { display: flex; flex-direction: column; gap: 12px; }
-    .line { border: 1px solid var(--border); background: #fff; border-radius: 18px; padding: 12px; }
-    .lineTop { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
-    .lineName { font-weight: 700; font-size: 14px; margin: 0; }
-    .lineMeta { margin-top: 6px; color: var(--muted); font-size: 12px; line-height: 1.35; }
-    .trash { border: none; background: transparent; cursor: pointer; padding: 6px; border-radius: 12px; color: #64748b; font-size: 18px; }
-    .trash:hover { background: #f1f5f9; color: #0f172a; }
-    .lineBottom { margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-    .lineQty { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
-    .lineQty input { width: 72px; height: 36px; border-radius: 12px; }
-    .lineNums { display: flex; gap: 14px; align-items: flex-end; }
-    .numBox { text-align: right; min-width: 64px; }
-    .numBox .muted { font-size: 11px; color: var(--muted); }
-    .numBox .val { font-size: 13px; font-weight: 750; margin-top: 2px; }
-    .numBox .val.strong { font-size: 14px; font-weight: 850; }
-
-    .totals { font-size: 13px; }
-    .totals .trow { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; color: #0f172a; }
-    .totals .trow span:first-child { color: var(--muted); }
-    .totals .trow strong { font-weight: 850; }
-
-    /* ── Mobile bottom cart bar ── */
-    .mobile-cart-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 300;
-      background: rgba(255,255,255,0.97);
-      box-shadow: 0 -2px 20px rgba(0,0,0,0.15);
-      padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    .cartLines{ display:flex; flex-direction:column; gap: 12px; }
+    .line{
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius: 18px;
+      padding: 12px;
     }
-
-    .mobile-cart-bar-inner {
-      display: flex;
-      align-items: center;
+    .lineTop{
+      display:flex;
+      justify-content:space-between;
       gap: 10px;
-      max-width: 600px;
-      margin: 0 auto;
+      align-items:flex-start;
     }
-
-    .cart-summary {
-      flex: 1;
-      font-size: 13px;
+    .lineName{ font-weight: 700; font-size: 14px; margin:0; }
+    .lineMeta{
+      margin-top:6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .trash{
+      border:none;
+      background: transparent;
+      cursor:pointer;
+      padding: 6px;
+      border-radius: 12px;
+      color: #64748b;
+    }
+    .trash:hover{ background: #f1f5f9; color:#0f172a; }
+    .lineBottom{
+      margin-top: 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .lineQty{
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      font-size: 12px;
       color: var(--muted);
     }
-    .cart-summary strong { color: var(--text); font-size: 15px; }
-
-    .view-cart-btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 20px;
-      padding: 12px 20px;
-      font-size: 14px;
-      font-family: inherit;
-      font-weight: bold;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: 0.2s;
+    .lineQty input{
+      width: 76px;
+      height: 36px;
+      border-radius: 14px;
     }
-    .view-cart-btn:hover  { background: var(--accentHover); }
-    .view-cart-btn:active { transform: scale(0.97); }
-
-    /* ── Mobile cart bottom sheet ── */
-    .cart-sheet-backdrop {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.35);
-      z-index: 400;
+    .lineNums{
+      display:flex;
+      gap: 16px;
+      align-items:flex-end;
     }
-    .cart-sheet-backdrop.is-open { display: block; }
-
-    .cart-sheet {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 500;
-      background: #fff;
-      border-radius: 22px 22px 0 0;
-      max-height: 85dvh;
-      overflow-y: auto;
-      padding: 0 16px calc(20px + env(safe-area-inset-bottom));
-      transform: translateY(100%);
-      transition: transform 0.35s ease;
+    .numBox{
+      text-align:right;
+      min-width: 70px;
     }
-    .cart-sheet.is-open { transform: translateY(0); }
+    .numBox .muted{ font-size: 11px; color: var(--muted); }
+    .numBox .val{ font-size: 13px; font-weight: 750; margin-top: 2px; }
+    .numBox .val.strong{ font-size: 14px; font-weight: 850; }
 
-    .cart-sheet::before {
-      content: "";
-      display: block;
-      width: 40px;
-      height: 4px;
-      background: #cbd5e1;
-      border-radius: 2px;
-      margin: 12px auto 16px;
+    .totals{ font-size: 13px; }
+    .totals .trow{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-top: 8px;
+      color:#0f172a;
+    }
+    .totals .trow span:first-child{ color: var(--muted); }
+    .totals .trow strong{ font-weight: 850; }
+    .help{
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height:1.35;
     }
 
-    .sheet-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
+    .miniCard{
+      margin-top: 14px;
+      border-radius: var(--radius);
+      border:1px solid var(--border);
+      background:#fff;
+      box-shadow: var(--shadow);
+      padding: 14px 16px;
     }
-    .sheet-header .title { font-size: 18px; }
+    .miniCard .mtitle{ font-weight: 750; font-size: 13px; }
+    .miniCard ul{ margin: 8px 0 0; padding-left: 18px; color: var(--muted); font-size: 13px; }
+    .miniCard li{ margin: 6px 0; }
 
-    .sheet-close {
-      background: #f1f5f9;
-      border: none;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      font-size: 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    .back-btn {
+    margin-top:15px;
+    margin-left: 15px;
+    width: 40px;
+    height: 30px;
+  }
   </style>
 </head>
 <body>
-
-  <!-- Sticky top bar -->
-  <div class="top-bar">
-    <button class="back-btn" onclick="backPress()" aria-label="Back">←</button>
-    <h1 id="restName"></h1>
-    <div class="pill" id="cartPill">🛒 <span id="cartCount">0</span> items</div>
+  <div class = "topBar">
+    <button class = "back-btn" onclick="backPress()">←</button>
   </div>
-
   <div class="wrap">
+    <header>
+      <div class="restaurant-brand-wrap">
+        <div class="restaurant-brand-row">
+          <img id="restLogo" alt="Restaurant logo" />
+          <div class="restaurant-brand-text">
+            <h1 id="restName"></h1>
+            <div class="sub" id="restTagline">Pick options, add to cart, and checkout on the right.</div>
+          </div>
+        </div>
+      </div>
+      <div class="pill" id="cartPill">🛒 <span id="cartCount">0</span> items</div>
+    </header>
+
     <div class="grid">
+      <!-- LEFT: MENU -->
+<main id="menuCol" class="menu">
+  <section id="donationsSection" style="display:none; margin-bottom: 24px;">
+    <div class="card">
+      <div class="hd">
+        <div class="title">Donations Menu</div>
+        <div class="desc">Available donation items for food bank accounts.</div>
+      </div>
+    </div>
+    <div id="donationsCol"></div>
+  </section>
 
-      <!-- Menu column -->
-      <main id="menuCol" class="menu"></main>
+  <section id="regularMenuSection">
+    <div class="card" style="margin-bottom: 18px;">
+      <div class="hd">
+        <div class="title">Main Menu</div>
+        <div class="desc">Regular restaurant menu items.</div>
+      </div>
+    </div>
+    <div id="regularMenuCol"></div>
+  </section>
+</main>
 
-      <!-- Desktop checkout sidebar -->
+      <!-- RIGHT: CHECKOUT -->
       <aside class="sticky">
         <section class="card">
           <div class="hd">
@@ -368,318 +508,457 @@
           </div>
           <div class="bd">
             <div id="cartArea"></div>
+
             <div class="sep"></div>
+
             <div class="totals">
               <div class="trow"><span>Subtotal</span><strong id="subTotal">$0.00</strong></div>
               <div class="trow"><span>Tax (<span id="taxRateText"></span>)</span><strong id="taxAmt">$0.00</strong></div>
               <div class="trow" style="font-size:15px"><span style="color:#0f172a;font-weight:850">Total</span><strong id="totalAmt">$0.00</strong></div>
             </div>
+
             <div style="margin-top:14px">
               <button class="btn primary block" id="placeOrderBtn" type="button">Place order</button>
+              <div class="help">Demo checkout only. Hook this up to your backend/payment flow.</div>
             </div>
           </div>
         </section>
       </aside>
-
     </div>
   </div>
 
-  <!-- Mobile: fixed bottom cart bar -->
-  <div class="mobile-cart-bar" id="mobileCartBar">
-    <div class="mobile-cart-bar-inner">
-      <div class="cart-summary">
-        <strong id="mobileCartCount">0 items</strong>
-        <span> · </span>
-        <span id="mobileTotalAmt">$0.00</span>
-      </div>
-      <button class="view-cart-btn" id="viewCartBtn">View Cart</button>
-    </div>
-  </div>
-
-  <!-- Mobile: cart bottom sheet -->
-  <div class="cart-sheet-backdrop" id="cartSheetBackdrop"></div>
-  <div class="cart-sheet" id="cartSheet">
-    <div class="sheet-header">
-      <div class="title">Your Cart</div>
-      <button class="sheet-close" id="closeCartSheet">✕</button>
-    </div>
-
-    <div id="sheetCartArea"></div>
-    <div class="sep"></div>
-
-    <div class="totals" style="margin-bottom:16px;">
-      <div class="trow"><span>Subtotal</span><strong id="sheetSubTotal">$0.00</strong></div>
-      <div class="trow"><span>Tax (<span id="sheetTaxRateText"></span>)</span><strong id="sheetTaxAmt">$0.00</strong></div>
-      <div class="trow" style="font-size:15px"><span style="color:#0f172a;font-weight:850">Total</span><strong id="sheetTotalAmt">$0.00</strong></div>
-    </div>
-
-    <div style="display:flex; gap:10px;">
-      <button class="btn ghost" id="sheetClearBtn" type="button" style="display:none">Clear</button>
-      <button class="btn primary block" id="sheetPlaceOrderBtn" type="button">Place order</button>
-    </div>
-  </div>
-
-  <script type="module">
+  <script type ="module">
+    //====Imports=====//
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { getDatabase, ref, set, get, } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-    const firebaseConfig = { databaseURL: "https://savordatabase-default-rtdb.firebaseio.com" };
-    const app = initializeApp(firebaseConfig);
-    const savorDB = getDatabase(app);
+console.log("map.js loaded");
+const firebaseConfig = {
+  databaseURL: "https://savordatabase-default-rtdb.firebaseio.com"
+};
+const app = initializeApp(firebaseConfig);
+const savorDB = getDatabase(app);
+    // ===== Data =====
 
     const TAX_RATE = 0.0875;
     sessionStorage.setItem("taxRate", TAX_RATE);
 
-    const state = { drafts: {}, cart: [], items: [] };
+const state = {
+  drafts: {},
+  cart: [],
+  items: [],
+  donationItems: [],
+  isFoodBankUser: false
+};
+    
 
-    document.getElementById("restName").innerText = sessionStorage.getItem("currRest");
+    async function loadRestaurantHeader() {
+  const rest = sessionStorage.getItem("currRest");
+  if (!rest) return;
 
-    window.backPress = function () {
-      sessionStorage.removeItem("currRest");
-      window.location.href = '/map.html';
-    };
+  document.getElementById("restName").innerText = rest;
 
-    // ── Mobile cart sheet ──
-    const cartSheet        = document.getElementById("cartSheet");
-    const cartSheetBackdrop = document.getElementById("cartSheetBackdrop");
+  try {
+    const infoRef = ref(savorDB, `rest/${rest}/Info`);
+    const infoSnap = await get(infoRef);
 
-    function openCartSheet() {
-      cartSheet.classList.add("is-open");
-      cartSheetBackdrop.classList.add("is-open");
+    if (!infoSnap.exists()) return;
+
+    const info = infoSnap.val() || {};
+    const logoImage = info["Logo Image:"] || "";
+    const description = info["Description:"] || "";
+
+    const logo = document.getElementById("restLogo");
+    const tagline = document.getElementById("restTagline");
+
+    if (logoImage) {
+      logo.src = logoImage;
+      logo.style.display = "block";
+    } else {
+      logo.style.display = "none";
     }
-    function closeCartSheet() {
-      cartSheet.classList.remove("is-open");
-      cartSheetBackdrop.classList.remove("is-open");
+
+    if (description) {
+      tagline.innerText = description;
+    }
+  } catch (err) {
+    console.error("Error loading restaurant header:", err);
+  }
+}
+
+window.backPress = function() {
+  sessionStorage.removeItem("currRest");
+  window.location.href = '/map.html';
+}
+
+async function checkIfFoodBankUser() {
+  const loggedUser = localStorage.getItem("loggedInUser");
+
+  if (!loggedUser) {
+    state.isFoodBankUser = false;
+    return false;
+  }
+
+  try {
+    const userRef = ref(savorDB, `user/${loggedUser}`);
+    const userSnap = await get(userRef);
+
+    if (!userSnap.exists()) {
+      state.isFoodBankUser = false;
+      return false;
     }
 
-    document.getElementById("viewCartBtn").addEventListener("click", openCartSheet);
-    document.getElementById("closeCartSheet").addEventListener("click", closeCartSheet);
-    cartSheetBackdrop.addEventListener("click", closeCartSheet);
-    document.getElementById("sheetClearBtn").addEventListener("click", () => { clearCart(); closeCartSheet(); });
-    document.getElementById("sheetPlaceOrderBtn").addEventListener("click", payCheck);
+    const userData = userSnap.val() || {};
+    state.isFoodBankUser = userData.accountType === "fb";
+    return state.isFoodBankUser;
+  } catch (err) {
+    console.error("Error checking account type:", err);
+    state.isFoodBankUser = false;
+    return false;
+  }
+}
 
-    // ── Render menu ──
-    async function renderMenu() {
-      const rest = sessionStorage.getItem("currRest");
-      const menuItemsRef = ref(savorDB, `rest/${rest}/menu`);
-      const menuItems = document.getElementById("menuCol");
-      const snapshot = await get(menuItemsRef);
-      if (!snapshot.exists()) return;
+function createMenuCard(item, isDonation = false) {
+  const section = document.createElement("section");
+section.className = "card item-card";
 
-      state.items = [];
-      snapshot.forEach(child => {
-        const data = child.val();
-        state.items.push({
-          id: child.key,
-          name: data.name,
-          description: data.description,
-          price: data.price,
-          imageURL: data.image || ""
+  const safePrice = isDonation ? 0 : Number(item.price || 0);
+
+  section.innerHTML = `
+    <div class="hd">
+      <div class="row">
+        <div>
+          <div class="title">${item.name || "Unnamed Item"}</div>
+          <div class="desc">${item.desc || ""}</div>
+        </div>
+        <div>
+          ${item.imageURL ? `<img src="${item.imageURL}" alt="${item.name}" style="max-width:80px; border-radius:8px;">` : ""}
+        </div>
+        <div class="priceCol">
+          <div class="from">${isDonation ? "Donation" : "From"}</div>
+          <div class="basePrice">$${safePrice.toFixed(2)}</div>
+        </div>
+      </div>
+    </div>
+    <div class="bd">
+      <div class="sep"></div>
+      <div class="qtyAdd">
+        <div class="qtyBox">
+          <div class="lbl">Quantity</div>
+          <input type="number" min="1" value="1" id="qty-${item.id}">
+        </div>
+        <div class="row" style="align-items:center">
+          <div class="yourPrice">
+            <div class="muted">Your price</div>
+            <div class="big" id="your-${item.id}">$${safePrice.toFixed(2)}</div>
+          </div>
+          <button class="btn primary" type="button" data-id="${item.id}">Add to cart</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  return section;
+}
+
+async function renderMenu() {
+  const rest = sessionStorage.getItem("currRest");
+  if (!rest) return;
+
+  const regularMenuCol = document.getElementById("regularMenuCol");
+  const donationsCol = document.getElementById("donationsCol");
+  const donationsSection = document.getElementById("donationsSection");
+
+  regularMenuCol.innerHTML = "";
+  donationsCol.innerHTML = "";
+
+  await checkIfFoodBankUser();
+
+  // -------------------------
+  // Load regular menu
+  // -------------------------
+  state.items = [];
+  try {
+    const menuItemsRef = ref(savorDB, `rest/${rest}/menu`);
+    const menuSnap = await get(menuItemsRef);
+
+    if (menuSnap.exists()) {
+      menuSnap.forEach(child => {
+        const data = child.val() || {};
+        if (data.quantity > 0) {
+          state.items.push({
+            id: child.key,
+            name: data.name,
+            description: data.description,
+            price: data.price,
+            imageURL: data.image || ""
+          });
+        }
+        else {
+          return;
+        }
+      });
+    }
+
+    state.items.forEach(item => {
+      regularMenuCol.appendChild(createMenuCard(item, false));
+    });
+  } catch (err) {
+    console.error("Error loading regular menu:", err);
+  }
+
+  // -------------------------
+  // Load donations only for food bank users
+  // -------------------------
+  if (state.isFoodBankUser) {
+    donationsSection.style.display = "block";
+    state.donationItems = [];
+
+    try {
+      const donationRef = ref(savorDB, `rest/${rest}/donations`);
+      const donationSnap = await get(donationRef);
+
+      if (donationSnap.exists()) {
+        donationSnap.forEach(child => {
+          const data = child.val() || {};
+          state.donationItems.push({
+            id: `donation-${child.key}`,
+            name: data.name,
+            desc: data.description,
+            price: Number(data.price || 0),
+            imageURL: data.image || ""
+          });
         });
-      });
-
-      menuItems.innerHTML = "";
-      state.items.forEach(item => {
-        const section = document.createElement("section");
-        section.className = "card";
-        section.innerHTML = `
-          <div class="hd">
-            <div class="row">
-              <div style="flex:1; min-width:0;">
-                <div class="title">${item.name}</div>
-                <div class="description">${item.description}</div>
-              </div>
-              ${item.imageURL ? `<img src="${item.imageURL}" alt="${item.name}" style="width:72px;height:72px;object-fit:cover;border-radius:10px;flex-shrink:0;">` : ""}
-              <div class="priceCol">
-                <div class="from">From</div>
-                <div class="basePrice">$${item.price.toFixed(2)}</div>
-              </div>
-            </div>
-          </div>
-          <div class="bd">
-            <div class="sep"></div>
-            <div class="qtyAdd">
-              <div class="qtyBox">
-                <div class="lbl">Qty</div>
-                <input type="number" min="1" value="1" id="qty-${item.id}" inputmode="numeric" style="width:72px;" />
-              </div>
-              <div class="row" style="align-items:center; gap:12px;">
-                <div class="yourPrice">
-                  <div class="muted">Your price</div>
-                  <div class="big" id="your-${item.id}">$${item.price.toFixed(2)}</div>
-                </div>
-                <button class="btn primary" type="button" data-id="${item.id}">Add to cart</button>
-              </div>
-            </div>
-          </div>
-        `;
-        menuItems.appendChild(section);
-      });
-    }
-
-    // ── Totals ──
-    function updateTotals() {
-      const subtotal = state.cart.reduce((sum, l) => sum + l.unitPrice * l.qty, 0);
-      const tax   = subtotal * TAX_RATE;
-      const total = subtotal + tax;
-      const taxPct = (TAX_RATE * 100).toFixed(2) + "%";
-      let cartItemCount = state.cart.reduce((s, l) => s + Number(l.qty), 0);
-
-      // Desktop sidebar
-      document.getElementById("subTotal").textContent   = `$${subtotal.toFixed(2)}`;
-      document.getElementById("taxAmt").textContent     = `$${tax.toFixed(2)}`;
-      document.getElementById("totalAmt").textContent   = `$${total.toFixed(2)}`;
-      document.getElementById("taxRateText").textContent = taxPct;
-      document.getElementById("cartCount").textContent  = cartItemCount;
-
-      // Mobile bar + sheet
-      document.getElementById("mobileCartCount").textContent = `${cartItemCount} item${cartItemCount !== 1 ? 's' : ''}`;
-      document.getElementById("mobileTotalAmt").textContent  = `$${total.toFixed(2)}`;
-      document.getElementById("sheetSubTotal").textContent   = `$${subtotal.toFixed(2)}`;
-      document.getElementById("sheetTaxAmt").textContent     = `$${tax.toFixed(2)}`;
-      document.getElementById("sheetTotalAmt").textContent   = `$${total.toFixed(2)}`;
-      document.getElementById("sheetTaxRateText").textContent = taxPct;
-    }
-
-    // ── Render cart lines (shared helper) ──
-    function buildCartLines(container, clearBtnEl) {
-      if (!state.cart.length) {
-        container.innerHTML = '<div class="checkoutEmpty">Your cart is empty</div>';
-        if (clearBtnEl) clearBtnEl.style.display = "none";
-        return;
       }
-      if (clearBtnEl) clearBtnEl.style.display = "inline-flex";
 
-      const wrap = document.createElement("div");
-      wrap.className = "cartLines";
-
-      state.cart.forEach(line => {
-        const div = document.createElement("div");
-        div.className = "line";
-        div.innerHTML = `
-          <div class="lineTop">
-            <div style="min-width:0"><p class="lineName">${line.name}</p></div>
-            <button class="trash" type="button" title="Remove">🗑️</button>
-          </div>
-          <div class="lineBottom">
-            <div class="lineQty">
-              <span>Qty</span>
-              <input type="number" min="1" value="${line.qty}" inputmode="numeric" />
-            </div>
-            <div class="lineNums">
-              <div class="numBox">
-                <div class="muted">Unit</div>
-                <div class="val">$${line.unitPrice.toFixed(2)}</div>
-              </div>
-              <div class="numBox">
-                <div class="muted">Line</div>
-                <div class="val strong">$${(line.unitPrice * line.qty).toFixed(2)}</div>
-              </div>
-            </div>
-          </div>
-        `;
-
-        div.querySelector(".trash").addEventListener("click", () => {
-          state.cart = state.cart.filter(l => l.itemId !== line.itemId);
-          syncUI();
-        });
-
-        div.querySelector("input[type=number]").addEventListener("input", e => {
-          const v = Math.max(1, Number(e.target.value || 1));
-          line.qty = v;
-          syncUI();
-        });
-
-        wrap.appendChild(div);
+      state.donationItems.forEach(item => {
+        donationsCol.appendChild(createMenuCard(item, true));
       });
-
-      container.innerHTML = "";
-      container.appendChild(wrap);
+    } catch (err) {
+      console.error("Error loading donations menu:", err);
     }
+  } else {
+    donationsSection.style.display = "none";
+  }
+}
 
-    function renderCart() {
-      buildCartLines(
-        document.getElementById("cartArea"),
-        document.getElementById("clearBtn")
-      );
-      buildCartLines(
-        document.getElementById("sheetCartArea"),
-        document.getElementById("sheetClearBtn")
-      );
-      updateTotals();
-    }
+function updateTotals() {
+  const subtotal = state.cart.reduce((sum, l) => sum + l.unitPrice * l.qty, 0);
+  const tax = subtotal * TAX_RATE;
+  const total = subtotal + tax;
 
-    function addToCart(itemId) {
-      const item = state.items.find(i => i.id === itemId);
-      if (!item) return;
-      const qtyInput = document.getElementById(`qty-${itemId}`);
-      const qty = qtyInput ? Math.max(1, parseInt(qtyInput.value) || 1) : 1;
-      if (!state.cart) state.cart = [];
-      const existing = state.cart.find(l => l.itemId === itemId);
-      if (existing) { existing.qty += qty; }
-      else { state.cart.push({ itemId: item.id, name: item.name, unitPrice: item.price, qty }); }
-      syncUI();
-    }
+  document.getElementById("subTotal").textContent = `$${subtotal.toFixed(2)}`;
+  document.getElementById("taxAmt").textContent = `$${tax.toFixed(2)}`;
+  document.getElementById("totalAmt").textContent = `$${total.toFixed(2)}`;
+  document.getElementById("taxRateText").textContent = (TAX_RATE*100).toFixed(2) + "%";
+  let cartItemCount = 0;
+  for (let x = 0; x < state.cart.length; x++) 
+  {
+      cartItemCount += Number(state.cart[x].qty);
+  }
+  document.getElementById("cartCount").textContent = cartItemCount;
+}
 
-    function clearCart() { state.cart = []; syncUI(); }
-    function syncUI()    { renderCart(); }
+// ---- Updated renderCart ----
+function renderCart() {
+  const cartArea = document.getElementById("cartArea");
+  const clearBtn = document.getElementById("clearBtn");
 
-    function getTimestamp() {
-      const now = new Date();
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const day   = String(now.getDate()).padStart(2, '0');
-      const year  = now.getFullYear();
-      let hours   = now.getHours();
-      const mins  = String(now.getMinutes()).padStart(2, '0');
-      const ampm  = hours >= 12 ? 'pm' : 'am';
-      hours = hours % 12 || 12;
-      return `${month}${day}${year}/${hours}:${mins}${ampm}`;
-    }
+  if (!state.cart.length) {
+    cartArea.innerHTML = '<div class="checkoutEmpty">Your cart is empty</div>';
+    clearBtn.style.display = "none";
+    updateTotals();
+    return;
+  }
 
-    function getRandom(max) { return Math.floor(Math.random() * max); }
+  clearBtn.style.display = "inline-flex";
 
-    function payCheck() {
-      if (!state.cart.length) { alert("Your cart is empty."); return; }
+  const wrap = document.createElement("div");
+  wrap.className = "cartLines";
 
-      if (!sessionStorage.getItem("currOrder")) {
-        const x = getRandom(1000);
-        const items = state.cart;
-        const user = localStorage.getItem("loggedInUser") || "guest";
-        const pickupTime = getTimestamp();
-        const rest = sessionStorage.getItem("currRest");
-        const totalPrice = parseFloat(document.getElementById("totalAmt").innerText.replace("$", ""));
-        sessionStorage.setItem("currOrder", x);
-        set(ref(savorDB, `order/${x}`), { items, pickupTime, rest, totalPrice, user, status: "pending", taxRate: TAX_RATE })
-          .then(() => { location.href = "paymentCheckout.html"; })
-          .catch(err => { console.error("Error creating order", err); alert("Failed to create order."); });
-      } else {
-        const items = state.cart;
-        const pickupTime = getTimestamp();
-        const totalPrice = parseFloat(document.getElementById("totalAmt").innerText.replace("$", ""));
-        update(ref(savorDB, `order/${sessionStorage.getItem("currOrder")}`), { items, totalPrice, pickupTime });
-        location.href = "paymentCheckout.html";
-      }
-    }
+  state.cart.forEach(line => {
+    const item = state.items.find(i => i.id === line.itemId);
 
-    // ── Events ──
-    document.getElementById("menuCol").addEventListener("click", e => {
-      if (!e.target.matches("button.btn.primary")) return;
-      addToCart(e.target.dataset.id);
+    const div = document.createElement("div");
+    div.className = "line";
+
+    div.innerHTML = `
+      <div class="lineTop">
+        <div style="min-width:0">
+          <p class="lineName">${line.name}</p>
+        </div>
+        <button class="trash" type="button" title="Remove">🗑️</button>
+      </div>
+      <div class="lineBottom">
+        <div class="lineQty">
+          <span>Qty</span>
+          <input type="number" min="1" value="${line.qty}" />
+        </div>
+        <div class="lineNums">
+  <div class="numBox">
+    <div class="muted">Price</div>
+    <div class="val strong">$${(line.unitPrice * line.qty).toFixed(2)}</div>
+  </div>
+</div>
+    `;
+
+    // ---- Remove item from cart ----
+    div.querySelector(".trash").addEventListener("click", () => {
+      state.cart = state.cart.filter(l => l.itemId !== line.itemId);
+      syncUI(); // re-render cart & totals
     });
 
-    document.getElementById("clearBtn").addEventListener("click", clearCart);
-    document.getElementById("placeOrderBtn").addEventListener("click", payCheck);
+    // ---- Update qty ----
+    div.querySelector("input[type=number]").addEventListener("input", e => {
+      const v = Math.max(1, Number(e.target.value || 1));
+      line.qty = v;
+      syncUI(); // re-render totals
+    });
 
-    async function checkOrderVal() {
-      if (sessionStorage.getItem("currOrder")) {
-        const snap = await get(ref(savorDB, `order/${sessionStorage.getItem("currOrder")}`));
-        if (snap.exists()) { state.cart = snap.val().items || []; renderCart(); }
-      }
-    }
+    wrap.appendChild(div);
+  });
 
-    // ── Boot ──
-    renderMenu();
-    checkOrderVal();
+  cartArea.innerHTML = "";
+  cartArea.appendChild(wrap);
+
+  updateTotals();
+  syncUI();
+}
+
+
+
+function addToCart(itemId) {
+  const allItems = [...state.donationItems, ...state.items];
+const item = allItems.find(i => i.id === itemId);
+  if (!item) return;
+
+  // Read quantity from input box
+  const qtyInput = document.getElementById(`qty-${itemId}`);
+  const qty = qtyInput ? Math.max(1, parseInt(qtyInput.value) || 1) : 1;
+
+  // Check if item is already in cart
+  if(state.cart === undefined)
+  {
+    state.cart = [];
+  }
+  const existing = state.cart.find(l => l.itemId === itemId);
+  if (existing) {
+    existing.qty += qty;
+  } else {
+    state.cart.push({
+      itemId: item.id,
+      name: item.name,
+      unitPrice: item.price,
+      qty
+    });
+  }
+
+  console.log("Cart:", state.cart);
+  syncUI();
+}
+
+
+
+function clearCart(){
+  state.cart = [];
+  syncUI();
+}
+
+function syncUI(){
+  renderCart();
+}
+
+function getTimestamp() {
+  const now = new Date();
+
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const year = now.getFullYear();
+
+  let hours = now.getHours();
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const ampm = hours >= 12 ? 'pm' : 'am';
+
+  hours = hours % 12 || 12; // convert 0 → 12
+
+  return `${month}${day}${year}/${hours}:${minutes}${ampm}`;
+}
+
+
+function getRandom(max) {
+  return Math.floor(Math.random() * max);
+}
+
+
+function payCheck(){
+  if(!sessionStorage.getItem("currOrder")){
+    const x = getRandom(1000);
+  const items = state.cart;
+  let user = "guest";
+  if (localStorage.getItem("loggedInUser")) {
+    user = localStorage.getItem("loggedInUser");
+  }
+  const pickupTime = getTimestamp();
+  const rest = sessionStorage.getItem("currRest");
+  const totalPrice = parseFloat(document.getElementById("totalAmt").innerText.replace("$", ""));
+  const status = "pending";
+  const taxRate = TAX_RATE;
+
+  sessionStorage.setItem("currOrder", x);
+  const orderRef = ref(savorDB, `order/${x}`);
+  set(orderRef, {items,pickupTime,rest,totalPrice,user,status,taxRate })
+  .then(() => {
+    location.href = `paymentCheckout.html`;
+  })
+  .catch(err => {
+    console.log("Error creating order",err);
+    alert("Failed to create order.");
+  })
+  }else{
+    const items = state.cart;
+    const pickupTime = getTimestamp();
+    const totalPrice = parseFloat(document.getElementById("totalAmt").innerText.replace("$", ""));
+    const orderRef = ref(savorDB, `order/${sessionStorage.getItem("currOrder")}`);
+    update(orderRef, {items,totalPrice,pickupTime})
+    location.href = 'paymentCheckout.html';
+  }
+}
+
+//===Events===//
+document.getElementById("menuCol").addEventListener("click", (e) => {
+  if (!e.target.matches("button.btn.primary")) return;
+
+  const itemId = e.target.dataset.id; // get the ID from data-id
+  addToCart(itemId);
+});
+
+document.getElementById("clearBtn")
+  .addEventListener("click", clearCart);
+
+document.getElementById("placeOrderBtn")
+  .addEventListener("click", payCheck);
+async function checkOrderVal()
+{
+  if(sessionStorage.getItem("currOrder"))
+  {
+    const orderRef = ref(savorDB,`order/${sessionStorage.getItem("currOrder")}`);
+    const snapshotRef = await get(orderRef);
+    const orderPrev = snapshotRef.val();
+    state.cart = orderPrev.items;
+    renderCart();
+  }
+  else
+  {
+    return;
+  }
+}
+
+//==Boot==//
+loadRestaurantHeader();
+renderMenu();
+checkOrderVal();
   </script>
 </body>
 </html>
+

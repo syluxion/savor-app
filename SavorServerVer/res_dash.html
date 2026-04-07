@@ -671,54 +671,123 @@
 
       <!-- Restaurant Info panel -->
       <section id="panel-settings" class="panel" role="tabpanel" aria-labelledby="tab-settings" hidden>
-        <section class="card">
-          <h3>Restaurant Info</h3>
-          <form id="restInfoForm" class="form-grid" autocomplete="on">
-            <div class="field">
-              <label>Restaurant Name</label>
-              <input type="text"  id="restName"    name="restName"    class="login-input"/>
-            </div>
-            <div class="field">
-              <label>Manager</label>
-              <input type="text"  id="fullName"    name="fullName"    class="login-input"/>
-            </div>
-            <div class="field">
-              <label>Phone Number</label>
-              <input type="tel"   id="phoneNumber" name="phoneNumber" class="login-input" autocomplete="tel" inputmode="tel"/>
-            </div>
-            <div class="field">
-              <label>Email</label>
-              <input type="email" id="email"       name="email"       class="login-input" autocomplete="email" inputmode="email"/>
-            </div>
-            <div class="field">
-              <label>Street Address</label>
-              <input type="text"  id="street1"     name="street1"     class="login-input" autocomplete="address-line1" placeholder="123 Main St"/>
-            </div>
-            <div class="field">
-              <label>Apt / Suite (optional)</label>
-              <input type="text"  id="street2"     name="street2"     class="login-input" autocomplete="address-line2" placeholder="Suite 200"/>
-            </div>
-            <div class="field">
-              <label>City</label>
-              <input type="text"  id="city"        name="city"        class="login-input" autocomplete="address-level2" placeholder="Los Angeles"/>
-            </div>
-            <div class="field">
-              <label>State</label>
-              <input type="text"  id="state"       name="state"       class="login-input" autocomplete="address-level1" placeholder="CA"/>
-            </div>
-            <div class="field">
-              <label>ZIP Code</label>
-              <input type="text"  id="zip"         name="zip"         class="login-input" autocomplete="postal-code" placeholder="90001" inputmode="numeric"/>
-            </div>
-            <div class="field">
-              <label>Country</label>
-              <input type="text"  id="country"     name="country"     class="login-input" autocomplete="country-name" placeholder="United States"/>
-            </div>
-            <div class="actions">
-              <button type="button" class="login-submit" onclick="saveResChanges(event)">Save Changes</button>
-              <div id="restInfoStatus" class="status" aria-live="polite"></div>
-            </div>
-          </form>
+        <section class="card" aria-labelledby="Restaurant-Settings-heading">
+        <h3 id="Restaurant-Settings-heading"><!--Restaurant Settings--></h3>
+        <form id="profileBasicsForm" class="form-grid" autocomplete="on">
+          <div class="field">
+            <label for="firstName">Restaurant Name</label>
+            <input type="text" id="restName" name="restName" class="login-input"/>
+          </div>
+          <div class="field">
+            <label for="lastName">Manager</label>
+            <input type="text" id="fullName" name="fullName" class="login-input"/>
+          </div>
+          <div class="field">
+            <label for="phoneNumber">Phone Number</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" class="login-input"/>
+          </div>
+<div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" class="login-input"/>
+          </div>
+          <div class="field">
+            <label for="street1">Street Address</label>
+            <input
+              type="text"
+              id="street1"
+              name="street1"
+              class="login-input"
+              autocomplete="address-line1"
+              placeholder="123 Main St"
+            />
+          </div>
+          <div class="field">
+          <label for="street2">Apartment / Suite (optional)</label>
+          <input
+            type="text"
+            id="street2"
+            name="street2"
+            class="login-input"
+            autocomplete="address-line2"
+            placeholder="Suite 200"
+          />
+          </div>
+          <div class="field">
+          <label for="city">City</label>
+          <input
+            type="text"
+            id="city"
+            name="city"
+            class="login-input"
+            autocomplete="address-level2"
+            placeholder="Los Angeles"
+          />
+          </div>
+          <div class="field">
+          <label for="state">State</label>
+          <input
+            type="text"
+            id="state"
+            name="state"
+            class="login-input"
+            autocomplete="address-level1"
+            placeholder="CA"
+          />
+          </div>
+
+        <div class="field">
+          <label for="zip">ZIP Code</label>
+          <input
+            type="text"
+            id="zip"
+            name="zip"
+            class="login-input"
+            autocomplete="postal-code"
+            placeholder="90001"
+          />
+        </div>
+        <div class="field">
+          <label for="country">Country</label>
+          <input
+            type="text"
+            id="country"
+            name="country"
+            class="login-input"
+            autocomplete="country-name"
+            placeholder="United States"
+          />
+        </div>
+
+        <div class="field">
+          <label>Logo Image URL</label>
+          <input
+            type="url"
+            id="logoImage"
+            name="logoImage"
+            class="login-input"
+            placeholder="https://example.com/logo.png"
+          />
+        </div>
+        
+        <div class="field">
+          <label>Description / Slogan</label>
+          <textarea
+            id="restDescription"
+            name="restDescription"
+            class="login-input"
+            rows="4"
+            maxlength="400"
+            placeholder="Fresh bowls made daily with bold flavor."
+            style="resize: vertical; min-height: 110px;"
+          ></textarea>
+        </div>
+
+          <!--add account type in the future-->
+          <div class="actions">
+            <button type="button" class="login-submit" onclick="saveResChanges(event)">Save Changes</button>
+            <div id="profileBasicsStatus" class="status" aria-live="polite"></div>
+          </div>
+        </form>
         </section>
       </section>
 
@@ -926,6 +995,9 @@
         restTarget = userData.rest;
         const header = document.getElementById('header-right');
         if (header) header.textContent = restTarget;
+
+        await loadRestaurantInfo();
+        
         const mobileHeader = document.getElementById('header-right-mobile');
         if (mobileHeader) mobileHeader.textContent = restTarget;
       } catch (err) { console.error("Error loading user:", err); return; }
@@ -1577,6 +1649,59 @@
         compEl.appendChild(sec);
       });
     }
+
+    async function loadRestaurantInfo() {
+  if (!restTarget) return;
+
+  try {
+    const infoRef = ref(savorDB, `rest/${restTarget}/Info`);
+    const infoSnap = await get(infoRef);
+
+    if (!infoSnap.exists()) return;
+
+    const info = infoSnap.val() || {};
+    const address = info.Address || {};
+
+    const restNameField = document.getElementById('restName');
+    if (restNameField) restNameField.value = restTarget;
+
+    const managerField = document.getElementById('fullName');
+    if (managerField) managerField.value = info["Manager:"] || "";
+
+    const phoneField = document.getElementById('phoneNumber');
+    if (phoneField) phoneField.value = info["phoneNum:"] || "";
+
+    const emailField = document.getElementById('email');
+    if (emailField) emailField.value = info["Email:"] || "";
+
+    const street1Field = document.getElementById('street1');
+    if (street1Field) street1Field.value = address["Street:"] || "";
+
+    const street2Field = document.getElementById('street2');
+    if (street2Field) street2Field.value = address["Suite:"] || "";
+
+    const cityField = document.getElementById('city');
+    if (cityField) cityField.value = address["City:"] || "";
+
+    const stateField = document.getElementById('state');
+    if (stateField) stateField.value = address["State:"] || "";
+
+    const zipField = document.getElementById('zip');
+    if (zipField) zipField.value = address["Zip Code:"] || "";
+
+    const countryField = document.getElementById('country');
+    if (countryField) countryField.value = address["Country:"] || "";
+
+    const logoField = document.getElementById('logoImage');
+    if (logoField) logoField.value = info["Logo Image:"] || "";
+
+    const descField = document.getElementById('restDescription');
+    if (descField) descField.value = info["Description:"] || "";
+
+  } catch (err) {
+    console.error("Error loading restaurant info:", err);
+  }
+}
 
     window.saveResChanges = function (event) {
       event.preventDefault();
