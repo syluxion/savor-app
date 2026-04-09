@@ -187,9 +187,9 @@
     <a href="/index.html" class="title-link">
       <h1 class="title-pickup" onclick="clearStorage()">SAVOR</h1>
     </a>
-    <a href="/user_acc.html" class="settings-btn">
-      <img src="/cog.png" alt="Settings" class="settings-icon" onclick="clearStorage()">
-    </a>
+    <button class="settings-btn" onclick="handleLogin()" style="background:none;border:none;cursor:pointer;">
+        <img src="/cog.png" alt="Settings" class="settings-icon">
+    </button>
   </div>
 
   <!-- Page content -->
@@ -351,6 +351,35 @@
       }
     }
 
+    window.handleLogin = async function() {
+      const userId = localStorage.getItem("loggedInUser");
+      if (!userId){
+        clearStorage();
+        window.location.href = "/login.html";
+        return;
+      };
+
+      const userSnap = await get(ref(savorDB, `user/${userId}`));
+      const userData = userSnap.val();
+      const type = userData?.accountType;
+
+      if (type === "fb") {
+        sessionStorage.setItem("ownedRest", userData.rest ?? "");
+        clearStorage();
+        window.location.href = "/fb_acc.html";
+      }
+      else if (type === "business") {
+        sessionStorage.setItem("ownedRest", userData.rest ?? "");
+        clearStorage();
+        window.location.href = "/res_dash.html";
+      }
+      else
+      {
+        clearStorage();
+        window.location.href = "/user_acc.html";
+      }
+    }
+
     async function getDirections() {
   const currOrderS = sessionStorage.getItem("currOrder");
   const orderRestSnap = await get(ref(savorDB, `order/${currOrderS}/rest`));
@@ -428,7 +457,7 @@
 
       await update(orderRef, { status: "Completed" });
       clearStorage();
-      window.location.href = "/index.html";
+      handleLogin();
     });
 
     loadOrder();

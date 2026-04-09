@@ -381,7 +381,7 @@
     <button class="back-btn" onclick="backPress()" aria-label="Back">←</button>
     <input id="searchInput" class="search-box" placeholder="Search restaurants…" enterkeyhint="search" />
     <button id="searchBtn" class="search-btn">SEARCH</button>
-    <button class="login-btn" onclick="loginPress()">ACCOUNT</button>
+    <button class="login-btn" onclick="handleLogin()">ACCOUNT</button>
   </div>
 
   <!-- Sidebar -->
@@ -434,7 +434,6 @@
     const dateRef = new Date().toLocaleString('en-us', { weekday: 'long' });
 
     // ── Navigation ──
-    window.loginPress = function () { window.location.href = 'login.html'; };
     window.backPress  = function () { sessionStorage.removeItem("query"); window.location.href = '/index.html'; };
     window.resPage    = function () { window.location.href = 'checkoutmenu.html'; };
     window.closeInfoCards = function () {
@@ -592,7 +591,32 @@
       }
     }
 
-    async function getDirections() {
+    window.handleLogin = async function(){
+      const userId = localStorage.getItem("loggedInUser");
+      if (!userId){
+        window.location.href = "/login.html";
+        return;
+      };
+
+      const userSnap = await get(ref(savorDB, `user/${userId}`));
+      const userData = userSnap.val();
+      const type = userData?.accountType;
+
+      if (type === "fb") {
+        sessionStorage.setItem("ownedRest", userData.rest ?? "");
+        window.location.href = "/fb_acc.html";
+      }
+      else if (type === "business") {
+        sessionStorage.setItem("ownedRest", userData.rest ?? "");
+        window.location.href = "/res_dash.html";
+      }
+      else
+      {
+        window.location.href = "/user_acc.html";
+      }
+    }
+
+    window.getDirections = async function() {
   const restName = sessionStorage.getItem("currRest");
   const restRef = ref(savorDB, `rest/${restName}`);
   const restSnap = await get (restRef);

@@ -768,6 +768,17 @@
             placeholder="https://example.com/logo.png"
           />
         </div>
+
+        <div class = "field">
+          <label>Map Preview Image URL</label>
+          <input
+            type="url"
+            id="mapPreviewImage"
+            name="mapPreviewImage"
+            class="login-input"
+            placeholder="https://example.com/map-preview.png"
+          />
+        </div>
         
         <div class="field">
           <label>Description / Slogan</label>
@@ -1695,6 +1706,9 @@
     const logoField = document.getElementById('logoImage');
     if (logoField) logoField.value = info["Logo Image:"] || "";
 
+    const previewField = document.getElementById('mapPreviewImage');
+    if (previewField) previewField.value = info["Map Preview Image:"] || "";
+
     const descField = document.getElementById('restDescription');
     if (descField) descField.value = info["Description:"] || "";
 
@@ -1715,10 +1729,16 @@
       const street   = document.getElementById('street1').value.trim();
       const suite    = document.getElementById('street2').value.trim();
       const zipCode  = document.getElementById('zip').value.trim();
+      const logo    = document.getElementById('logoImage').value.trim();
+      const mapPrev = document.getElementById('mapPreviewImage').value.trim();
+      const desc    = document.getElementById('restDescription').value.trim();
       update(ref(savorDB, `rest/${restTarget}/Info`), {
         "Email:":    email,
         "Manager:":  manager,
         "phoneNum:": phoneNum,
+        "Logo Image:": logo,
+        "Description:": desc,
+
         Address: {
           "City:":     city,
           "Country:":  country,
@@ -1730,6 +1750,9 @@
       })
         .then(() => alert("Restaurant updated successfully!"))
         .catch(err => { console.error(err); alert("Error saving restaurant."); });
+      update( ref(savorDB, `rest/${restTarget}`), {
+        "image": mapPrev
+      })
     };
 
     (async () => { await organizeOrders(); renderOrders(); })();

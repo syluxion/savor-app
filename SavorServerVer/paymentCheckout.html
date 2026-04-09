@@ -260,7 +260,7 @@
         </div>
 
         <div class="field" id="guest-email-field">
-          <label for="email">Email (for confirmation)</label>
+          <label for="email" id = "emailLabel">Email (for confirmation)</label>
           <input type="email" id="email" class="login-input" placeholder="john@example.com"
                  autocomplete="email" inputmode="email" />
         </div>
@@ -295,7 +295,9 @@
     const loggedUser = localStorage.getItem("loggedInUser");
     if (loggedUser) {
       const guestEmailField = document.getElementById("email");
+      const guestEmailLabel = document.getElementById("emailLabel");
       if (guestEmailField) guestEmailField.style.display = "none";
+      if (guestEmailLabel) guestEmailLabel.style.display = "none";
     }
 
     window.finishOrder = function () {
