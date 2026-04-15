@@ -947,6 +947,10 @@
           <input id="itemDescription" class="login-input" type="text" placeholder="e.g., A sweet indulgence"/>
         </div>
         <div class="field">
+          <label for="itemList">Food Items</label>
+          <input id="foodText" class="login-input" type="text" placeholder="e.g., Chicken Tenders, Fries, etc."/>
+        </div>
+        <div class="field">
           <label for="itemAllergy">Allergies</label>
           <select id="itemAllergy" class="login-input">
             <option value="">Select an allergy</option>
@@ -1512,12 +1516,18 @@
 
       function closeModal() { modal.classList.remove('is-open'); modal.setAttribute('aria-hidden', 'true'); resetForm(); }
 
+      // ─── SAVE BUTTON ────────────────────────────────────────────────────────
       saveBtn.addEventListener('click', async () => {
         if (!validateForm()) { statusEl.textContent = 'Please fill in the highlighted fields.'; return; }
+
         const finalImage    = imageDataUrl || editingExistingImage || '';
         const now           = Date.now();
         const expireMinsRaw = expireInput.value.trim();
         const expireMins    = expireMinsRaw === '' ? null : Number(expireMinsRaw);
+
+        // ★ Capture foodText BEFORE closeModal() wipes the form
+        const foodTextValue = document.getElementById('foodText').value;
+
         let payload = {
           name: nameInput.value.trim(), image: finalImage, description: descInput.value.trim(),
           allergies: [...selectedAllergies], quantity: Number(qtyInput.value),
@@ -1526,20 +1536,31 @@
         if (currentEditCollection === 'menu') {
           payload = { ...payload, expireMins, expiresAt: computeExpiresAt(expireMinsRaw), status: "active" };
         }
+
         try {
           if (!editMode) {
             const newItemRef = push(ref(savorDB, `rest/${restTarget}/menu`));
             await set(newItemRef, { ...payload, createdAt: now });
-            statusEl.textContent = 'Saved to Firebase!'; closeModal();
-            await loadInventory('firebase'); return;
+
+            // ★ await lookupAll so macros are written before the modal closes,
+            //   and pass the captured text so it isn't lost after resetForm()
+            await lookupAll(newItemRef.key, foodTextValue);
+
+            statusEl.textContent = 'Saved to Firebase!';
+            closeModal();
+            await loadInventory('firebase');
+            return;
           }
+
           if (!editingItemId) { statusEl.textContent = 'Missing item id.'; return; }
           await update(ref(savorDB, `rest/${restTarget}/${currentEditCollection}/${editingItemId}`), payload);
-          statusEl.textContent = 'Updated in Firebase!'; closeModal();
+          statusEl.textContent = 'Updated in Firebase!';
+          closeModal();
           if (currentEditCollection === 'menu') await loadInventory('firebase');
           else await loadDonations();
         } catch (err) { console.error(err); statusEl.textContent = 'Error saving to Firebase (check Rules).'; }
       });
+      // ────────────────────────────────────────────────────────────────────────
 
       loadInventory('firebase');
       loadDonations();
@@ -1662,60 +1683,44 @@
     }
 
     async function loadRestaurantInfo() {
-  if (!restTarget) return;
+      if (!restTarget) return;
+      try {
+        const infoRef = ref(savorDB, `rest/${restTarget}/Info`);
+        const infoSnap = await get(infoRef);
+        if (!infoSnap.exists()) return;
+        const info = infoSnap.val() || {};
+        const address = info.Address || {};
 
-  try {
-    const infoRef = ref(savorDB, `rest/${restTarget}/Info`);
-    const infoSnap = await get(infoRef);
-
-    if (!infoSnap.exists()) return;
-
-    const info = infoSnap.val() || {};
-    const address = info.Address || {};
-
-    const restNameField = document.getElementById('restName');
-    if (restNameField) restNameField.value = restTarget;
-
-    const managerField = document.getElementById('fullName');
-    if (managerField) managerField.value = info["Manager:"] || "";
-
-    const phoneField = document.getElementById('phoneNumber');
-    if (phoneField) phoneField.value = info["phoneNum:"] || "";
-
-    const emailField = document.getElementById('email');
-    if (emailField) emailField.value = info["Email:"] || "";
-
-    const street1Field = document.getElementById('street1');
-    if (street1Field) street1Field.value = address["Street:"] || "";
-
-    const street2Field = document.getElementById('street2');
-    if (street2Field) street2Field.value = address["Suite:"] || "";
-
-    const cityField = document.getElementById('city');
-    if (cityField) cityField.value = address["City:"] || "";
-
-    const stateField = document.getElementById('state');
-    if (stateField) stateField.value = address["State:"] || "";
-
-    const zipField = document.getElementById('zip');
-    if (zipField) zipField.value = address["Zip Code:"] || "";
-
-    const countryField = document.getElementById('country');
-    if (countryField) countryField.value = address["Country:"] || "";
-
-    const logoField = document.getElementById('logoImage');
-    if (logoField) logoField.value = info["Logo Image:"] || "";
-
-    const previewField = document.getElementById('mapPreviewImage');
-    if (previewField) previewField.value = info["Map Preview Image:"] || "";
-
-    const descField = document.getElementById('restDescription');
-    if (descField) descField.value = info["Description:"] || "";
-
-  } catch (err) {
-    console.error("Error loading restaurant info:", err);
-  }
-}
+        const restNameField = document.getElementById('restName');
+        if (restNameField) restNameField.value = restTarget;
+        const managerField = document.getElementById('fullName');
+        if (managerField) managerField.value = info["Manager:"] || "";
+        const phoneField = document.getElementById('phoneNumber');
+        if (phoneField) phoneField.value = info["phoneNum:"] || "";
+        const emailField = document.getElementById('email');
+        if (emailField) emailField.value = info["Email:"] || "";
+        const street1Field = document.getElementById('street1');
+        if (street1Field) street1Field.value = address["Street:"] || "";
+        const street2Field = document.getElementById('street2');
+        if (street2Field) street2Field.value = address["Suite:"] || "";
+        const cityField = document.getElementById('city');
+        if (cityField) cityField.value = address["City:"] || "";
+        const stateField = document.getElementById('state');
+        if (stateField) stateField.value = address["State:"] || "";
+        const zipField = document.getElementById('zip');
+        if (zipField) zipField.value = address["Zip Code:"] || "";
+        const countryField = document.getElementById('country');
+        if (countryField) countryField.value = address["Country:"] || "";
+        const logoField = document.getElementById('logoImage');
+        if (logoField) logoField.value = info["Logo Image:"] || "";
+        const previewField = document.getElementById('mapPreviewImage');
+        if (previewField) previewField.value = info["Map Preview Image:"] || "";
+        const descField = document.getElementById('restDescription');
+        if (descField) descField.value = info["Description:"] || "";
+      } catch (err) {
+        console.error("Error loading restaurant info:", err);
+      }
+    }
 
     window.saveResChanges = function (event) {
       event.preventDefault();
@@ -1738,7 +1743,6 @@
         "phoneNum:": phoneNum,
         "Logo Image:": logo,
         "Description:": desc,
-
         Address: {
           "City:":     city,
           "Country:":  country,
@@ -1750,10 +1754,111 @@
       })
         .then(() => alert("Restaurant updated successfully!"))
         .catch(err => { console.error(err); alert("Error saving restaurant."); });
-      update( ref(savorDB, `rest/${restTarget}`), {
-        "image": mapPrev
-      })
+      update(ref(savorDB, `rest/${restTarget}`), { "image": mapPrev });
     };
+
+    // ═══════════════════════════════════════════
+    // MACRO LOOKUP
+    // ═══════════════════════════════════════════
+    const API_KEY = 'prU6zqtG77ZGq1LVbp46GCCMZPmMwQMvwDiNtq84';
+
+    function pickBestFood(foods) {
+      return foods
+        .filter(f => {
+          const n = f.description.toLowerCase();
+          return !n.includes('spread')
+              && !n.includes('meatless')
+              && !n.includes('canned')
+              && !n.includes('frozen')
+              && !n.includes('baby food')
+              && !n.includes('fast food')
+              && !n.includes('flavored')
+              && !n.includes('nugget');
+        })
+        .sort((a, b) => {
+          const aIsFoundation = a.dataType === 'Foundation' ? 0 : 1;
+          const bIsFoundation = b.dataType === 'Foundation' ? 0 : 1;
+          if (aIsFoundation !== bIsFoundation) return aIsFoundation - bIsFoundation;
+          return a.description.split(',').length - b.description.split(',').length;
+        })[0] || foods[0];
+    }
+
+    function getNutrient(food, name) {
+      const nutrient = food.foodNutrients.find(n =>
+        n.nutrientName?.toLowerCase().includes(name.toLowerCase())
+      );
+      return nutrient ? nutrient.value : null;
+    }
+
+    const GRAIN_KEYWORDS = ['rice', 'pasta', 'oat', 'flour', 'quinoa', 'lentil', 'bean'];
+    const MEAT_KEYWORDS  = ['chicken', 'beef', 'pork', 'salmon', 'tuna', 'turkey', 'lamb'];
+
+    function getQuerySuffix(ingredient) {
+      const i = ingredient.toLowerCase();
+      if (GRAIN_KEYWORDS.some(k => i.includes(k))) return 'dry';
+      if (MEAT_KEYWORDS.some(k => i.includes(k)))  return 'raw';
+      return '';
+    }
+
+    async function searchFDC(ingredient, dataType) {
+      const suffix = getQuerySuffix(ingredient);
+      const query  = suffix ? `${ingredient} ${suffix}` : ingredient;
+      const params = new URLSearchParams({
+        query:    query,
+        api_key:  API_KEY,
+        pageSize: 5,
+        dataType: dataType,
+      });
+      const res = await fetch(`https://api.nal.usda.gov/fdc/v1/foods/search?${params}`);
+      if (!res.ok) throw new Error(`API error ${res.status} for "${ingredient}"`);
+      return await res.json();
+    }
+
+    async function fetchMacros(ingredient) {
+      let data = await searchFDC(ingredient, 'Foundation,SR Legacy');
+      if (!data.foods?.length) {
+        data = await searchFDC(ingredient, 'Foundation,SR Legacy');
+      }
+      if (!data.foods?.length) return { name: ingredient, error: 'Not found' };
+      const food = pickBestFood(data.foods);
+      return {
+        name:     food.description,
+        calories: getNutrient(food, 'Energy'),
+        protein:  getNutrient(food, 'Protein'),
+        carbs:    getNutrient(food, 'Carbohydrate'),
+        fat:      getNutrient(food, 'Total lipid'),
+        fiber:    getNutrient(food, 'Fiber'),
+      };
+    }
+
+    // ★ Accepts foodTextValue so it doesn't depend on the live DOM after closeModal()
+    window.lookupAll = async function(currentItem, foodTextValue) {
+      const input = foodTextValue ?? document.getElementById('foodText').value;
+      const ingredients = input.split(',').map(s => s.trim()).filter(Boolean);
+      if (!ingredients.length) return;
+
+      const results = await Promise.all(ingredients.map(fetchMacros));
+
+      let totalCalories = 0, totalProtein = 0, totalCarbs = 0, totalFat = 0, totalFiber = 0;
+      results.forEach(r => {
+        totalCalories += r.calories || 0;
+        totalProtein  += r.protein  || 0;
+        totalCarbs    += r.carbs    || 0;
+        totalFat      += r.fat      || 0;
+        totalFiber    += r.fiber    || 0;
+      });
+
+      // Save totals to DB under the new item
+      const itemRef = ref(savorDB, `rest/${restTarget}/menu/${currentItem}`);
+      await update(itemRef, {
+        calories: Math.round(totalCalories),
+        protein:  Math.round(totalProtein),
+        carbs:    Math.round(totalCarbs),
+        fat:      Math.round(totalFat),
+        fiber:    Math.round(totalFiber),
+      });
+    };
+    // ═══════════════════════════════════════════
 
     (async () => { await organizeOrders(); renderOrders(); })();
 
