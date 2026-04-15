@@ -80,6 +80,7 @@
 }
 
 #restTagline{
+  display:flex;
   margin-top: 10px;
   font-size: 16px;
   line-height: 1.55;
@@ -630,11 +631,17 @@ section.className = "card item-card";
       <div class="row">
         <div>
           <div class="title">${item.name || "Unnamed Item"}</div>
-          <div class="desc">${item.desc || ""}</div>
+          <div class="desc">${item.description || ""}</div>
         </div>
         <div>
           ${item.imageURL ? `<img src="${item.imageURL}" alt="${item.name}" style="max-width:80px; border-radius:8px;">` : ""}
         </div>
+        <div class = "desc">
+            <div class="tag">Calories: ${item.calories || "N/A"}</div>
+            <div class="tag">Protein: ${item.protein || "N/A"}g</div>
+            <div class="tag">Carbs: ${item.carbs || "N/A"}g</div>
+            <div class="tag">Fat: ${item.fat || "N/A"}g</div>
+          </div>
         <div class="priceCol">
           <div class="from">${isDonation ? "Donation" : "From"}</div>
           <div class="basePrice">$${safePrice.toFixed(2)}</div>
@@ -642,6 +649,7 @@ section.className = "card item-card";
       </div>
     </div>
     <div class="bd">
+      <div class = "desc"> ${item.allergies ? "Allergies: " + item.allergies : ""} </div>
       <div class="sep"></div>
       <div class="qtyAdd">
         <div class="qtyBox">
@@ -692,7 +700,13 @@ async function renderMenu() {
             name: data.name,
             description: data.description,
             price: data.price,
-            imageURL: data.image || ""
+            imageURL: data.image || "",
+            calories : data.calories || "N/A",
+            protein : data.protein || "N/A",
+            carbs : data.carbs || "N/A",
+            fat : data.fat || "N/A",
+            allergies : data.allergies || "None"
+
           });
         }
         else {
