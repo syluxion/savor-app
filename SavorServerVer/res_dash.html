@@ -38,8 +38,13 @@
         overflow: auto;
       }
 
-      .mobile-header     { display: none; }
-      .mobile-bottom-nav { display: none; }
+      .mobile-header {
+        display: none;
+      }
+
+      .mobile-bottom-nav {
+        display: none;
+      }
     }
 
     /* ═══════════════════════════════════════════
@@ -54,7 +59,9 @@
         gap: 0;
       }
 
-      .settings-nav { display: none; }
+      .settings-nav {
+        display: none;
+      }
 
       .settings-content {
         flex: 1;
@@ -129,7 +136,10 @@
         text-align: center;
       }
 
-      .mobile-bottom-nav .nav-item .nav-icon { font-size: 20px; line-height: 1; }
+      .mobile-bottom-nav .nav-item .nav-icon {
+        font-size: 20px;
+        line-height: 1;
+      }
 
       .mobile-bottom-nav .nav-item.is-active {
         color: #0a5a2e;
@@ -137,17 +147,34 @@
         box-shadow: none;
       }
 
-      .mobile-bottom-nav .nav-item:hover { transform: none; color: #118f54; }
+      .mobile-bottom-nav .nav-item:hover {
+        transform: none;
+        color: #118f54;
+      }
 
-      .settings-header { margin-bottom: 12px; padding: 0; }
+      .settings-header {
+        margin-bottom: 12px;
+        padding: 0;
+      }
 
-      .info-bubble { flex: 1 1 120px; }
+      .info-bubble {
+        flex: 1 1 120px;
+      }
 
-      .inventory-item { flex-wrap: wrap; gap: 10px; }
+      .inventory-item {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
 
-      .item-actions { width: 100%; justify-content: flex-end; }
+      .item-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
 
-      .modal { padding: 0; align-items: flex-end; }
+      .modal {
+        padding: 0;
+        align-items: flex-end;
+      }
 
       .modal-card {
         width: 100%;
@@ -155,11 +182,19 @@
         border-radius: 22px 22px 0 0;
       }
 
-      .login-submit { width: 100%; padding: 14px; font-size: 18px; }
+      .login-submit {
+        width: 100%;
+        padding: 14px;
+        font-size: 18px;
+      }
 
-      .actions { flex-direction: column; }
+      .actions {
+        flex-direction: column;
+      }
 
-      .card + .card { margin-top: 16px; }
+      .card+.card {
+        margin-top: 16px;
+      }
     }
 
     /* ═══════════════════════════════════════════
@@ -193,7 +228,10 @@
       transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
     }
 
-    .nav-item:hover    { transform: translateX(2px); }
+    .nav-item:hover {
+      transform: translateX(2px);
+    }
+
     .nav-item.is-active {
       background: #e7f5ee;
       box-shadow: 0 0 0 2px rgba(17, 143, 84, 0.25) inset;
@@ -208,7 +246,11 @@
       max-height: calc(100vh - 48px);
     }
 
-    .profile-avatar { display: flex; justify-content: center; margin: 6px 0 8px; }
+    .profile-avatar {
+      display: flex;
+      justify-content: center;
+      margin: 6px 0 8px;
+    }
 
     .avatar-large {
       width: 96px;
@@ -228,9 +270,24 @@
       padding: 0 10px;
     }
 
-    .header-left { font-size: 1.5rem; font-weight: bold; color: #0a5a2e; margin: 0; }
-    .header-right { font-size: 0.95rem; color: #444; margin: 0; }
-    .settings-subtitle { color: #444; margin: 6px 0 0; font-size: 14px; }
+    .header-left {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #0a5a2e;
+      margin: 0;
+    }
+
+    .header-right {
+      font-size: 0.95rem;
+      color: #444;
+      margin: 0;
+    }
+
+    .settings-subtitle {
+      color: #444;
+      margin: 6px 0 0;
+      font-size: 14px;
+    }
 
     .panel {
       opacity: 0;
@@ -239,7 +296,11 @@
       display: none;
     }
 
-    .panel.is-visible { display: block; opacity: 1; transform: translateY(0); }
+    .panel.is-visible {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
 
     .card {
       background: #fff;
@@ -248,9 +309,16 @@
       box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     }
 
-    .card + .card { margin-top: 16px; }
+    .card+.card {
+      margin-top: 16px;
+    }
 
-    .info-bubbles { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px; }
+    .info-bubbles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
 
     .info-bubble {
       flex: 1 1 150px;
@@ -269,16 +337,39 @@
       margin-bottom: 4px;
     }
 
-    .bubble-value { font-size: 1.1rem; font-weight: 700; color: #0a5a2e; }
+    .bubble-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0a5a2e;
+    }
 
-    .form-grid { max-width: 720px; margin: 0 auto; }
+    .form-grid {
+      max-width: 720px;
+      margin: 0 auto;
+    }
 
-    .field { margin-bottom: 16px; text-align: left; }
-    .field label { display: block; margin-bottom: 6px; font-weight: 600; }
+    .field {
+      margin-bottom: 16px;
+      text-align: left;
+    }
 
-    .actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
 
-    .status { font-size: 14px; color: #0a5a2e; }
+    .actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .status {
+      font-size: 14px;
+      color: #0a5a2e;
+    }
 
     .login-input {
       display: block;
@@ -296,7 +387,10 @@
       appearance: none;
     }
 
-    .login-input:focus { outline: none; box-shadow: 0 0 10px rgba(17, 143, 84, 0.4); }
+    .login-input:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(17, 143, 84, 0.4);
+    }
 
     .login-input.is-invalid {
       box-shadow: 0 0 0 2px rgba(220, 30, 30, 0.65) inset, 0 0 10px rgba(220, 30, 30, 0.2);
@@ -324,7 +418,10 @@
       margin-top: 10px;
     }
 
-    .login-submit:hover  { background-color: #118f54; transform: scale(1.05); }
+    .login-submit:hover {
+      background-color: #118f54;
+      transform: scale(1.05);
+    }
 
     .login-links {
       margin-top: 30px;
@@ -335,8 +432,16 @@
       flex-wrap: wrap;
     }
 
-    .login-links a { color: #0a5a2e; text-decoration: none; transition: color 0.2s ease; }
-    .login-links a:hover { text-decoration: underline; color: #118f54; }
+    .login-links a {
+      color: #0a5a2e;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .login-links a:hover {
+      text-decoration: underline;
+      color: #118f54;
+    }
 
     .inventory-list,
     .donations-list {
@@ -357,27 +462,76 @@
       gap: 16px;
     }
 
-    .inventory-item.is-expired { opacity: 0.45; filter: grayscale(1); }
+    .inventory-item.is-expired {
+      opacity: 0.45;
+      filter: grayscale(1);
+    }
 
-    .item-timer { font-size: 0.85rem; font-weight: 600; color: #444; margin-top: 2px; }
-    .inventory-item.is-expired .item-timer { color: #777; }
+    .item-timer {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #444;
+      margin-top: 2px;
+    }
 
-    .item-image { width: 80px; height: 80px; object-fit: cover; border-radius: 10px; }
+    .inventory-item.is-expired .item-timer {
+      color: #777;
+    }
 
-    .item-details { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .item-image {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
 
-    .item-description { font-weight: 600; font-size: 1rem; color: #0a5a2e; }
-    .item-price       { font-weight: bold; color: #118f54; }
+    .item-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
 
-    .item-quantity { display: flex; align-items: center; gap: 8px; }
+    .item-description {
+      font-weight: 600;
+      font-size: 1rem;
+      color: #0a5a2e;
+    }
 
-    .item-subdescription { font-size: 0.9rem; color: #555; }
+    .item-price {
+      font-weight: bold;
+      color: #118f54;
+    }
 
-    .item-allergy { font-size: 0.78rem; color: #a85a00; margin-top: 2px; font-style: italic; }
+    .item-quantity {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-    .mobile-bottom-nav .mob-nav-item.danger           { color: #b3261e; }
-    .mobile-bottom-nav .mob-nav-item.danger.is-active { background: rgba(179,38,30,0.06); }
-    .nav-item.danger-item { color: #b3261e; }
+    .item-subdescription {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .item-allergy {
+      font-size: 0.78rem;
+      color: #a85a00;
+      margin-top: 2px;
+      font-style: italic;
+    }
+
+    .mobile-bottom-nav .mob-nav-item.danger {
+      color: #b3261e;
+    }
+
+    .mobile-bottom-nav .mob-nav-item.danger.is-active {
+      background: rgba(179, 38, 30, 0.06);
+    }
+
+    .nav-item.danger-item {
+      color: #b3261e;
+    }
 
     .selected-allergy-chip {
       display: inline-flex;
@@ -412,7 +566,9 @@
       cursor: pointer;
     }
 
-    .quantity-btn:hover { background-color: #118f54; }
+    .quantity-btn:hover {
+      background-color: #118f54;
+    }
 
     .quantity-input {
       width: 50px;
@@ -435,7 +591,9 @@
       z-index: 9999;
     }
 
-    .modal.is-open { display: flex; }
+    .modal.is-open {
+      display: flex;
+    }
 
     .modal-card {
       width: min(720px, 100%);
@@ -454,8 +612,18 @@
       margin-bottom: 12px;
     }
 
-    .modal-close { border: none; background: transparent; font-size: 20px; cursor: pointer; padding: 8px 10px; border-radius: 10px; }
-    .modal-close:hover { background: rgba(0, 0, 0, 0.06); }
+    .modal-close {
+      border: none;
+      background: transparent;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 8px 10px;
+      border-radius: 10px;
+    }
+
+    .modal-close:hover {
+      background: rgba(0, 0, 0, 0.06);
+    }
 
     .dropzone {
       border: 2px dashed rgba(17, 143, 84, 0.45);
@@ -472,13 +640,31 @@
       text-align: center;
     }
 
-    .dropzone.is-dragover { background: #e7f5ee; border-color: #118f54; }
-    .dropzone.is-invalid  { border-color: rgba(220, 30, 30, 0.8); background: rgba(255, 220, 220, 0.55); }
+    .dropzone.is-dragover {
+      background: #e7f5ee;
+      border-color: #118f54;
+    }
 
-    .image-preview { display: none; max-width: 100%; max-height: 240px; border-radius: 14px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); }
+    .dropzone.is-invalid {
+      border-color: rgba(220, 30, 30, 0.8);
+      background: rgba(255, 220, 220, 0.55);
+    }
 
-    .dropzone.has-image .dropzone-text  { display: none; }
-    .dropzone.has-image .image-preview  { display: block; }
+    .image-preview {
+      display: none;
+      max-width: 100%;
+      max-height: 240px;
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .dropzone.has-image .dropzone-text {
+      display: none;
+    }
+
+    .dropzone.has-image .image-preview {
+      display: block;
+    }
 
     .item-action-btn {
       border: none;
@@ -490,11 +676,24 @@
       font-size: 14px;
     }
 
-    .item-action-btn:hover          { background: #118f54; }
-    .item-action-btn.delete-btn     { background: #b3261e; }
-    .item-action-btn.delete-btn:hover { background: #d93025; }
+    .item-action-btn:hover {
+      background: #118f54;
+    }
 
-    .item-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .item-action-btn.delete-btn {
+      background: #b3261e;
+    }
+
+    .item-action-btn.delete-btn:hover {
+      background: #d93025;
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
 
     .title-pickup {
       font-size: 40px;
@@ -505,7 +704,10 @@
       text-shadow: 0 3px 0 #c8e1c8, 0 6px 0 #a8d1a8, 0 9px 10px rgba(0, 0, 0, 0.25);
     }
 
-    .title-link { text-decoration: none; color: inherit; }
+    .title-link {
+      text-decoration: none;
+      color: inherit;
+    }
 
     .nav-item-with-link {
       display: block;
@@ -524,11 +726,31 @@
       color: inherit;
     }
 
-    .row        { display: flex; justify-content: space-between; align-items: center; }
-    .hd         { width: 100%; }
-    .title      { font-weight: 700; color: #0a5a2e; }
-    .rest       { flex: 1; text-align: center; font-size: 0.9rem; }
-    .totalPrice { text-align: right; font-size: 0.9rem; }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .hd {
+      width: 100%;
+    }
+
+    .title {
+      font-weight: 700;
+      color: #0a5a2e;
+    }
+
+    .rest {
+      flex: 1;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .totalPrice {
+      text-align: right;
+      font-size: 0.9rem;
+    }
 
     #pending-orders .card,
     #completed-orders .card {
@@ -538,7 +760,9 @@
     }
 
     #pending-orders .card:hover,
-    #completed-orders .card:hover { transform: translateY(-2px); }
+    #completed-orders .card:hover {
+      transform: translateY(-2px);
+    }
 
     .field-row {
       display: grid;
@@ -546,7 +770,10 @@
       gap: 12px;
       margin-bottom: 16px;
     }
-    .field-row .field { margin-bottom: 0; }
+
+    .field-row .field {
+      margin-bottom: 0;
+    }
   </style>
 </head>
 
@@ -566,14 +793,22 @@
         <h1 class="title-pickup">SAVOR</h1>
       </a>
       <nav role="tablist" aria-orientation="vertical">
-        <button type="button" class="nav-item is-active" role="tab" aria-selected="true"  aria-controls="panel-profile"          id="tab-profile">Home</button>
-        <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-inventory"        id="tab-inventory">Inventory</button>
-        <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-donations"        id="tab-donations">Donations</button>
-        <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-orders"           id="tab-orders">Orders &amp; Sales</button>
-        <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-settings"         id="tab-settings">Restaurant Info</button>
-        <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-personal-profile" id="tab-personal-profile">Personal Info</button>
-        <button type="button" class="nav-item danger-item" role="tab" aria-selected="false" aria-controls="panel-logout"         id="tab-logout">Logout</button>
-        <button type="button" class="nav-item danger-item" role="tab" aria-selected="false" aria-controls="panel-delete"         id="tab-delete">Delete Account</button>
+        <button type="button" class="nav-item is-active" role="tab" aria-selected="true" aria-controls="panel-profile"
+          id="tab-profile">Home</button>
+        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-inventory"
+          id="tab-inventory">Inventory</button>
+        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-donations"
+          id="tab-donations">Donations</button>
+        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-orders"
+          id="tab-orders">Orders &amp; Sales</button>
+        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-settings"
+          id="tab-settings">Restaurant Info</button>
+        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-personal-profile"
+          id="tab-personal-profile">Personal Info</button>
+        <button type="button" class="nav-item danger-item" role="tab" aria-selected="false" aria-controls="panel-logout"
+          id="tab-logout">Logout</button>
+        <button type="button" class="nav-item danger-item" role="tab" aria-selected="false" aria-controls="panel-delete"
+          id="tab-delete">Delete Account</button>
       </nav>
     </aside>
 
@@ -591,7 +826,7 @@
           <div class="info-bubbles">
             <div class="info-bubble">
               <div class="bubble-label">Active Listings</div>
-              <div class="bubble-value">0</div>
+              <div class="bubble-value" id="active-listings">0</div>
             </div>
           </div>
           <div class="info-bubbles">
@@ -625,18 +860,19 @@
         <section class="card">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
             <h3>Inventory</h3>
-            <button id="add-item-btn" class="login-submit" style="padding:8px 20px; font-size:16px; width:auto; margin-top:0;">Add Item</button>
+            <button id="add-item-btn" class="login-submit"
+              style="padding:8px 20px; font-size:16px; width:auto; margin-top:0;">Add Item</button>
           </div>
           <div class="inventory-list">
             <div class="inventory-item">
-              <img src="/placeholder.png" alt="Item Image" class="item-image"/>
+              <img src="/placeholder.png" alt="Item Image" class="item-image" />
               <div class="item-details">
                 <div class="item-description">Sample Item</div>
                 <div class="item-price">$12.99</div>
               </div>
               <div class="item-quantity">
                 <button class="quantity-btn minus">-</button>
-                <input type="number" class="quantity-input" value="0" min="0"/>
+                <input type="number" class="quantity-input" value="0" min="0" />
                 <button class="quantity-btn plus">+</button>
               </div>
             </div>
@@ -660,11 +896,15 @@
           <h3>Orders</h3>
           <section class="card">
             <h3>Pending Orders</h3>
-            <div id="pending-orders"><h3>Loading</h3></div>
+            <div id="pending-orders">
+              <h3>Loading</h3>
+            </div>
           </section>
           <section class="card">
             <h3>Completed Orders</h3>
-            <div id="completed-orders"><h3>Loading</h3></div>
+            <div id="completed-orders">
+              <h3>Loading</h3>
+            </div>
           </section>
         </section>
       </section>
@@ -672,133 +912,81 @@
       <!-- Restaurant Info panel -->
       <section id="panel-settings" class="panel" role="tabpanel" aria-labelledby="tab-settings" hidden>
         <section class="card" aria-labelledby="Restaurant-Settings-heading">
-        <h3 id="Restaurant-Settings-heading"><!--Restaurant Settings--></h3>
-        <form id="profileBasicsForm" class="form-grid" autocomplete="on">
-          <div class="field">
-            <label for="firstName">Restaurant Name</label>
-            <input type="text" id="restName" name="restName" class="login-input"/>
-          </div>
-          <div class="field">
-            <label for="lastName">Manager</label>
-            <input type="text" id="fullName" name="fullName" class="login-input"/>
-          </div>
-          <div class="field">
-            <label for="phoneNumber">Phone Number</label>
-            <input type="tel" id="phoneNumber" name="phoneNumber" class="login-input"/>
-          </div>
-<div class="field">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" class="login-input"/>
-          </div>
-          <div class="field">
-            <label for="street1">Street Address</label>
-            <input
-              type="text"
-              id="street1"
-              name="street1"
-              class="login-input"
-              autocomplete="address-line1"
-              placeholder="123 Main St"
-            />
-          </div>
-          <div class="field">
-          <label for="street2">Apartment / Suite (optional)</label>
-          <input
-            type="text"
-            id="street2"
-            name="street2"
-            class="login-input"
-            autocomplete="address-line2"
-            placeholder="Suite 200"
-          />
-          </div>
-          <div class="field">
-          <label for="city">City</label>
-          <input
-            type="text"
-            id="city"
-            name="city"
-            class="login-input"
-            autocomplete="address-level2"
-            placeholder="Los Angeles"
-          />
-          </div>
-          <div class="field">
-          <label for="state">State</label>
-          <input
-            type="text"
-            id="state"
-            name="state"
-            class="login-input"
-            autocomplete="address-level1"
-            placeholder="CA"
-          />
-          </div>
+          <h3 id="Restaurant-Settings-heading"><!--Restaurant Settings--></h3>
+          <form id="profileBasicsForm" class="form-grid" autocomplete="on">
+            <div class="field">
+              <label for="firstName">Restaurant Name</label>
+              <input type="text" id="restName" name="restName" class="login-input" />
+            </div>
+            <div class="field">
+              <label for="lastName">Manager</label>
+              <input type="text" id="fullName" name="fullName" class="login-input" />
+            </div>
+            <div class="field">
+              <label for="phoneNumber">Phone Number</label>
+              <input type="tel" id="phoneNumber" name="phoneNumber" class="login-input" />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" class="login-input" />
+            </div>
+            <div class="field">
+              <label for="street1">Street Address</label>
+              <input type="text" id="street1" name="street1" class="login-input" autocomplete="address-line1"
+                placeholder="123 Main St" />
+            </div>
+            <div class="field">
+              <label for="street2">Apartment / Suite (optional)</label>
+              <input type="text" id="street2" name="street2" class="login-input" autocomplete="address-line2"
+                placeholder="Suite 200" />
+            </div>
+            <div class="field">
+              <label for="city">City</label>
+              <input type="text" id="city" name="city" class="login-input" autocomplete="address-level2"
+                placeholder="Los Angeles" />
+            </div>
+            <div class="field">
+              <label for="state">State</label>
+              <input type="text" id="state" name="state" class="login-input" autocomplete="address-level1"
+                placeholder="CA" />
+            </div>
 
-        <div class="field">
-          <label for="zip">ZIP Code</label>
-          <input
-            type="text"
-            id="zip"
-            name="zip"
-            class="login-input"
-            autocomplete="postal-code"
-            placeholder="90001"
-          />
-        </div>
-        <div class="field">
-          <label for="country">Country</label>
-          <input
-            type="text"
-            id="country"
-            name="country"
-            class="login-input"
-            autocomplete="country-name"
-            placeholder="United States"
-          />
-        </div>
+            <div class="field">
+              <label for="zip">ZIP Code</label>
+              <input type="text" id="zip" name="zip" class="login-input" autocomplete="postal-code"
+                placeholder="90001" />
+            </div>
+            <div class="field">
+              <label for="country">Country</label>
+              <input type="text" id="country" name="country" class="login-input" autocomplete="country-name"
+                placeholder="United States" />
+            </div>
 
-        <div class="field">
-          <label>Logo Image URL</label>
-          <input
-            type="url"
-            id="logoImage"
-            name="logoImage"
-            class="login-input"
-            placeholder="https://example.com/logo.png"
-          />
-        </div>
+            <div class="field">
+              <label>Logo Image URL</label>
+              <input type="url" id="logoImage" name="logoImage" class="login-input"
+                placeholder="https://example.com/logo.png" />
+            </div>
 
-        <div class = "field">
-          <label>Map Preview Image URL</label>
-          <input
-            type="url"
-            id="mapPreviewImage"
-            name="mapPreviewImage"
-            class="login-input"
-            placeholder="https://example.com/map-preview.png"
-          />
-        </div>
-        
-        <div class="field">
-          <label>Description / Slogan</label>
-          <textarea
-            id="restDescription"
-            name="restDescription"
-            class="login-input"
-            rows="4"
-            maxlength="400"
-            placeholder="Fresh bowls made daily with bold flavor."
-            style="resize: vertical; min-height: 110px;"
-          ></textarea>
-        </div>
+            <div class="field">
+              <label>Map Preview Image URL</label>
+              <input type="url" id="mapPreviewImage" name="mapPreviewImage" class="login-input"
+                placeholder="https://example.com/map-preview.png" />
+            </div>
 
-          <!--add account type in the future-->
-          <div class="actions">
-            <button type="button" class="login-submit" onclick="saveResChanges(event)">Save Changes</button>
-            <div id="profileBasicsStatus" class="status" aria-live="polite"></div>
-          </div>
-        </form>
+            <div class="field">
+              <label>Description / Slogan</label>
+              <textarea id="restDescription" name="restDescription" class="login-input" rows="4" maxlength="400"
+                placeholder="Fresh bowls made daily with bold flavor."
+                style="resize: vertical; min-height: 110px;"></textarea>
+            </div>
+
+            <!--add account type in the future-->
+            <div class="actions">
+              <button type="button" class="login-submit" onclick="saveResChanges(event)">Save Changes</button>
+              <div id="profileBasicsStatus" class="status" aria-live="polite"></div>
+            </div>
+          </form>
         </section>
       </section>
 
@@ -810,23 +998,25 @@
           <form id="personalInfoForm" class="form-grid" autocomplete="on">
             <div class="field">
               <label for="firstName">First Name</label>
-              <input type="text"  id="firstName"   name="firstName"   class="login-input" autocomplete="given-name"/>
+              <input type="text" id="firstName" name="firstName" class="login-input" autocomplete="given-name" />
             </div>
             <div class="field">
               <label for="lastName">Last Name</label>
-              <input type="text"  id="lastName"    name="lastName"    class="login-input" autocomplete="family-name"/>
+              <input type="text" id="lastName" name="lastName" class="login-input" autocomplete="family-name" />
             </div>
             <div class="field">
               <label for="userEmail">Email</label>
-              <input type="email" id="userEmail"   name="email"       class="login-input" autocomplete="email" inputmode="email"/>
+              <input type="email" id="userEmail" name="email" class="login-input" autocomplete="email"
+                inputmode="email" />
             </div>
             <div class="field">
               <label for="birthdate">Birthdate</label>
-              <input type="date"  id="birthdate"   name="birthdate"   class="login-input"/>
+              <input type="date" id="birthdate" name="birthdate" class="login-input" />
             </div>
             <div class="field">
               <label for="userPhone">Phone Number</label>
-              <input type="tel"   id="userPhone"   name="phoneNumber" class="login-input" autocomplete="tel" inputmode="tel"/>
+              <input type="tel" id="userPhone" name="phoneNumber" class="login-input" autocomplete="tel"
+                inputmode="tel" />
             </div>
             <div class="actions">
               <button type="submit" class="login-submit" onclick="saveAccountChanges1(event)">Save Changes</button>
@@ -840,15 +1030,18 @@
           <form id="securityForm" class="form-grid" autocomplete="off">
             <div class="field">
               <label for="currentPassword">Current Password</label>
-              <input type="password" id="currentPassword" name="currentPassword" class="login-input" autocomplete="current-password"/>
+              <input type="password" id="currentPassword" name="currentPassword" class="login-input"
+                autocomplete="current-password" />
             </div>
             <div class="field">
               <label for="newPassword">New Password</label>
-              <input type="password" id="newPassword"     name="newPassword"     class="login-input" autocomplete="new-password"/>
+              <input type="password" id="newPassword" name="newPassword" class="login-input"
+                autocomplete="new-password" />
             </div>
             <div class="field">
               <label for="confirmPassword">Confirm New Password</label>
-              <input type="password" id="confirmPassword" name="confirmPassword" class="login-input" autocomplete="new-password"/>
+              <input type="password" id="confirmPassword" name="confirmPassword" class="login-input"
+                autocomplete="new-password" />
             </div>
             <div class="actions">
               <button type="submit" class="login-submit" onclick="updatePass(event)">Update Password</button>
@@ -862,20 +1055,22 @@
           <form id="paymentForm" class="form-grid" autocomplete="off">
             <div class="field">
               <label for="cardName">Cardholder Name</label>
-              <input type="text"     id="cardName"   class="login-input" placeholder="John Doe"            autocomplete="cc-name"/>
+              <input type="text" id="cardName" class="login-input" placeholder="John Doe" autocomplete="cc-name" />
             </div>
             <div class="field">
               <label for="cardNumber">Card Number</label>
-              <input type="text"     id="cardNumber" class="login-input" placeholder="1234 5678 9012 3456" autocomplete="cc-number" inputmode="numeric" maxlength="19"/>
+              <input type="text" id="cardNumber" class="login-input" placeholder="1234 5678 9012 3456"
+                autocomplete="cc-number" inputmode="numeric" maxlength="19" />
             </div>
             <div class="field-row">
               <div class="field">
                 <label for="expiry">Expiration</label>
-                <input type="month"    id="expiry" class="login-input" autocomplete="cc-exp"/>
+                <input type="month" id="expiry" class="login-input" autocomplete="cc-exp" />
               </div>
               <div class="field">
                 <label for="cvv">CVV</label>
-                <input type="password" id="cvv"    class="login-input" placeholder="123" autocomplete="cc-csc" inputmode="numeric" maxlength="4"/>
+                <input type="password" id="cvv" class="login-input" placeholder="123" autocomplete="cc-csc"
+                  inputmode="numeric" maxlength="4" />
               </div>
             </div>
             <div class="actions">
@@ -894,22 +1089,28 @@
   </div>
 
   <nav class="mobile-bottom-nav" aria-label="Main navigation">
-    <button type="button" class="nav-item is-active" role="tab" aria-selected="true"  aria-controls="panel-profile"          id="mob-tab-profile">
+    <button type="button" class="nav-item is-active" role="tab" aria-selected="true" aria-controls="panel-profile"
+      id="mob-tab-profile">
       <span class="nav-icon">🏠</span>Home
     </button>
-    <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-inventory"        id="mob-tab-inventory">
+    <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-inventory"
+      id="mob-tab-inventory">
       <span class="nav-icon">📦</span>Inventory
     </button>
-    <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-donations"        id="mob-tab-donations">
+    <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-donations"
+      id="mob-tab-donations">
       <span class="nav-icon">🤝</span>Donations
     </button>
-    <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-orders"           id="mob-tab-orders">
+    <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-orders"
+      id="mob-tab-orders">
       <span class="nav-icon">🧾</span>Orders
     </button>
-    <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-settings"         id="mob-tab-settings">
+    <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-settings"
+      id="mob-tab-settings">
       <span class="nav-icon">⚙️</span>Restaurant
     </button>
-    <button type="button" class="nav-item"           role="tab" aria-selected="false" aria-controls="panel-personal-profile" id="mob-tab-personal-profile">
+    <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-personal-profile"
+      id="mob-tab-personal-profile">
       <span class="nav-icon">👤</span>Personal Info
     </button>
     <button type="button" class="nav-item danger-item" id="mob-logout">
@@ -933,22 +1134,22 @@
           <strong>Drop image here</strong> or click to upload
           <div style="font-size:12px; color:#666; margin-top:6px;">PNG / JPG recommended</div>
         </div>
-        <input id="itemImageInput" type="file" accept="image/*" hidden/>
-        <img id="imagePreview" class="image-preview" alt="Preview"/>
+        <input id="itemImageInput" type="file" accept="image/*" hidden />
+        <img id="imagePreview" class="image-preview" alt="Preview" />
       </div>
 
       <div class="form-grid" style="max-width:none;">
         <div class="field">
           <label for="itemName">Name</label>
-          <input id="itemName" class="login-input" type="text" placeholder="e.g., Chocolate Cake"/>
+          <input id="itemName" class="login-input" type="text" placeholder="e.g., Chocolate Cake" />
         </div>
         <div class="field">
           <label for="itemDescription">Description</label>
-          <input id="itemDescription" class="login-input" type="text" placeholder="e.g., A sweet indulgence"/>
+          <input id="itemDescription" class="login-input" type="text" placeholder="e.g., A sweet indulgence" />
         </div>
         <div class="field">
           <label for="itemList">Food Items</label>
-          <input id="foodText" class="login-input" type="text" placeholder="e.g., Chicken Tenders, Fries, etc."/>
+          <input id="foodText" class="login-input" type="text" placeholder="e.g., Chicken Tenders, Fries, etc." />
         </div>
         <div class="field">
           <label for="itemAllergy">Allergies</label>
@@ -960,22 +1161,25 @@
             <option value="Other">Other</option>
           </select>
           <div id="otherAllergyField" style="display:none;">
-            <input id="itemOtherAllergy" class="login-input" type="text" placeholder="Enter specific allergy"/>
+            <input id="itemOtherAllergy" class="login-input" type="text" placeholder="Enter specific allergy" />
           </div>
           <button type="button" id="addAllergyBtn" class="item-action-btn" style="margin-top:8px;">Add Allergy</button>
           <div id="selectedAllergiesList" style="margin-top:12px;"></div>
         </div>
         <div class="field">
           <label for="itemQuantity">Quantity</label>
-          <input id="itemQuantity" class="login-input" type="number" min="0" step="1" placeholder="e.g., 12" inputmode="numeric"/>
+          <input id="itemQuantity" class="login-input" type="number" min="0" step="1" placeholder="e.g., 12"
+            inputmode="numeric" />
         </div>
         <div class="field">
           <label for="itemPrice">Price</label>
-          <input id="itemPrice" class="login-input" type="number" min="0" step="0.01" placeholder="e.g., 11.50" inputmode="decimal"/>
+          <input id="itemPrice" class="login-input" type="number" min="0" step="0.01" placeholder="e.g., 11.50"
+            inputmode="decimal" />
         </div>
         <div class="field">
           <label for="itemExpireMins">Expires in (optional)</label>
-          <input id="itemExpireMins" class="login-input" type="number" min="1" step="1" placeholder="e.g., 60" inputmode="numeric"/>
+          <input id="itemExpireMins" class="login-input" type="number" min="1" step="1" placeholder="e.g., 60"
+            inputmode="numeric" />
         </div>
         <div class="actions">
           <button type="button" id="saveItemBtn" class="login-submit">Save Item</button>
@@ -991,12 +1195,12 @@
     import { getDatabase, ref, set, get, push, update, remove } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
     const firebaseConfig = { databaseURL: "https://savordatabase-default-rtdb.firebaseio.com" };
-    const app     = initializeApp(firebaseConfig);
+    const app = initializeApp(firebaseConfig);
     const savorDB = getDatabase(app);
 
     let restTarget = '';
 
-    window.viewOrder   = function () { window.location.href = "orderView.html"; };
+    window.viewOrder = function () { window.location.href = "orderView.html"; };
     window.pickupOrder = function () { window.location.href = "orderView.html"; };
 
     document.addEventListener('DOMContentLoaded', async () => {
@@ -1012,21 +1216,21 @@
         if (header) header.textContent = restTarget;
 
         await loadRestaurantInfo();
-        
+
         const mobileHeader = document.getElementById('header-right-mobile');
         if (mobileHeader) mobileHeader.textContent = restTarget;
       } catch (err) { console.error("Error loading user:", err); return; }
 
-      const tabs   = Array.from(document.querySelectorAll('[role="tab"]'));
+      const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
       const panels = Array.from(document.querySelectorAll('.panel'));
 
-      const inventoryTab  = document.getElementById('tab-inventory');
-      const donationsTab  = document.getElementById('tab-donations');
+      const inventoryTab = document.getElementById('tab-inventory');
+      const donationsTab = document.getElementById('tab-donations');
 
-      let inventoryItems       = [];
-      let donationItems        = [];
-      let editMode             = false;
-      let editingItemId        = '';
+      let inventoryItems = [];
+      let donationItems = [];
+      let editMode = false;
+      let editingItemId = '';
       let editingExistingImage = '';
       let currentEditCollection = 'menu';
 
@@ -1052,7 +1256,7 @@
       function formatMs(ms) {
         if (ms < 0) ms = 0;
         const totalSeconds = Math.floor(ms / 1000);
-        const hrs  = Math.floor(totalSeconds / 3600);
+        const hrs = Math.floor(totalSeconds / 3600);
         const mins = Math.floor((totalSeconds % 3600) / 60);
         const secs = totalSeconds % 60;
         const pad = n => String(n).padStart(2, '0');
@@ -1065,11 +1269,11 @@
         countdownInterval = setInterval(() => {
           const now = Date.now();
           document.querySelectorAll('.item-timer[data-timer-id]').forEach(el => {
-            const id   = el.getAttribute('data-timer-id');
+            const id = el.getAttribute('data-timer-id');
             const item = inventoryItems.find(x => String(x.id) === String(id));
             if (!item) return;
-            if (item.status === "expired")  { el.textContent = "Expired (sent to donations)"; return; }
-            if (!item.expiresAt)            { el.textContent = "No expiration set"; return; }
+            if (item.status === "expired") { el.textContent = "Expired (sent to donations)"; return; }
+            if (!item.expiresAt) { el.textContent = "No expiration set"; return; }
             const left = item.expiresAt - now;
             el.textContent = left <= 0 ? "Expiring..." : `Expires in: ${formatMs(left)}`;
           });
@@ -1143,15 +1347,15 @@
           }
           if (!e.target.classList.contains('quantity-btn')) return;
           const itemDiv = e.target.closest('.inventory-item');
-          const input   = itemDiv.querySelector('.quantity-input');
-          let value     = parseInt(input.value);
-          if (e.target.classList.contains('plus'))                        value++;
+          const input = itemDiv.querySelector('.quantity-input');
+          let value = parseInt(input.value);
+          if (e.target.classList.contains('plus')) value++;
           if (e.target.classList.contains('minus') && value > 0) value--;
           input.value = value;
           const id = itemDiv?.dataset?.id || '';
           if (id) {
             try {
-              const item  = inventoryItems.find(x => String(x.id) === String(id));
+              const item = inventoryItems.find(x => String(x.id) === String(id));
               const patch = { quantity: value, updatedAt: Date.now() };
               if (item && item.status === "expired" && value > 0) { patch.status = "active"; patch.expiresAt = resetExpiresAtFromItem(item); }
               await update(ref(savorDB, `rest/${restTarget}/menu/${id}`), patch);
@@ -1169,7 +1373,7 @@
           const id = itemDiv?.dataset?.id || '';
           if (id) {
             try {
-              const item  = inventoryItems.find(x => String(x.id) === String(id));
+              const item = inventoryItems.find(x => String(x.id) === String(id));
               const patch = { quantity: value, updatedAt: Date.now() };
               if (item && item.status === "expired" && value > 0) { patch.status = "active"; patch.expiresAt = resetExpiresAtFromItem(item); }
               await update(ref(savorDB, `rest/${restTarget}/menu/${id}`), patch);
@@ -1202,9 +1406,9 @@
           }
           if (!e.target.classList.contains('quantity-btn')) return;
           const itemDiv = e.target.closest('.inventory-item');
-          const input   = itemDiv.querySelector('.quantity-input');
-          let value     = parseInt(input.value);
-          if (e.target.classList.contains('plus'))                        value++;
+          const input = itemDiv.querySelector('.quantity-input');
+          let value = parseInt(input.value);
+          if (e.target.classList.contains('plus')) value++;
           if (e.target.classList.contains('minus') && value > 0) value--;
           input.value = value;
           const id = itemDiv?.dataset?.id || '';
@@ -1376,27 +1580,27 @@
         }, 30 * 1000);
       }
 
-      const modal              = document.getElementById('addItemModal');
-      const closeModalBtn      = document.getElementById('closeAddItemModal');
-      const cancelBtn          = document.getElementById('cancelItemBtn');
-      const saveBtn            = document.getElementById('saveItemBtn');
-      const statusEl           = document.getElementById('addItemStatus');
-      const dropZone           = document.getElementById('imageDropZone');
-      const fileInput          = document.getElementById('itemImageInput');
-      const previewImg         = document.getElementById('imagePreview');
-      const nameInput          = document.getElementById('itemName');
-      const descInput          = document.getElementById('itemDescription');
-      const allergySelect      = document.getElementById('itemAllergy');
-      const otherAllergyField  = document.getElementById('otherAllergyField');
-      const otherAllergyInput  = document.getElementById('itemOtherAllergy');
-      const addAllergyBtn      = document.getElementById('addAllergyBtn');
+      const modal = document.getElementById('addItemModal');
+      const closeModalBtn = document.getElementById('closeAddItemModal');
+      const cancelBtn = document.getElementById('cancelItemBtn');
+      const saveBtn = document.getElementById('saveItemBtn');
+      const statusEl = document.getElementById('addItemStatus');
+      const dropZone = document.getElementById('imageDropZone');
+      const fileInput = document.getElementById('itemImageInput');
+      const previewImg = document.getElementById('imagePreview');
+      const nameInput = document.getElementById('itemName');
+      const descInput = document.getElementById('itemDescription');
+      const allergySelect = document.getElementById('itemAllergy');
+      const otherAllergyField = document.getElementById('otherAllergyField');
+      const otherAllergyInput = document.getElementById('itemOtherAllergy');
+      const addAllergyBtn = document.getElementById('addAllergyBtn');
       const selectedAllergiesList = document.getElementById('selectedAllergiesList');
-      const qtyInput           = document.getElementById('itemQuantity');
-      const priceInput         = document.getElementById('itemPrice');
-      const expireInput        = document.getElementById('itemExpireMins');
-      const titleEl            = document.getElementById('addItemTitle');
-      let selectedAllergies    = [];
-      let imageDataUrl         = '';
+      const qtyInput = document.getElementById('itemQuantity');
+      const priceInput = document.getElementById('itemPrice');
+      const expireInput = document.getElementById('itemExpireMins');
+      const titleEl = document.getElementById('addItemTitle');
+      let selectedAllergies = [];
+      let imageDataUrl = '';
 
       allergySelect.addEventListener('change', () => {
         otherAllergyField.style.display = allergySelect.value === 'Other' ? 'block' : 'none';
@@ -1483,8 +1687,8 @@
 
       function validateForm() {
         clearValidation(); let ok = true;
-        if (!nameInput.value.trim())  { nameInput.classList.add('is-invalid'); ok = false; }
-        if (!descInput.value.trim())  { descInput.classList.add('is-invalid'); ok = false; }
+        if (!nameInput.value.trim()) { nameInput.classList.add('is-invalid'); ok = false; }
+        if (!descInput.value.trim()) { descInput.classList.add('is-invalid'); ok = false; }
         const qty = qtyInput.value.trim();
         if (qty === '' || Number.isNaN(Number(qty)) || Number(qty) < 0) { qtyInput.classList.add('is-invalid'); ok = false; }
         const price = priceInput.value.trim();
@@ -1504,11 +1708,11 @@
         reader.readAsDataURL(file);
       }
 
-      dropZone.addEventListener('click',    ()  => fileInput.click());
-      fileInput.addEventListener('change',  ()  => setImageFromFile(fileInput.files?.[0]));
-      dropZone.addEventListener('dragover', e   => { e.preventDefault(); dropZone.classList.add('is-dragover'); });
-      dropZone.addEventListener('dragleave',()  => dropZone.classList.remove('is-dragover'));
-      dropZone.addEventListener('drop',     e   => { e.preventDefault(); dropZone.classList.remove('is-dragover'); setImageFromFile(e.dataTransfer.files?.[0]); });
+      dropZone.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', () => setImageFromFile(fileInput.files?.[0]));
+      dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('is-dragover'); });
+      dropZone.addEventListener('dragleave', () => dropZone.classList.remove('is-dragover'));
+      dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('is-dragover'); setImageFromFile(e.dataTransfer.files?.[0]); });
 
       closeModalBtn.addEventListener('click', closeModal);
       cancelBtn.addEventListener('click', closeModal);
@@ -1520,10 +1724,10 @@
       saveBtn.addEventListener('click', async () => {
         if (!validateForm()) { statusEl.textContent = 'Please fill in the highlighted fields.'; return; }
 
-        const finalImage    = imageDataUrl || editingExistingImage || '';
-        const now           = Date.now();
+        const finalImage = imageDataUrl || editingExistingImage || '';
+        const now = Date.now();
         const expireMinsRaw = expireInput.value.trim();
-        const expireMins    = expireMinsRaw === '' ? null : Number(expireMinsRaw);
+        const expireMins = expireMinsRaw === '' ? null : Number(expireMinsRaw);
 
         // ★ Capture foodText BEFORE closeModal() wipes the form
         const foodTextValue = document.getElementById('foodText').value;
@@ -1577,9 +1781,9 @@
     window.saveAccountChanges1 = function (event) {
       const loggedUser = localStorage.getItem("loggedInUser");
       event.preventDefault();
-      const email     = document.getElementById('userEmail').value.trim();
+      const email = document.getElementById('userEmail').value.trim();
       const firstName = document.getElementById('firstName').value.trim();
-      const lastName  = document.getElementById('lastName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
       const birthDate = document.getElementById('birthdate').value.trim();
 
       if (!loggedUser) { alert("No logged in user!"); return; }
@@ -1594,12 +1798,12 @@
 
     window.savePaymentInfo = function () {
       const loggedUser = localStorage.getItem("loggedInUser");
-      const cardName   = document.getElementById('cardName').value.trim();
+      const cardName = document.getElementById('cardName').value.trim();
       const cardNumber = document.getElementById('cardNumber').value.trim();
-      const expiry     = document.getElementById('expiry').value.trim();
-      const cvv        = document.getElementById('cvv').value.trim();
+      const expiry = document.getElementById('expiry').value.trim();
+      const cvv = document.getElementById('cvv').value.trim();
 
-      if (!loggedUser)                                 { alert("No logged in user!"); return; }
+      if (!loggedUser) { alert("No logged in user!"); return; }
       if (!cardName || !cardNumber || !expiry || !cvv) { alert("Please fill in all payment fields."); return; }
 
       update(ref(savorDB, `user/${loggedUser}`), { cardName, cardNumber, expiry, cvv })
@@ -1610,7 +1814,7 @@
     window.updatePass = function (event) {
       const loggedUser = localStorage.getItem("loggedInUser");
       event.preventDefault();
-      const newPassword     = document.getElementById('newPassword').value.trim();
+      const newPassword = document.getElementById('newPassword').value.trim();
       const confirmPassword = document.getElementById('confirmPassword').value.trim();
 
       if (newPassword !== confirmPassword) { alert("Passwords do not match. Please re-enter them."); return; }
@@ -1648,9 +1852,9 @@
     async function organizeOrders() {
       state.pendOrders = []; state.compOrders = [];
       const loggedUser = localStorage.getItem("loggedInUser");
-      const snapshot   = await get(ref(savorDB, `order`));
-      const userSnap   = await get(ref(savorDB, `user/${loggedUser}`));
-      const userData   = userSnap.val();
+      const snapshot = await get(ref(savorDB, `order`));
+      const userSnap = await get(ref(savorDB, `user/${loggedUser}`));
+      const userData = userSnap.val();
       restTarget = userData.rest;
       if (!snapshot.exists()) return;
       snapshot.forEach(child => {
@@ -1725,30 +1929,30 @@
     window.saveResChanges = function (event) {
       event.preventDefault();
       if (!restTarget) { alert("No restaurant found!"); return; }
-      const email    = document.getElementById('email').value.trim();
-      const manager  = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const manager = document.getElementById('fullName').value.trim();
       const phoneNum = document.getElementById('phoneNumber').value.trim();
-      const city     = document.getElementById('city').value.trim();
-      const country  = document.getElementById('country').value.trim();
-      const state    = document.getElementById('state').value.trim();
-      const street   = document.getElementById('street1').value.trim();
-      const suite    = document.getElementById('street2').value.trim();
-      const zipCode  = document.getElementById('zip').value.trim();
-      const logo    = document.getElementById('logoImage').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const country = document.getElementById('country').value.trim();
+      const state = document.getElementById('state').value.trim();
+      const street = document.getElementById('street1').value.trim();
+      const suite = document.getElementById('street2').value.trim();
+      const zipCode = document.getElementById('zip').value.trim();
+      const logo = document.getElementById('logoImage').value.trim();
       const mapPrev = document.getElementById('mapPreviewImage').value.trim();
-      const desc    = document.getElementById('restDescription').value.trim();
+      const desc = document.getElementById('restDescription').value.trim();
       update(ref(savorDB, `rest/${restTarget}/Info`), {
-        "Email:":    email,
-        "Manager:":  manager,
+        "Email:": email,
+        "Manager:": manager,
         "phoneNum:": phoneNum,
         "Logo Image:": logo,
         "Description:": desc,
         Address: {
-          "City:":     city,
-          "Country:":  country,
-          "State:":    state,
-          "Street:":   street,
-          "Suite:":    suite,
+          "City:": city,
+          "Country:": country,
+          "State:": state,
+          "Street:": street,
+          "Suite:": suite,
           "Zip Code:": zipCode
         }
       })
@@ -1767,13 +1971,13 @@
         .filter(f => {
           const n = f.description.toLowerCase();
           return !n.includes('spread')
-              && !n.includes('meatless')
-              && !n.includes('canned')
-              && !n.includes('frozen')
-              && !n.includes('baby food')
-              && !n.includes('fast food')
-              && !n.includes('flavored')
-              && !n.includes('nugget');
+            && !n.includes('meatless')
+            && !n.includes('canned')
+            && !n.includes('frozen')
+            && !n.includes('baby food')
+            && !n.includes('fast food')
+            && !n.includes('flavored')
+            && !n.includes('nugget');
         })
         .sort((a, b) => {
           const aIsFoundation = a.dataType === 'Foundation' ? 0 : 1;
@@ -1791,21 +1995,21 @@
     }
 
     const GRAIN_KEYWORDS = ['rice', 'pasta', 'oat', 'flour', 'quinoa', 'lentil', 'bean'];
-    const MEAT_KEYWORDS  = ['chicken', 'beef', 'pork', 'salmon', 'tuna', 'turkey', 'lamb'];
+    const MEAT_KEYWORDS = ['chicken', 'beef', 'pork', 'salmon', 'tuna', 'turkey', 'lamb'];
 
     function getQuerySuffix(ingredient) {
       const i = ingredient.toLowerCase();
       if (GRAIN_KEYWORDS.some(k => i.includes(k))) return 'dry';
-      if (MEAT_KEYWORDS.some(k => i.includes(k)))  return 'raw';
+      if (MEAT_KEYWORDS.some(k => i.includes(k))) return 'raw';
       return '';
     }
 
     async function searchFDC(ingredient, dataType) {
       const suffix = getQuerySuffix(ingredient);
-      const query  = suffix ? `${ingredient} ${suffix}` : ingredient;
+      const query = suffix ? `${ingredient} ${suffix}` : ingredient;
       const params = new URLSearchParams({
-        query:    query,
-        api_key:  API_KEY,
+        query: query,
+        api_key: API_KEY,
         pageSize: 5,
         dataType: dataType,
       });
@@ -1822,17 +2026,17 @@
       if (!data.foods?.length) return { name: ingredient, error: 'Not found' };
       const food = pickBestFood(data.foods);
       return {
-        name:     food.description,
+        name: food.description,
         calories: getNutrient(food, 'Energy'),
-        protein:  getNutrient(food, 'Protein'),
-        carbs:    getNutrient(food, 'Carbohydrate'),
-        fat:      getNutrient(food, 'Total lipid'),
-        fiber:    getNutrient(food, 'Fiber'),
+        protein: getNutrient(food, 'Protein'),
+        carbs: getNutrient(food, 'Carbohydrate'),
+        fat: getNutrient(food, 'Total lipid'),
+        fiber: getNutrient(food, 'Fiber'),
       };
     }
 
     // ★ Accepts foodTextValue so it doesn't depend on the live DOM after closeModal()
-    window.lookupAll = async function(currentItem, foodTextValue) {
+    window.lookupAll = async function (currentItem, foodTextValue) {
       const input = foodTextValue ?? document.getElementById('foodText').value;
       const ingredients = input.split(',').map(s => s.trim()).filter(Boolean);
       if (!ingredients.length) return;
@@ -1842,25 +2046,55 @@
       let totalCalories = 0, totalProtein = 0, totalCarbs = 0, totalFat = 0, totalFiber = 0;
       results.forEach(r => {
         totalCalories += r.calories || 0;
-        totalProtein  += r.protein  || 0;
-        totalCarbs    += r.carbs    || 0;
-        totalFat      += r.fat      || 0;
-        totalFiber    += r.fiber    || 0;
+        totalProtein += r.protein || 0;
+        totalCarbs += r.carbs || 0;
+        totalFat += r.fat || 0;
+        totalFiber += r.fiber || 0;
       });
 
       // Save totals to DB under the new item
       const itemRef = ref(savorDB, `rest/${restTarget}/menu/${currentItem}`);
       await update(itemRef, {
         calories: Math.round(totalCalories),
-        protein:  Math.round(totalProtein),
-        carbs:    Math.round(totalCarbs),
-        fat:      Math.round(totalFat),
-        fiber:    Math.round(totalFiber),
+        protein: Math.round(totalProtein),
+        carbs: Math.round(totalCarbs),
+        fat: Math.round(totalFat),
+        fiber: Math.round(totalFiber),
       });
     };
     // ═══════════════════════════════════════════
 
-    (async () => { await organizeOrders(); renderOrders(); })();
+    window.checkActive = async function () 
+    {
+      let activeCount = 0;
+      let totalQuantity = 0;
+      const loggedUser = localStorage.getItem("loggedInUser");
+      const rest = await get(ref(savorDB, `user/${loggedUser}/rest`)).then(snap => snap.val());
+      if (!rest) 
+      {
+        alert("No restaurant associated with this account."); return; 
+      }
+      const menuSnap = await get(ref(savorDB, `rest/${rest}/menu`));
+      if (!menuSnap.exists()) 
+      {
+        console.log("No menu found for restaurant:", rest);
+      } 
+      else 
+      {
+        menuSnap.forEach(child => {
+          const item = child.val();
+          if (item.status === "active") {
+            activeCount++;
+            totalQuantity += Number(item.quantity || 0);
+          }
+        });
+      }
+
+      const activeEl = document.getElementById("active-listings");
+      if (activeEl) activeEl.textContent = String(activeCount+" Total Items: "+totalQuantity);
+    }
+
+      (async () => { await organizeOrders(); renderOrders(); checkActive(); })();
 
   </script>
 </body>
