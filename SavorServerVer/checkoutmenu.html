@@ -918,7 +918,7 @@ function payCheck(){
   if (localStorage.getItem("loggedInUser")) {
     user = localStorage.getItem("loggedInUser");
   }
-  const pickupTime = getTimestamp();
+  const pickupTime = Date.now();
   const rest = sessionStorage.getItem("currRest");
   const totalPrice = parseFloat(document.getElementById("totalAmt").innerText.replace("$", ""));
   const status = "pending";

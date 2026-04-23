@@ -832,7 +832,7 @@
           <div class="info-bubbles">
             <div class="info-bubble">
               <div class="bubble-label">Total Sales Today</div>
-              <div class="bubble-value">$0.00</div>
+              <div class="bubble-value" id = "today-sales-value">$0.00</div>
             </div>
           </div>
           <div class="info-bubbles">
@@ -841,16 +841,7 @@
               <div class="bubble-value">0</div>
             </div>
           </div>
-          <div class="info-bubbles">
-            <div class="info-bubble">
-              <div class="bubble-label">Popular Items</div>
-              <ul class="bubble-list">
-                <li>1. Null</li>
-                <li>2. Null</li>
-                <li>3. Null</li>
-              </ul>
-            </div>
-          </div>
+          
           <form id="profileBasicsForm" class="form-grid" autocomplete="on"></form>
         </section>
       </section>
@@ -1181,6 +1172,42 @@
           <input id="itemExpireMins" class="login-input" type="number" min="1" step="1" placeholder="e.g., 60"
             inputmode="numeric" />
         </div>
+        <div class="field">
+          <button type="button" id="addMacrosBtn" class="item-action-btn" style="margin-top:8px;">Manually Add Macros</button>
+  
+          <div id="macrosFields" style="display:none; margin-top:16px; border-top:1px solid #eee; padding-top:16px;">
+            <h4 style="color:#0a5a2e; margin-bottom:12px;">Nutritional Information</h4>
+              <div class="field-row">
+                <div class="field">
+                <label>Total Serving (g/oz)</label>
+                <input type="text" id="macroServing" class="login-input" placeholder="e.g. 200g">
+              </div>
+              <div class="field">
+                <label>Calories (kcal)</label>
+                <input type="number" id="macroCalories" class="login-input">
+              </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Protein (g)</label>
+              <input type="number" id="macroProtein" class="login-input">
+            </div>
+            <div class="field">
+              <label>Carbs (g)</label>
+              <input type="number" id="macroCarbs" class="login-input">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Fat (g)</label>
+              <input type="number" id="macroFat" class="login-input">
+            </div>
+            <div class="field">
+              <label>Fiber (g)</label>
+              <input type="number" id="macroFiber" class="login-input">
+            </div>
+          </div>
+        </div>
         <div class="actions">
           <button type="button" id="saveItemBtn" class="login-submit">Save Item</button>
           <button type="button" id="cancelItemBtn" class="login-submit" style="background:#777;">Cancel</button>
@@ -1216,6 +1243,11 @@
         if (header) header.textContent = restTarget;
 
         await loadRestaurantInfo();
+
+        await organizeOrders();
+        renderOrders();
+        checkActive();
+        calculateTodaySales();
 
         const mobileHeader = document.getElementById('header-right-mobile');
         if (mobileHeader) mobileHeader.textContent = restTarget;
@@ -1592,6 +1624,7 @@
       const descInput = document.getElementById('itemDescription');
       const allergySelect = document.getElementById('itemAllergy');
       const otherAllergyField = document.getElementById('otherAllergyField');
+      const addMacrosBtn = document.getElementById('addMacrosBtn');
       const otherAllergyInput = document.getElementById('itemOtherAllergy');
       const addAllergyBtn = document.getElementById('addAllergyBtn');
       const selectedAllergiesList = document.getElementById('selectedAllergiesList');
@@ -1606,6 +1639,14 @@
         otherAllergyField.style.display = allergySelect.value === 'Other' ? 'block' : 'none';
         if (allergySelect.value !== 'Other') otherAllergyInput.value = '';
       });
+
+      if (addMacrosBtn && macrosFields) {
+        addMacrosBtn.addEventListener('click', () => {
+        const isHidden = macrosFields.style.display === 'none';
+        macrosFields.style.display = isHidden ? 'block' : 'none';
+        addMacrosBtn.textContent = isHidden ? 'Hide Macro Entry' : 'Manually Add Macros';
+        });
+      }
 
       function renderSelectedAllergies() {
         selectedAllergiesList.innerHTML = '';
@@ -1731,11 +1772,24 @@
 
         // ★ Capture foodText BEFORE closeModal() wipes the form
         const foodTextValue = document.getElementById('foodText').value;
-
+  
+        const serving = document.getElementById('macroServing').value || "";
+        const calories = Number(document.getElementById('macroCalories').value || 0);
+        const protein =Number(document.getElementById('macroProtein').value || 0);
+        const carbs =  Number(document.getElementById('macroCarbs').value || 0);
+        const fat = Number(document.getElementById('macroFat').value || 0);
+        const fiber = Number(document.getElementById('macroFiber').value || 0);
+        
         let payload = {
           name: nameInput.value.trim(), image: finalImage, description: descInput.value.trim(),
           allergies: [...selectedAllergies], quantity: Number(qtyInput.value),
-          price: Number(priceInput.value), updatedAt: now
+          price: Number(priceInput.value), updatedAt: now,
+          serving: serving,
+          calories: calories,
+          protein: protein,
+          carbs: carbs,
+          fat: fat,
+          fiber: fiber
         };
         if (currentEditCollection === 'menu') {
           payload = { ...payload, expireMins, expiresAt: computeExpiresAt(expireMinsRaw), status: "active" };
@@ -2094,7 +2148,47 @@
       if (activeEl) activeEl.textContent = String(activeCount+" Total Items: "+totalQuantity);
     }
 
-      (async () => { await organizeOrders(); renderOrders(); checkActive(); })();
+    function parsePickupTime(str) {
+      // "04102026/10:59am" → month=04, day=10, year=2026, time=10:59am
+    const [datePart, timePart] = str.split('/');
+    const month = datePart.slice(0, 2);
+    const day   = datePart.slice(2, 4);
+    const year  = datePart.slice(4, 8);
+
+    // Build a standard string JS can parse
+    return new Date(`${month}/${day}/${year} ${timePart}`);
+}
+
+    window.calculateTodaySales = async function() {
+        const salesDisplay = document.getElementById("today-sales-value");
+        if (!salesDisplay) return;
+
+        try {
+          const now = Date.now();
+          const twentyFourHoursAgo = now - (24 * 60 * 60 * 1000);
+
+          const ordersref = ref(savorDB, 'order');
+          const snapshot = await get(ordersref);
+
+          let totalSales = 0;
+
+          if (snapshot.exists()) {
+            snapshot.forEach((child) => {
+              const ordersData = child.val();
+              // Maybe use a createdAt timestamp as opposed to pickuptime
+              if (ordersData.rest === restTarget && ordersData.pickupTime > twentyFourHoursAgo) {
+                const price = parseFloat(ordersData.totalPrice) || 0;
+                totalSales += price;
+              }
+            });
+          }
+
+          salesDisplay.textContent = `$${totalSales.toFixed(2)}`;
+        } catch (err) {
+         console.error("Error calculating today's sales:", err);
+         salesDisplay.textContent = "$0.00";
+        }
+      };
 
   </script>
 </body>

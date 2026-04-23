@@ -127,7 +127,7 @@
     @media (min-width: 600px) {
       .sidebar {
         left: 8px;
-        top: 62px;
+        top: 10px;
         width: 240px;
         height: calc(100dvh - 72px);
         border-radius: 20px;
@@ -520,7 +520,7 @@
 
       restaurants.forEach(r => {
         const marker = L.marker([r.lat, r.lng], { icon }).addTo(map);
-        marker.bindPopup(`<b style="color:#0a5a2e">${r.name}</b>`);
+        marker.bindPopup(`<b style="color:#0a5a2e">${r.id}</b>`);
         marker.on("click", () => { updateInfoBox(r); startRouting(r); });
         markers.push(marker);
       });
