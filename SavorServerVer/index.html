@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>S4VOR Restaurant Finder</title>
   <style>
     * {
@@ -14,7 +14,7 @@
       margin: 0;
       padding: 0;
       min-height: 100dvh;
-      background: url("/S4.png") no-repeat center center fixed;
+      background: url("S4.png") no-repeat center center fixed;
       background-size: cover;
       font-family: 'Arial Rounded MT Bold', sans-serif;
       overflow-x: hidden;
@@ -212,6 +212,25 @@
         font-size: 20px;
       }
     }
+      
+      @media (max-width: 599px) {
+        .page-wrapper {
+          padding: calc(env(safe-area-inset-top) + 20px) 15% 32px;
+        }
+
+        .login-btn {
+          top: calc(env(safe-area-inset-top) + 16px);  /* pushes button below island */
+        }
+
+        .search-container {
+          margin-top:40px;
+        }
+        
+        .title {
+            top: calc(env(safe-area-inset-top));
+        }
+      }
+    
   </style>
 </head>
 
@@ -244,7 +263,7 @@
     async function handleLogin() {
       const userId = localStorage.getItem("loggedInUser");
       if (!userId){
-        window.location.href = "/login.html";
+        window.location.href = "login.html";
         return;
       };
 
@@ -254,15 +273,15 @@
 
       if (type === "fb") {
         sessionStorage.setItem("ownedRest", userData.rest ?? "");
-        window.location.href = "/fb_acc.html";
+        window.location.href = "fb_acc.html";
       }
       else if (type === "business") {
         sessionStorage.setItem("ownedRest", userData.rest ?? "");
-        window.location.href = "/res_dash.html";
+        window.location.href = "res_dash.html";
       }
       else
       {
-        window.location.href = "/user_acc.html";
+        window.location.href = "user_acc.html";
       }
     }
 

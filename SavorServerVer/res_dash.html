@@ -3,7 +3,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Dashboard - Savor</title>
   <style>
     * {
@@ -444,6 +445,7 @@
     }
 
     .inventory-list,
+    .expiring-list,
     .donations-list {
       display: flex;
       flex-direction: column;
@@ -472,6 +474,16 @@
       font-weight: 600;
       color: #444;
       margin-top: 2px;
+    }
+
+    .item-timer.is-expiring-soon {
+      color: #d93025;
+      font-weight: 800;
+    }
+
+    .inventory-item.is-expiring-soon {
+      border: 2px solid rgba(217, 48, 37, 0.25);
+      background: #fff5f5;
     }
 
     .inventory-item.is-expired .item-timer {
@@ -774,6 +786,27 @@
     .field-row .field {
       margin-bottom: 0;
     }
+
+    @media (max-width: 599px) {
+      .mobile-header {
+        padding-top: calc(env(safe-area-inset-top) + 10px);
+      }
+
+      .mobile-bottom-nav {
+        padding-bottom: env(safe-area-inset-bottom);
+        height: calc(64px + env(safe-area-inset-bottom));
+      }
+
+      .mobile-bottom-nav .nav-item {
+        font-size: 9px;
+        padding: 6px 2px;
+      }
+
+      .mobile-bottom-nav .nav-item .nav-icon {
+        font-size: 17px;
+      }
+
+    }
   </style>
 </head>
 
@@ -797,6 +830,8 @@
           id="tab-profile">Home</button>
         <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-inventory"
           id="tab-inventory">Inventory</button>
+        <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-expiring"
+          id="tab-expiring">Expiring</button>
         <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-donations"
           id="tab-donations">Donations</button>
         <button type="button" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-orders"
@@ -832,16 +867,15 @@
           <div class="info-bubbles">
             <div class="info-bubble">
               <div class="bubble-label">Total Sales Today</div>
-              <div class="bubble-value" id = "today-sales-value">$0.00</div>
+              <div class="bubble-value" id="today-sales-value">$0.00</div>
             </div>
           </div>
           <div class="info-bubbles">
             <div class="info-bubble">
               <div class="bubble-label">Expiring Soon</div>
-              <div class="bubble-value">0</div>
+              <div class="bubble-value" id="home-expiring-soon">0</div>
             </div>
           </div>
-          
           <form id="profileBasicsForm" class="form-grid" autocomplete="on"></form>
         </section>
       </section>
@@ -868,6 +902,16 @@
               </div>
             </div>
           </div>
+        </section>
+      </section>
+
+      <!-- Expiring panel -->
+      <section id="panel-expiring" class="panel" role="tabpanel" aria-labelledby="tab-expiring" hidden>
+        <section class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h3>Expiring Soon</h3>
+          </div>
+          <div class="expiring-list"></div>
         </section>
       </section>
 
@@ -1173,12 +1217,13 @@
             inputmode="numeric" />
         </div>
         <div class="field">
-          <button type="button" id="addMacrosBtn" class="item-action-btn" style="margin-top:8px;">Manually Add Macros</button>
-  
+          <button type="button" id="addMacrosBtn" class="item-action-btn" style="margin-top:8px;">Manually Add
+            Macros</button>
+
           <div id="macrosFields" style="display:none; margin-top:16px; border-top:1px solid #eee; padding-top:16px;">
             <h4 style="color:#0a5a2e; margin-bottom:12px;">Nutritional Information</h4>
-              <div class="field-row">
-                <div class="field">
+            <div class="field-row">
+              <div class="field">
                 <label>Total Serving (g/oz)</label>
                 <input type="text" id="macroServing" class="login-input" placeholder="e.g. 200g">
               </div>
@@ -1186,25 +1231,26 @@
                 <label>Calories (kcal)</label>
                 <input type="number" id="macroCalories" class="login-input">
               </div>
-          </div>
-          <div class="field-row">
-            <div class="field">
-              <label>Protein (g)</label>
-              <input type="number" id="macroProtein" class="login-input">
             </div>
-            <div class="field">
-              <label>Carbs (g)</label>
-              <input type="number" id="macroCarbs" class="login-input">
+            <div class="field-row">
+              <div class="field">
+                <label>Protein (g)</label>
+                <input type="number" id="macroProtein" class="login-input">
+              </div>
+              <div class="field">
+                <label>Carbs (g)</label>
+                <input type="number" id="macroCarbs" class="login-input">
+              </div>
             </div>
-          </div>
-          <div class="field-row">
-            <div class="field">
-              <label>Fat (g)</label>
-              <input type="number" id="macroFat" class="login-input">
-            </div>
-            <div class="field">
-              <label>Fiber (g)</label>
-              <input type="number" id="macroFiber" class="login-input">
+            <div class="field-row">
+              <div class="field">
+                <label>Fat (g)</label>
+                <input type="number" id="macroFat" class="login-input">
+              </div>
+              <div class="field">
+                <label>Fiber (g)</label>
+                <input type="number" id="macroFiber" class="login-input">
+              </div>
             </div>
           </div>
         </div>
@@ -1244,11 +1290,6 @@
 
         await loadRestaurantInfo();
 
-        await organizeOrders();
-        renderOrders();
-        checkActive();
-        calculateTodaySales();
-
         const mobileHeader = document.getElementById('header-right-mobile');
         if (mobileHeader) mobileHeader.textContent = restTarget;
       } catch (err) { console.error("Error loading user:", err); return; }
@@ -1261,6 +1302,7 @@
 
       let inventoryItems = [];
       let donationItems = [];
+      let expiringSoonItems = [];
       let editMode = false;
       let editingItemId = '';
       let editingExistingImage = '';
@@ -1295,20 +1337,83 @@
         return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
       }
 
+      function getTotalLifetimeMs(item) {
+        if (item?.expireMins != null && Number(item.expireMins) > 0) {
+          return Number(item.expireMins) * 60 * 1000;
+        }
+        if (item?.createdAt && item?.expiresAt) {
+          return Math.max(0, Number(item.expiresAt) - Number(item.createdAt));
+        }
+        return 0;
+      }
+
+      function isExpiringSoon(item) {
+        if (!item || item.status === "expired" || !item.expiresAt) return false;
+        const totalLifetime = getTotalLifetimeMs(item);
+        if (totalLifetime <= 0) return false;
+        const warningWindow = totalLifetime * 0.20;
+        const timeLeft = Number(item.expiresAt) - Date.now();
+        return timeLeft > 0 && timeLeft <= warningWindow;
+      }
+
       let countdownInterval = null;
       function startCountdownUI() {
         if (countdownInterval) clearInterval(countdownInterval);
+
         countdownInterval = setInterval(() => {
           const now = Date.now();
+
           document.querySelectorAll('.item-timer[data-timer-id]').forEach(el => {
             const id = el.getAttribute('data-timer-id');
-            const item = inventoryItems.find(x => String(x.id) === String(id));
+            const item = inventoryItems.find(x => String(x.id) === String(id))
+              || expiringSoonItems.find(x => String(x.id) === String(id));
+
             if (!item) return;
-            if (item.status === "expired") { el.textContent = "Expired (sent to donations)"; return; }
-            if (!item.expiresAt) { el.textContent = "No expiration set"; return; }
+
+            const itemCard = el.closest('.inventory-item');
+
+            if (item.status === "expired") {
+              el.textContent = "Expired (sent to donations)";
+              el.classList.remove('is-expiring-soon');
+              if (itemCard) itemCard.classList.remove('is-expiring-soon');
+              return;
+            }
+
+            if (!item.expiresAt) {
+              el.textContent = "No expiration set";
+              el.classList.remove('is-expiring-soon');
+              if (itemCard) itemCard.classList.remove('is-expiring-soon');
+              return;
+            }
+
             const left = item.expiresAt - now;
-            el.textContent = left <= 0 ? "Expiring..." : `Expires in: ${formatMs(left)}`;
+
+            if (left <= 0) {
+              el.textContent = "Expiring...";
+              el.classList.remove('is-expiring-soon');
+              if (itemCard) itemCard.classList.remove('is-expiring-soon');
+              return;
+            }
+
+            el.textContent = `Expires in: ${formatMs(left)}`;
+
+            if (isExpiringSoon(item)) {
+              el.classList.add('is-expiring-soon');
+              if (itemCard) itemCard.classList.add('is-expiring-soon');
+            } else {
+              el.classList.remove('is-expiring-soon');
+              if (itemCard) itemCard.classList.remove('is-expiring-soon');
+            }
           });
+
+          const prevCount = expiringSoonItems.length;
+
+          updateHomeExpiringSoon();
+
+          if (expiringSoonItems.length !== prevCount) {
+            populateExpiring(expiringSoonItems);
+          }
+
         }, 1000);
       }
 
@@ -1358,62 +1463,98 @@
 
       // Inventory panel events
       const inventoryPanel = document.getElementById('panel-inventory');
-      if (inventoryPanel) {
-        inventoryPanel.addEventListener('click', async e => {
+      const expiringPanel = document.getElementById('panel-expiring');
+
+      [inventoryPanel, expiringPanel].forEach(panel => {
+        if (!panel) return;
+
+        panel.addEventListener('click', async e => {
           if (e.target.classList.contains('delete-btn')) {
             const itemDiv = e.target.closest('.inventory-item');
             const id = itemDiv?.dataset?.id || '';
             if (!id) return;
             if (!confirm('Delete this item?')) return;
-            try { await remove(ref(savorDB, `rest/${restTarget}/menu/${id}`)); await loadInventory('firebase'); }
-            catch (err) { console.error(err); alert('Error deleting item (check Rules).'); }
+
+            try {
+              await remove(ref(savorDB, `rest/${restTarget}/menu/${id}`));
+              await loadInventory('firebase');
+            } catch (err) {
+              console.error(err);
+              alert('Error deleting item (check Rules).');
+            }
             return;
           }
+
           if (e.target.classList.contains('edit-btn')) {
             const itemDiv = e.target.closest('.inventory-item');
             const id = itemDiv?.dataset?.id || '';
             if (!id) return;
+
             const item = inventoryItems.find(x => String(x.id) === String(id));
             if (!item) return;
-            openEditModal(item); return;
+
+            openEditModal(item);
+            return;
           }
+
           if (!e.target.classList.contains('quantity-btn')) return;
+
           const itemDiv = e.target.closest('.inventory-item');
           const input = itemDiv.querySelector('.quantity-input');
           let value = parseInt(input.value);
+
           if (e.target.classList.contains('plus')) value++;
           if (e.target.classList.contains('minus') && value > 0) value--;
+
           input.value = value;
+
           const id = itemDiv?.dataset?.id || '';
           if (id) {
             try {
               const item = inventoryItems.find(x => String(x.id) === String(id));
               const patch = { quantity: value, updatedAt: Date.now() };
-              if (item && item.status === "expired" && value > 0) { patch.status = "active"; patch.expiresAt = resetExpiresAtFromItem(item); }
+
+              if (item && item.status === "expired" && value > 0) {
+                patch.status = "active";
+                patch.expiresAt = resetExpiresAtFromItem(item);
+              }
+
               await update(ref(savorDB, `rest/${restTarget}/menu/${id}`), patch);
               await loadInventory('firebase');
-            } catch (err) { console.error(err); }
+            } catch (err) {
+              console.error(err);
+            }
           }
         });
 
-        inventoryPanel.addEventListener('input', async e => {
+        panel.addEventListener('input', async e => {
           if (!e.target.classList.contains('quantity-input')) return;
+
           let value = parseInt(e.target.value);
           if (isNaN(value) || value < 0) value = 0;
           e.target.value = value;
+
           const itemDiv = e.target.closest('.inventory-item');
           const id = itemDiv?.dataset?.id || '';
+
           if (id) {
             try {
               const item = inventoryItems.find(x => String(x.id) === String(id));
               const patch = { quantity: value, updatedAt: Date.now() };
-              if (item && item.status === "expired" && value > 0) { patch.status = "active"; patch.expiresAt = resetExpiresAtFromItem(item); }
+
+              if (item && item.status === "expired" && value > 0) {
+                patch.status = "active";
+                patch.expiresAt = resetExpiresAtFromItem(item);
+              }
+
               await update(ref(savorDB, `rest/${restTarget}/menu/${id}`), patch);
               await loadInventory('firebase');
-            } catch (err) { console.error(err); }
+            } catch (err) {
+              console.error(err);
+            }
           }
         });
-      }
+      });
 
       // Donations panel events
       const donationsPanel = document.getElementById('panel-donations');
@@ -1464,7 +1605,35 @@
         });
       }
 
-      async function loadInventory(source = 'json') {
+      function updateHomeExpiringSoon() {
+        const now = Date.now();
+
+        const liveExpiring = inventoryItems.filter(item => {
+          if (!item || item.status === "expired") return false;
+          if (Number(item.quantity || 0) <= 0) return false;
+          if (!item.expiresAt) return false;
+
+          const totalLifetime = getTotalLifetimeMs(item);
+          if (totalLifetime <= 0) return false;
+
+          const warningWindow = totalLifetime * 0.20;
+          const timeLeft = item.expiresAt - now;
+
+          return timeLeft > 0 && timeLeft <= warningWindow;
+        });
+
+        expiringSoonItems = liveExpiring;
+
+        const expiringBubble = document.getElementById('home-expiring-soon');
+
+        if (expiringBubble) {
+          expiringBubble.textContent = String(liveExpiring.length);
+        }
+
+        populateExpiring(liveExpiring);
+      }
+
+      async function loadInventory(source = 'firebase') {
         let items = [];
         if (source === 'json') {
           try { const res = await fetch('../inventory.json'); items = await res.json(); }
@@ -1479,7 +1648,17 @@
           } catch (err) { console.error('Error loading Firebase inventory:', err); items = []; }
         }
         inventoryItems = Array.isArray(items) ? items : [];
+        expiringSoonItems = inventoryItems.filter(item =>
+          item.status !== "expired" &&
+          Number(item.quantity || 0) > 0 &&
+          isExpiringSoon(item)
+        );
+
         populateInventory(inventoryItems);
+        populateExpiring(expiringSoonItems);
+
+        updateHomeExpiringSoon();
+
       }
 
       async function loadDonations() {
@@ -1505,6 +1684,7 @@
           const div = document.createElement('div');
           div.classList.add('inventory-item');
           if (item.status === "expired") div.classList.add('is-expired');
+          if (isExpiringSoon(item)) div.classList.add('is-expiring-soon');
           div.dataset.id = item.id || '';
           div.innerHTML = `
             <img src="${item.image || '/placeholder.png'}" alt="Item Image" class="item-image"/>
@@ -1526,6 +1706,54 @@
             </div>`;
           list.appendChild(div);
         });
+        startCountdownUI();
+      }
+
+      function populateExpiring(items) {
+        const list = document.querySelector('.expiring-list');
+        if (!list) return;
+
+        list.innerHTML = '';
+
+        if (!items.length) {
+          list.innerHTML = `
+            <div class="card" style="box-shadow:none; background:#f8faf8;">
+              <div style="color:#666; font-weight:600;">No items are expiring soon.</div>
+            </div>
+          `;
+          return;
+        }
+
+        const sorted = [...items].sort((a, b) => (a.expiresAt || 0) - (b.expiresAt || 0));
+
+        sorted.forEach(item => {
+          const div = document.createElement('div');
+          div.classList.add('inventory-item', 'is-expiring-soon');
+          div.dataset.id = item.id || '';
+
+          div.innerHTML = `
+            <img src="${item.image || '/placeholder.png'}" alt="Item Image" class="item-image"/>
+            <div class="item-details">
+              <div class="item-description">${item.name || 'Unnamed Item'}</div>
+              <div class="item-subdescription">${item.description || ''}</div>
+              ${Array.isArray(item.allergies) && item.allergies.length ? `<div class="item-allergy">Contains: ${item.allergies.join(', ')}</div>` : (item.allergy ? `<div class="item-allergy">Contains: ${item.allergy}</div>` : '')}
+              <div class="item-timer is-expiring-soon" data-timer-id="${item.id || ''}">Loading...</div>
+              <div class="item-price">$${(typeof item.price === 'number' ? item.price : Number(item.price || 0)).toFixed(2)}</div>
+            </div>
+            <div class="item-quantity">
+              <button class="quantity-btn minus">-</button>
+              <input type="number" class="quantity-input" value="${item.quantity ?? 0}" min="0"/>
+              <button class="quantity-btn plus">+</button>
+            </div>
+            <div class="item-actions">
+              <button type="button" class="item-action-btn edit-btn">Edit</button>
+              <button type="button" class="item-action-btn delete-btn">Delete</button>
+            </div>
+          `;
+
+          list.appendChild(div);
+        });
+
         startCountdownUI();
       }
 
@@ -1624,9 +1852,9 @@
       const descInput = document.getElementById('itemDescription');
       const allergySelect = document.getElementById('itemAllergy');
       const otherAllergyField = document.getElementById('otherAllergyField');
-      const addMacrosBtn = document.getElementById('addMacrosBtn');
       const otherAllergyInput = document.getElementById('itemOtherAllergy');
       const addAllergyBtn = document.getElementById('addAllergyBtn');
+      const addMacrosBtn = document.getElementById('addMacrosBtn');
       const selectedAllergiesList = document.getElementById('selectedAllergiesList');
       const qtyInput = document.getElementById('itemQuantity');
       const priceInput = document.getElementById('itemPrice');
@@ -1642,9 +1870,9 @@
 
       if (addMacrosBtn && macrosFields) {
         addMacrosBtn.addEventListener('click', () => {
-        const isHidden = macrosFields.style.display === 'none';
-        macrosFields.style.display = isHidden ? 'block' : 'none';
-        addMacrosBtn.textContent = isHidden ? 'Hide Macro Entry' : 'Manually Add Macros';
+          const isHidden = macrosFields.style.display === 'none';
+          macrosFields.style.display = isHidden ? 'block' : 'none';
+          addMacrosBtn.textContent = isHidden ? 'Hide Macro Entry' : 'Manually Add Macros';
         });
       }
 
@@ -1714,16 +1942,43 @@
       }
 
       function openDonationEditModal(item) {
-        editMode = true; editingItemId = item.id || ''; editingExistingImage = item.image || ''; currentEditCollection = 'donations';
-        titleEl.textContent = 'Edit Donation Item'; saveBtn.textContent = 'Update Item';
-        nameInput.value = item.name || ''; descInput.value = item.description || '';
-        selectedAllergies = Array.isArray(item.allergies) ? [...item.allergies] : (item.allergy ? [item.allergy] : []);
-        renderSelectedAllergies(); allergySelect.value = ''; otherAllergyField.style.display = 'none'; otherAllergyInput.value = '';
-        qtyInput.value = String(item.quantity ?? 0); priceInput.value = String(item.price ?? 0); expireInput.value = '';
+        editMode = true;
+        editingItemId = item.id || '';
+        editingExistingImage = item.image || '';
+        currentEditCollection = 'donations';
+
+        titleEl.textContent = 'Edit Donation Item';
+        saveBtn.textContent = 'Update Item';
+
+        nameInput.value = item.name || '';
+        descInput.value = item.description || '';
+
+        selectedAllergies = Array.isArray(item.allergies)
+          ? [...item.allergies]
+          : (item.allergy ? [item.allergy] : []);
+        renderSelectedAllergies();
+
+        allergySelect.value = '';
+        otherAllergyField.style.display = 'none';
+        otherAllergyInput.value = '';
+
+        qtyInput.value = String(item.quantity ?? 0);
+        priceInput.value = String(item.price ?? 0);
+        expireInput.value = '';
         imageDataUrl = '';
-        if (editingExistingImage) { previewImg.src = editingExistingImage; dropZone.classList.add('has-image'); }
-        else { previewImg.src = ''; dropZone.classList.remove('has-image'); }
-        modal.classList.add('is-open'); modal.setAttribute('aria-hidden', 'false'); statusEl.textContent = ''; clearValidation();
+
+        if (editingExistingImage) {
+          previewImg.src = editingExistingImage;
+          dropZone.classList.add('has-image');
+        } else {
+          previewImg.src = '';
+          dropZone.classList.remove('has-image');
+        }
+
+        modal.classList.add('is-open');
+        modal.setAttribute('aria-hidden', 'false');
+        statusEl.textContent = '';
+        clearValidation();
       }
 
       function validateForm() {
@@ -1761,7 +2016,6 @@
 
       function closeModal() { modal.classList.remove('is-open'); modal.setAttribute('aria-hidden', 'true'); resetForm(); }
 
-      // ─── SAVE BUTTON ────────────────────────────────────────────────────────
       saveBtn.addEventListener('click', async () => {
         if (!validateForm()) { statusEl.textContent = 'Please fill in the highlighted fields.'; return; }
 
@@ -1772,28 +2026,32 @@
 
         // ★ Capture foodText BEFORE closeModal() wipes the form
         const foodTextValue = document.getElementById('foodText').value;
-  
-        const serving = document.getElementById('macroServing').value || "";
-        const calories = Number(document.getElementById('macroCalories').value || 0);
-        const protein =Number(document.getElementById('macroProtein').value || 0);
-        const carbs =  Number(document.getElementById('macroCarbs').value || 0);
-        const fat = Number(document.getElementById('macroFat').value || 0);
-        const fiber = Number(document.getElementById('macroFiber').value || 0);
-        
-        let payload = {
-          name: nameInput.value.trim(), image: finalImage, description: descInput.value.trim(),
-          allergies: [...selectedAllergies], quantity: Number(qtyInput.value),
-          price: Number(priceInput.value), updatedAt: now,
-          serving: serving,
-          calories: calories,
-          protein: protein,
-          carbs: carbs,
-          fat: fat,
-          fiber: fiber
+        const manualMacros = {
+          serving: document.getElementById('macroServing').value || "",
+          calories: Number(document.getElementById('macroCalories').value || 0),
+          protein: Number(document.getElementById('macroProtein').value || 0),
+          carbs: Number(document.getElementById('macroCarbs').value || 0),
+          fat: Number(document.getElementById('macroFat').value || 0),
+          fiber: Number(document.getElementById('macroFiber').value || 0),
         };
-        if (currentEditCollection === 'menu') {
-          payload = { ...payload, expireMins, expiresAt: computeExpiresAt(expireMinsRaw), status: "active" };
-        }
+        let payload = {
+          name: nameInput.value.trim(),
+          image: finalImage,
+          description: descInput.value.trim(),
+          allergies: [...selectedAllergies],
+          quantity: Number(qtyInput.value),
+          price: Number(priceInput.value),
+          updatedAt: now,
+          status: "active",
+          expiresAt: computeExpiresAt(expireMinsRaw),
+          expireMins: expireMins,
+          serving: document.getElementById('macroServing').value || "",
+          calories: Number(document.getElementById('macroCalories').value || 0),
+          protein: Number(document.getElementById('macroProtein').value || 0),
+          carbs: Number(document.getElementById('macroCarbs').value || 0),
+          fat: Number(document.getElementById('macroFat').value || 0),
+          fiber: Number(document.getElementById('macroFiber').value || 0),
+        };
 
         try {
           if (!editMode) {
@@ -1818,7 +2076,6 @@
           else await loadDonations();
         } catch (err) { console.error(err); statusEl.textContent = 'Error saving to Firebase (check Rules).'; }
       });
-      // ────────────────────────────────────────────────────────────────────────
 
       loadInventory('firebase');
       loadDonations();
@@ -1827,369 +2084,386 @@
       if (inventoryTab) inventoryTab.addEventListener('click', () => loadInventory('firebase'));
       if (donationsTab) donationsTab.addEventListener('click', () => loadDonations());
 
-      document.getElementById('savePayment')?.addEventListener('click', savePaymentInfo);
+      // FIX: use a wrapper so savePaymentInfo is looked up at call time, not registration time
+      document.getElementById('savePayment')?.addEventListener('click', () => window.savePaymentInfo?.());
 
-    }); // end DOMContentLoaded
+      window.saveAccountChanges1 = function (event) {
+        const loggedUser = localStorage.getItem("loggedInUser");
+        event.preventDefault();
+        const email = document.getElementById('userEmail').value.trim();
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        const birthDate = document.getElementById('birthdate').value.trim();
 
+        if (!loggedUser) { alert("No logged in user!"); return; }
 
-    window.saveAccountChanges1 = function (event) {
-      const loggedUser = localStorage.getItem("loggedInUser");
-      event.preventDefault();
-      const email = document.getElementById('userEmail').value.trim();
-      const firstName = document.getElementById('firstName').value.trim();
-      const lastName = document.getElementById('lastName').value.trim();
-      const birthDate = document.getElementById('birthdate').value.trim();
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/;
+        if (!emailPattern.test(email)) { alert("Please enter a valid email."); return; }
 
-      if (!loggedUser) { alert("No logged in user!"); return; }
+        update(ref(savorDB, `user/${loggedUser}`), { email, firstName, lastName, birthDate })
+          .then(() => alert("Account updated successfully!"))
+          .catch(err => { console.error(err); alert("Error saving account."); });
+      };
 
-      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/;
-      if (!emailPattern.test(email)) { alert("Please enter a valid email."); return; }
+      window.savePaymentInfo = function () {
+        const loggedUser = localStorage.getItem("loggedInUser");
+        const cardName = document.getElementById('cardName').value.trim();
+        const cardNumber = document.getElementById('cardNumber').value.trim();
+        const expiry = document.getElementById('expiry').value.trim();
+        const cvv = document.getElementById('cvv').value.trim();
 
-      update(ref(savorDB, `user/${loggedUser}`), { email, firstName, lastName, birthDate })
-        .then(() => alert("Account updated successfully!"))
-        .catch(err => { console.error(err); alert("Error saving account."); });
-    };
+        if (!loggedUser) { alert("No logged in user!"); return; }
+        if (!cardName || !cardNumber || !expiry || !cvv) { alert("Please fill in all payment fields."); return; }
 
-    window.savePaymentInfo = function () {
-      const loggedUser = localStorage.getItem("loggedInUser");
-      const cardName = document.getElementById('cardName').value.trim();
-      const cardNumber = document.getElementById('cardNumber').value.trim();
-      const expiry = document.getElementById('expiry').value.trim();
-      const cvv = document.getElementById('cvv').value.trim();
+        update(ref(savorDB, `user/${loggedUser}`), { cardName, cardNumber, expiry, cvv })
+          .then(() => alert("Payment info updated successfully!"))
+          .catch(err => { console.error(err); alert("Error saving payment info."); });
+      };
 
-      if (!loggedUser) { alert("No logged in user!"); return; }
-      if (!cardName || !cardNumber || !expiry || !cvv) { alert("Please fill in all payment fields."); return; }
+      window.updatePass = function (event) {
+        const loggedUser = localStorage.getItem("loggedInUser");
+        event.preventDefault();
+        const newPassword = document.getElementById('newPassword').value.trim();
+        const confirmPassword = document.getElementById('confirmPassword').value.trim();
 
-      update(ref(savorDB, `user/${loggedUser}`), { cardName, cardNumber, expiry, cvv })
-        .then(() => alert("Payment info updated successfully!"))
-        .catch(err => { console.error(err); alert("Error saving payment info."); });
-    };
+        if (newPassword !== confirmPassword) { alert("Passwords do not match. Please re-enter them."); return; }
 
-    window.updatePass = function (event) {
-      const loggedUser = localStorage.getItem("loggedInUser");
-      event.preventDefault();
-      const newPassword = document.getElementById('newPassword').value.trim();
-      const confirmPassword = document.getElementById('confirmPassword').value.trim();
+        set(ref(savorDB, `user/${loggedUser}/password`), newPassword)
+          .then(() => alert("Password updated successfully!"))
+          .catch(err => { console.error(err); alert("Failed to update password."); });
+      };
 
-      if (newPassword !== confirmPassword) { alert("Passwords do not match. Please re-enter them."); return; }
+      document.getElementById('tab-logout')?.addEventListener('click', () => window.logoutUser());
+      document.getElementById('tab-delete')?.addEventListener('click', () => confirmDelete());
+      document.getElementById('mob-logout')?.addEventListener('click', () => window.logoutUser());
+      document.getElementById('mob-delete')?.addEventListener('click', () => confirmDelete());
 
-      set(ref(savorDB, `user/${loggedUser}/password`), newPassword)
-        .then(() => alert("Password updated successfully!"))
-        .catch(err => { console.error(err); alert("Failed to update password."); });
-    };
+      function confirmDelete() {
+        if (confirm("Are you sure you want to delete your account?")) deleteAccount();
+      }
 
-    document.getElementById('tab-logout')?.addEventListener('click', () => window.logoutUser());
-    document.getElementById('tab-delete')?.addEventListener('click', () => confirmDelete());
-    document.getElementById('mob-logout')?.addEventListener('click', () => window.logoutUser());
-    document.getElementById('mob-delete')?.addEventListener('click', () => confirmDelete());
+      async function deleteAccount() {
+        const loggedUser = localStorage.getItem("loggedInUser");
+        try {
+          await remove(ref(savorDB, `user/${loggedUser}`));
+          localStorage.removeItem("loggedInUser");
+          window.location.href = "index.html";
+        } catch (err) { console.error("Error deleting account:", err); }
+      }
 
-    function confirmDelete() {
-      if (confirm("Are you sure you want to delete your account?")) deleteAccount();
-    }
-
-    async function deleteAccount() {
-      const loggedUser = localStorage.getItem("loggedInUser");
-      try {
-        await remove(ref(savorDB, `user/${loggedUser}`));
+      window.logoutUser = function () {
         localStorage.removeItem("loggedInUser");
         window.location.href = "index.html";
-      } catch (err) { console.error("Error deleting account:", err); }
-    }
-
-    window.logoutUser = function () {
-      localStorage.removeItem("loggedInUser");
-      window.location.href = "index.html";
-    };
-
-    const state = { pendOrders: [], compOrders: [] };
-
-    async function organizeOrders() {
-      state.pendOrders = []; state.compOrders = [];
-      const loggedUser = localStorage.getItem("loggedInUser");
-      const snapshot = await get(ref(savorDB, `order`));
-      const userSnap = await get(ref(savorDB, `user/${loggedUser}`));
-      const userData = userSnap.val();
-      restTarget = userData.rest;
-      if (!snapshot.exists()) return;
-      snapshot.forEach(child => {
-        const order = child.val();
-        if (order.rest !== restTarget) return;
-        const orderObj = { id: child.key, rest: order.rest, totalPrice: order.totalPrice, status: order.status };
-        if (order.status === "pending") state.pendOrders.push(orderObj);
-        else state.compOrders.push(orderObj);
-      });
-    }
-
-    async function renderOrders() {
-      const pendEl = document.getElementById("pending-orders");
-      const compEl = document.getElementById("completed-orders");
-      pendEl.innerHTML = ""; compEl.innerHTML = "";
-      state.pendOrders.forEach(ord => {
-        const sec = document.createElement("section");
-        sec.className = "card";
-        sec.addEventListener("click", () => { sessionStorage.setItem("currOrder", ord.id); window.viewOrder(); });
-        sec.innerHTML = `<div class="hd"><div class="row"><div class="title">#${ord.id}</div><div class="rest">${ord.rest}</div><div class="totalPrice">${ord.totalPrice}</div></div></div>`;
-        pendEl.appendChild(sec);
-      });
-      state.compOrders.forEach(ord => {
-        const sec = document.createElement("section");
-        sec.className = "card";
-        sec.addEventListener("click", () => { sessionStorage.setItem("currOrder", ord.id); window.viewOrder(); });
-        sec.innerHTML = `<div class="hd"><div class="row"><div class="title">#${ord.id}</div><div class="rest">${ord.rest}</div><div class="totalPrice">${ord.totalPrice}</div></div></div>`;
-        compEl.appendChild(sec);
-      });
-    }
-
-    async function loadRestaurantInfo() {
-      if (!restTarget) return;
-      try {
-        const infoRef = ref(savorDB, `rest/${restTarget}/Info`);
-        const infoSnap = await get(infoRef);
-        if (!infoSnap.exists()) return;
-        const info = infoSnap.val() || {};
-        const address = info.Address || {};
-
-        const restNameField = document.getElementById('restName');
-        if (restNameField) restNameField.value = restTarget;
-        const managerField = document.getElementById('fullName');
-        if (managerField) managerField.value = info["Manager:"] || "";
-        const phoneField = document.getElementById('phoneNumber');
-        if (phoneField) phoneField.value = info["phoneNum:"] || "";
-        const emailField = document.getElementById('email');
-        if (emailField) emailField.value = info["Email:"] || "";
-        const street1Field = document.getElementById('street1');
-        if (street1Field) street1Field.value = address["Street:"] || "";
-        const street2Field = document.getElementById('street2');
-        if (street2Field) street2Field.value = address["Suite:"] || "";
-        const cityField = document.getElementById('city');
-        if (cityField) cityField.value = address["City:"] || "";
-        const stateField = document.getElementById('state');
-        if (stateField) stateField.value = address["State:"] || "";
-        const zipField = document.getElementById('zip');
-        if (zipField) zipField.value = address["Zip Code:"] || "";
-        const countryField = document.getElementById('country');
-        if (countryField) countryField.value = address["Country:"] || "";
-        const logoField = document.getElementById('logoImage');
-        if (logoField) logoField.value = info["Logo Image:"] || "";
-        const previewField = document.getElementById('mapPreviewImage');
-        if (previewField) previewField.value = info["Map Preview Image:"] || "";
-        const descField = document.getElementById('restDescription');
-        if (descField) descField.value = info["Description:"] || "";
-      } catch (err) {
-        console.error("Error loading restaurant info:", err);
-      }
-    }
-
-    window.saveResChanges = function (event) {
-      event.preventDefault();
-      if (!restTarget) { alert("No restaurant found!"); return; }
-      const email = document.getElementById('email').value.trim();
-      const manager = document.getElementById('fullName').value.trim();
-      const phoneNum = document.getElementById('phoneNumber').value.trim();
-      const city = document.getElementById('city').value.trim();
-      const country = document.getElementById('country').value.trim();
-      const state = document.getElementById('state').value.trim();
-      const street = document.getElementById('street1').value.trim();
-      const suite = document.getElementById('street2').value.trim();
-      const zipCode = document.getElementById('zip').value.trim();
-      const logo = document.getElementById('logoImage').value.trim();
-      const mapPrev = document.getElementById('mapPreviewImage').value.trim();
-      const desc = document.getElementById('restDescription').value.trim();
-      update(ref(savorDB, `rest/${restTarget}/Info`), {
-        "Email:": email,
-        "Manager:": manager,
-        "phoneNum:": phoneNum,
-        "Logo Image:": logo,
-        "Description:": desc,
-        Address: {
-          "City:": city,
-          "Country:": country,
-          "State:": state,
-          "Street:": street,
-          "Suite:": suite,
-          "Zip Code:": zipCode
-        }
-      })
-        .then(() => alert("Restaurant updated successfully!"))
-        .catch(err => { console.error(err); alert("Error saving restaurant."); });
-      update(ref(savorDB, `rest/${restTarget}`), { "image": mapPrev });
-    };
-
-    // ═══════════════════════════════════════════
-    // MACRO LOOKUP
-    // ═══════════════════════════════════════════
-    const API_KEY = 'prU6zqtG77ZGq1LVbp46GCCMZPmMwQMvwDiNtq84';
-
-    function pickBestFood(foods) {
-      return foods
-        .filter(f => {
-          const n = f.description.toLowerCase();
-          return !n.includes('spread')
-            && !n.includes('meatless')
-            && !n.includes('canned')
-            && !n.includes('frozen')
-            && !n.includes('baby food')
-            && !n.includes('fast food')
-            && !n.includes('flavored')
-            && !n.includes('nugget');
-        })
-        .sort((a, b) => {
-          const aIsFoundation = a.dataType === 'Foundation' ? 0 : 1;
-          const bIsFoundation = b.dataType === 'Foundation' ? 0 : 1;
-          if (aIsFoundation !== bIsFoundation) return aIsFoundation - bIsFoundation;
-          return a.description.split(',').length - b.description.split(',').length;
-        })[0] || foods[0];
-    }
-
-    function getNutrient(food, name) {
-      const nutrient = food.foodNutrients.find(n =>
-        n.nutrientName?.toLowerCase().includes(name.toLowerCase())
-      );
-      return nutrient ? nutrient.value : null;
-    }
-
-    const GRAIN_KEYWORDS = ['rice', 'pasta', 'oat', 'flour', 'quinoa', 'lentil', 'bean'];
-    const MEAT_KEYWORDS = ['chicken', 'beef', 'pork', 'salmon', 'tuna', 'turkey', 'lamb'];
-
-    function getQuerySuffix(ingredient) {
-      const i = ingredient.toLowerCase();
-      if (GRAIN_KEYWORDS.some(k => i.includes(k))) return 'dry';
-      if (MEAT_KEYWORDS.some(k => i.includes(k))) return 'raw';
-      return '';
-    }
-
-    async function searchFDC(ingredient, dataType) {
-      const suffix = getQuerySuffix(ingredient);
-      const query = suffix ? `${ingredient} ${suffix}` : ingredient;
-      const params = new URLSearchParams({
-        query: query,
-        api_key: API_KEY,
-        pageSize: 5,
-        dataType: dataType,
-      });
-      const res = await fetch(`https://api.nal.usda.gov/fdc/v1/foods/search?${params}`);
-      if (!res.ok) throw new Error(`API error ${res.status} for "${ingredient}"`);
-      return await res.json();
-    }
-
-    async function fetchMacros(ingredient) {
-      let data = await searchFDC(ingredient, 'Foundation,SR Legacy');
-      if (!data.foods?.length) {
-        data = await searchFDC(ingredient, 'Foundation,SR Legacy');
-      }
-      if (!data.foods?.length) return { name: ingredient, error: 'Not found' };
-      const food = pickBestFood(data.foods);
-      return {
-        name: food.description,
-        calories: getNutrient(food, 'Energy'),
-        protein: getNutrient(food, 'Protein'),
-        carbs: getNutrient(food, 'Carbohydrate'),
-        fat: getNutrient(food, 'Total lipid'),
-        fiber: getNutrient(food, 'Fiber'),
       };
-    }
 
-    // ★ Accepts foodTextValue so it doesn't depend on the live DOM after closeModal()
-    window.lookupAll = async function (currentItem, foodTextValue) {
-      const input = foodTextValue ?? document.getElementById('foodText').value;
-      const ingredients = input.split(',').map(s => s.trim()).filter(Boolean);
-      if (!ingredients.length) return;
+      const state = { pendOrders: [], compOrders: [] };
 
-      const results = await Promise.all(ingredients.map(fetchMacros));
-
-      let totalCalories = 0, totalProtein = 0, totalCarbs = 0, totalFat = 0, totalFiber = 0;
-      results.forEach(r => {
-        totalCalories += r.calories || 0;
-        totalProtein += r.protein || 0;
-        totalCarbs += r.carbs || 0;
-        totalFat += r.fat || 0;
-        totalFiber += r.fiber || 0;
-      });
-
-      // Save totals to DB under the new item
-      const itemRef = ref(savorDB, `rest/${restTarget}/menu/${currentItem}`);
-      await update(itemRef, {
-        calories: Math.round(totalCalories),
-        protein: Math.round(totalProtein),
-        carbs: Math.round(totalCarbs),
-        fat: Math.round(totalFat),
-        fiber: Math.round(totalFiber),
-      });
-    };
-    // ═══════════════════════════════════════════
-
-    window.checkActive = async function () 
-    {
-      let activeCount = 0;
-      let totalQuantity = 0;
-      const loggedUser = localStorage.getItem("loggedInUser");
-      const rest = await get(ref(savorDB, `user/${loggedUser}/rest`)).then(snap => snap.val());
-      if (!rest) 
-      {
-        alert("No restaurant associated with this account."); return; 
-      }
-      const menuSnap = await get(ref(savorDB, `rest/${rest}/menu`));
-      if (!menuSnap.exists()) 
-      {
-        console.log("No menu found for restaurant:", rest);
-      } 
-      else 
-      {
-        menuSnap.forEach(child => {
-          const item = child.val();
-          if (item.status === "active") {
-            activeCount++;
-            totalQuantity += Number(item.quantity || 0);
-          }
+      async function organizeOrders() {
+        state.pendOrders = []; state.compOrders = [];
+        const loggedUser = localStorage.getItem("loggedInUser");
+        const snapshot = await get(ref(savorDB, `order`));
+        const userSnap = await get(ref(savorDB, `user/${loggedUser}`));
+        const userData = userSnap.val();
+        restTarget = userData.rest;
+        if (!snapshot.exists()) return;
+        snapshot.forEach(child => {
+          const order = child.val();
+          if (order.rest !== restTarget) return;
+          const orderObj = { id: child.key, rest: order.rest, totalPrice: order.totalPrice, status: order.status };
+          if (order.status === "pending") state.pendOrders.push(orderObj);
+          else state.compOrders.push(orderObj);
         });
       }
 
-      const activeEl = document.getElementById("active-listings");
-      if (activeEl) activeEl.textContent = String(activeCount+" Total Items: "+totalQuantity);
-    }
+      async function renderOrders() {
+        const pendEl = document.getElementById("pending-orders");
+        const compEl = document.getElementById("completed-orders");
+        pendEl.innerHTML = ""; compEl.innerHTML = "";
+        state.pendOrders.forEach(ord => {
+          const sec = document.createElement("section");
+          sec.className = "card";
+          sec.addEventListener("click", () => { sessionStorage.setItem("currOrder", ord.id); window.viewOrder(); });
+          sec.innerHTML = `<div class="hd"><div class="row"><div class="title">#${ord.id}</div><div class="rest">${ord.rest}</div><div class="totalPrice">${ord.totalPrice}</div></div></div>`;
+          pendEl.appendChild(sec);
+        });
+        state.compOrders.forEach(ord => {
+          const sec = document.createElement("section");
+          sec.className = "card";
+          sec.addEventListener("click", () => { sessionStorage.setItem("currOrder", ord.id); window.viewOrder(); });
+          sec.innerHTML = `<div class="hd"><div class="row"><div class="title">#${ord.id}</div><div class="rest">${ord.rest}</div><div class="totalPrice">${ord.totalPrice}</div></div></div>`;
+          compEl.appendChild(sec);
+        });
+      }
 
-    function parsePickupTime(str) {
-      // "04102026/10:59am" → month=04, day=10, year=2026, time=10:59am
-    const [datePart, timePart] = str.split('/');
-    const month = datePart.slice(0, 2);
-    const day   = datePart.slice(2, 4);
-    const year  = datePart.slice(4, 8);
-
-    // Build a standard string JS can parse
-    return new Date(`${month}/${day}/${year} ${timePart}`);
-}
-
-    window.calculateTodaySales = async function() {
-        const salesDisplay = document.getElementById("today-sales-value");
-        if (!salesDisplay) return;
-
+      async function loadRestaurantInfo() {
+        if (!restTarget) return;
         try {
-          const now = Date.now();
-          const twentyFourHoursAgo = now - (24 * 60 * 60 * 1000);
+          const infoRef = ref(savorDB, `rest/${restTarget}/Info`);
+          const infoSnap = await get(infoRef);
+          if (!infoSnap.exists()) return;
+          const info = infoSnap.val() || {};
+          const address = info.Address || {};
 
-          const ordersref = ref(savorDB, 'order');
-          const snapshot = await get(ordersref);
-
-          let totalSales = 0;
-
-          if (snapshot.exists()) {
-            snapshot.forEach((child) => {
-              const ordersData = child.val();
-              // Maybe use a createdAt timestamp as opposed to pickuptime
-              if (ordersData.rest === restTarget && ordersData.pickupTime > twentyFourHoursAgo) {
-                const price = parseFloat(ordersData.totalPrice) || 0;
-                totalSales += price;
-              }
-            });
-          }
-
-          salesDisplay.textContent = `$${totalSales.toFixed(2)}`;
+          const restNameField = document.getElementById('restName');
+          if (restNameField) restNameField.value = restTarget;
+          const managerField = document.getElementById('fullName');
+          if (managerField) managerField.value = info["Manager:"] || "";
+          const phoneField = document.getElementById('phoneNumber');
+          if (phoneField) phoneField.value = info["phoneNum:"] || "";
+          const emailField = document.getElementById('email');
+          if (emailField) emailField.value = info["Email:"] || "";
+          const street1Field = document.getElementById('street1');
+          if (street1Field) street1Field.value = address["Street:"] || "";
+          const street2Field = document.getElementById('street2');
+          if (street2Field) street2Field.value = address["Suite:"] || "";
+          const cityField = document.getElementById('city');
+          if (cityField) cityField.value = address["City:"] || "";
+          const stateField = document.getElementById('state');
+          if (stateField) stateField.value = address["State:"] || "";
+          const zipField = document.getElementById('zip');
+          if (zipField) zipField.value = address["Zip Code:"] || "";
+          const countryField = document.getElementById('country');
+          if (countryField) countryField.value = address["Country:"] || "";
+          const logoField = document.getElementById('logoImage');
+          if (logoField) logoField.value = info["Logo Image:"] || "";
+          const previewField = document.getElementById('mapPreviewImage');
+          if (previewField) previewField.value = info["Map Preview Image:"] || "";
+          const descField = document.getElementById('restDescription');
+          if (descField) descField.value = info["Description:"] || "";
         } catch (err) {
-         console.error("Error calculating today's sales:", err);
-         salesDisplay.textContent = "$0.00";
+          console.error("Error loading restaurant info:", err);
         }
+      }
+
+      window.saveResChanges = function (event) {
+        event.preventDefault();
+        if (!restTarget) { alert("No restaurant found!"); return; }
+        const email = document.getElementById('email').value.trim();
+        const manager = document.getElementById('fullName').value.trim();
+        const phoneNum = document.getElementById('phoneNumber').value.trim();
+        const city = document.getElementById('city').value.trim();
+        const country = document.getElementById('country').value.trim();
+        const state = document.getElementById('state').value.trim();
+        const street = document.getElementById('street1').value.trim();
+        const suite = document.getElementById('street2').value.trim();
+        const zipCode = document.getElementById('zip').value.trim();
+        const logo = document.getElementById('logoImage').value.trim();
+        const mapPrev = document.getElementById('mapPreviewImage').value.trim();
+        const desc = document.getElementById('restDescription').value.trim();
+        update(ref(savorDB, `rest/${restTarget}/Info`), {
+          "Email:": email,
+          "Manager:": manager,
+          "phoneNum:": phoneNum,
+          "Logo Image:": logo,
+          "Description:": desc,
+          Address: {
+            "City:": city,
+            "Country:": country,
+            "State:": state,
+            "Street:": street,
+            "Suite:": suite,
+            "Zip Code:": zipCode
+          }
+        })
+          .then(() => alert("Restaurant updated successfully!"))
+          .catch(err => { console.error(err); alert("Error saving restaurant."); });
+        update(ref(savorDB, `rest/${restTarget}`), { "image": mapPrev });
       };
 
+      // ═══════════════════════════════════════════
+      // MACRO LOOKUP
+      // ═══════════════════════════════════════════
+      const API_KEY = 'prU6zqtG77ZGq1LVbp46GCCMZPmMwQMvwDiNtq84';
+
+      function pickBestFood(foods) {
+        return foods
+          .filter(f => {
+            const n = f.description.toLowerCase();
+            return !n.includes('spread')
+              && !n.includes('meatless')
+              && !n.includes('canned')
+              && !n.includes('frozen')
+              && !n.includes('baby food')
+              && !n.includes('fast food')
+              && !n.includes('flavored')
+              && !n.includes('nugget');
+          })
+          .sort((a, b) => {
+            const aIsFoundation = a.dataType === 'Foundation' ? 0 : 1;
+            const bIsFoundation = b.dataType === 'Foundation' ? 0 : 1;
+            if (aIsFoundation !== bIsFoundation) return aIsFoundation - bIsFoundation;
+            return a.description.split(',').length - b.description.split(',').length;
+          })[0] || foods[0];
+      }
+
+      function getNutrient(food, name) {
+        const nutrient = food.foodNutrients.find(n =>
+          n.nutrientName?.toLowerCase().includes(name.toLowerCase())
+        );
+        return nutrient ? nutrient.value : null;
+      }
+
+      const GRAIN_KEYWORDS = ['rice', 'pasta', 'oat', 'flour', 'quinoa', 'lentil', 'bean'];
+      const MEAT_KEYWORDS = ['chicken', 'beef', 'pork', 'salmon', 'tuna', 'turkey', 'lamb'];
+
+      function getQuerySuffix(ingredient) {
+        const i = ingredient.toLowerCase();
+        if (GRAIN_KEYWORDS.some(k => i.includes(k))) return 'dry';
+        if (MEAT_KEYWORDS.some(k => i.includes(k))) return 'raw';
+        return '';
+      }
+
+      async function searchFDC(ingredient, dataType) {
+        const suffix = getQuerySuffix(ingredient);
+        const query = suffix ? `${ingredient} ${suffix}` : ingredient;
+        const params = new URLSearchParams({
+          query: query,
+          api_key: API_KEY,
+          pageSize: 5,
+          dataType: dataType,
+        });
+        const res = await fetch(`https://api.nal.usda.gov/fdc/v1/foods/search?${params}`);
+        if (!res.ok) throw new Error(`API error ${res.status} for "${ingredient}"`);
+        return await res.json();
+      }
+
+      async function fetchMacros(ingredient) {
+        let data = await searchFDC(ingredient, 'Foundation,SR Legacy');
+        if (!data.foods?.length) {
+          data = await searchFDC(ingredient, 'Foundation,SR Legacy');
+        }
+        if (!data.foods?.length) return { name: ingredient, error: 'Not found' };
+        const food = pickBestFood(data.foods);
+        return {
+          name: food.description,
+          calories: getNutrient(food, 'Energy'),
+          protein: getNutrient(food, 'Protein'),
+          carbs: getNutrient(food, 'Carbohydrate'),
+          fat: getNutrient(food, 'Total lipid'),
+          fiber: getNutrient(food, 'Fiber'),
+        };
+      }
+
+      window.lookupAll = async function (currentItem, foodTextValue) {
+        const input = foodTextValue ?? document.getElementById('foodText').value;
+        const ingredients = input.split(',').map(s => s.trim()).filter(Boolean);
+        if (!ingredients.length) return;
+
+        const results = await Promise.all(ingredients.map(fetchMacros));
+
+        let totalCalories = 0, totalProtein = 0, totalCarbs = 0, totalFat = 0, totalFiber = 0;
+        results.forEach(r => {
+          totalCalories += r.calories || 0;
+          totalProtein += r.protein || 0;
+          totalCarbs += r.carbs || 0;
+          totalFat += r.fat || 0;
+          totalFiber += r.fiber || 0;
+        });
+
+        const itemRef = ref(savorDB, `rest/${restTarget}/menu/${currentItem}`);
+        await update(itemRef, {
+          calories: Math.round(totalCalories),
+          protein: Math.round(totalProtein),
+          carbs: Math.round(totalCarbs),
+          fat: Math.round(totalFat),
+          fiber: Math.round(totalFiber),
+        });
+      };
+
+      window.checkActive = async function () {
+        let activeCount = 0;
+        let totalQuantity = 0;
+        const loggedUser = localStorage.getItem("loggedInUser");
+        const rest = await get(ref(savorDB, `user/${loggedUser}/rest`)).then(snap => snap.val());
+        if (!rest) {
+          alert("No restaurant associated with this account."); return;
+        }
+        const menuSnap = await get(ref(savorDB, `rest/${rest}/menu`));
+        if (!menuSnap.exists()) {
+          console.log("No menu found for restaurant:", rest);
+        } else {
+          menuSnap.forEach(child => {
+            const item = child.val();
+            if (item.status === "active") {
+              activeCount++;
+              totalQuantity += Number(item.quantity || 0);
+            }
+          });
+        }
+
+        const activeEl = document.getElementById("active-listings");
+        if (activeEl) activeEl.textContent = String(activeCount + " Total Items: " + totalQuantity);
+      };
+
+      window.calculateTodaySales = async function() {
+  const salesDisplay = document.getElementById("today-sales-value");
+  if (!salesDisplay) return;
+
+  function parsePickupTime(raw) {
+    if (!raw) return null;
+
+    // Already a numeric timestamp
+    const asNum = Number(raw);
+    if (!isNaN(asNum) && asNum > 1000000000000) return asNum;
+
+    // Strip "ASAP - " prefix
+    const cleaned = String(raw).replace(/^ASAP\s*-\s*/i, '').trim();
+
+    // "ASAP" with no date
+    if (!cleaned || cleaned.toUpperCase() === 'ASAP') return null;
+
+    // Format: "05/03/2026 @ 10:22 AM"
+    const fmt1 = cleaned.match(/^(\d{2})\/(\d{2})\/(\d{4})\s*@\s*(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+    if (fmt1) {
+      const [, mm, dd, yyyy, hh, min, ampm] = fmt1;
+      let hours = parseInt(hh);
+      if (ampm.toUpperCase() === 'PM' && hours !== 12) hours += 12;
+      if (ampm.toUpperCase() === 'AM' && hours === 12) hours = 0;
+      return new Date(parseInt(yyyy), parseInt(mm) - 1, parseInt(dd), hours, parseInt(min)).getTime();
+    }
+
+    // Format: "04292026/7:21pm" → MMDDYYYY/H:MMam
+    const fmt2 = cleaned.match(/^(\d{2})(\d{2})(\d{4})\/(\d{1,2}):(\d{2})(am|pm)$/i);
+    if (fmt2) {
+      const [, mm, dd, yyyy, hh, min, ampm] = fmt2;
+      let hours = parseInt(hh);
+      if (ampm.toLowerCase() === 'pm' && hours !== 12) hours += 12;
+      if (ampm.toLowerCase() === 'am' && hours === 12) hours = 0;
+      return new Date(parseInt(yyyy), parseInt(mm) - 1, parseInt(dd), hours, parseInt(min)).getTime();
+    }
+
+    return null;
+  }
+
+  try {
+    const now = Date.now();
+    const twentyFourHoursAgo = now - (24 * 60 * 60 * 1000);
+
+    const snapshot = await get(ref(savorDB, 'order'));
+    let totalSales = 0;
+
+    if (snapshot.exists()) {
+      snapshot.forEach((child) => {
+        const order = child.val();
+        if (order.rest !== restTarget) return;
+
+        const ts = parsePickupTime(order.pickupTime);
+        if (ts && ts >= twentyFourHoursAgo && ts <= now) {
+          totalSales += parseFloat(order.totalPrice) || 0;
+        }
+      });
+    }
+
+    salesDisplay.textContent = `$${totalSales.toFixed(2)}`;
+  } catch (err) {
+    console.error("Error calculating today's sales:", err);
+    salesDisplay.textContent = "$0.00";
+  }
+};
+
+      (async () => { await organizeOrders(); renderOrders(); checkActive(); calculateTodaySales(); })();
+
+    }); // ← closes DOMContentLoaded
   </script>
 </body>
 

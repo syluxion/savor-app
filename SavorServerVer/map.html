@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>SAVOR Map</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -127,7 +127,7 @@
     @media (min-width: 600px) {
       .sidebar {
         left: 8px;
-        top: 10px;
+        top: 62px;
         width: 240px;
         height: calc(100dvh - 72px);
         border-radius: 20px;
@@ -366,6 +366,187 @@
       display: block;
       margin-bottom: 0;
     }
+
+
+    .rating-open-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 2px auto 8px;
+  display: block;
+  cursor: pointer;
+  font: inherit;
+}
+
+.rating-open-btn .info-rating {
+  margin: 0;
+}
+
+.write-review-btn {
+  display: block;
+  margin: 0 auto 10px;
+  padding: 8px 14px;
+  background: #ffffff;
+  color: #0a5a2e;
+  border: 2px solid #0a5a2e;
+  border-radius: 16px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.write-review-btn:hover {
+  background: #0a5a2e;
+  color: white;
+  transform: scale(1.03);
+}
+
+.review-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000000;
+  padding: 18px;
+}
+
+.review-modal-overlay.open {
+  display: flex;
+}
+
+.review-modal-card {
+  width: min(420px, 100%);
+  max-height: 85vh;
+  overflow-y: auto;
+  background: rgba(255,255,255,0.98);
+  border-radius: 22px;
+  padding: 20px 18px 18px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.28);
+  position: relative;
+}
+
+.review-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: #0a5a2e;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.review-modal-title {
+  margin: 0 0 8px;
+  text-align: center;
+  color: #0a5a2e;
+  font-size: 22px;
+}
+
+.review-modal-subtitle {
+  text-align: center;
+  margin: 0 0 16px;
+  color: #444;
+  font-size: 14px;
+}
+
+.star-picker {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.star-btn {
+  background: transparent;
+  border: none;
+  font-size: 34px;
+  cursor: pointer;
+  color: #cfcfcf;
+  transition: transform 0.15s;
+}
+
+.star-btn.active {
+  color: #ffb400;
+}
+
+.star-btn:hover {
+  transform: scale(1.08);
+}
+
+.review-comment-box {
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+  border: 1px solid #d8d8d8;
+  border-radius: 14px;
+  padding: 12px;
+  font-family: inherit;
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+.reviews-summary {
+  text-align: center;
+  margin-bottom: 14px;
+  color: #0a5a2e;
+  font-weight: bold;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.review-item {
+  background: #f4faf6;
+  border: 1px solid rgba(17,143,84,0.14);
+  border-radius: 16px;
+  padding: 12px;
+}
+
+.review-item-name {
+  font-weight: bold;
+  color: #0a5a2e;
+  margin-bottom: 4px;
+}
+
+.review-item-stars {
+  color: #ffb400;
+  margin-bottom: 6px;
+}
+
+.review-item-comment {
+  color: #333;
+  line-height: 1.35;
+  font-size: 14px;
+}
+
+.review-empty {
+  text-align: center;
+  color: #666;
+  padding: 12px 0;
+}
+
+@media (max-width: 599px) {
+        .top-bar {
+          padding-top: calc(env(safe-area-inset-top) + 10px);
+        }
+        .leaflet-top.leaflet-left {
+            top: calc(env(safe-area-inset-top) + 70px); /* safe area + top-bar height */
+          }
+          
+      }
+
+
   </style>
 </head>
 <body>
@@ -400,7 +581,13 @@
       <img id="info-img" alt="Restaurant image" />
     </div>
     <h3 id="info-name"></h3>
-    <div class="info-rating" id="info-rating"></div>
+  
+    <button class="rating-open-btn" id="info-rating-btn" type="button">
+      <span class="info-rating" id="info-rating"></span>
+    </button>
+  
+    <button class="write-review-btn" id="write-review-btn" type="button">Write a Review</button>
+  
     <p class="info-hours" id="info-hours"></p>
     <p class="info-address" id="info-address">Loading address…</p>
     <button class="info-action-btn" id="order-btn">ORDER</button>
@@ -419,12 +606,55 @@
     <button class="info-action-btn" id="fb-dir-btn">Directions</button>
   </div>
 
+  <!-- Write review modal -->
+<div class="review-modal-overlay" id="review-modal">
+  <div class="review-modal-card">
+    <button class="review-modal-close" id="close-review-modal" type="button">✕</button>
+    <h3 class="review-modal-title">Write a Review</h3>
+    <p class="review-modal-subtitle" id="review-modal-rest-name"></p>
+
+    <div class="star-picker" id="star-picker">
+      <button type="button" class="star-btn" data-value="1">☆</button>
+      <button type="button" class="star-btn" data-value="2">☆</button>
+      <button type="button" class="star-btn" data-value="3">☆</button>
+      <button type="button" class="star-btn" data-value="4">☆</button>
+      <button type="button" class="star-btn" data-value="5">☆</button>
+    </div>
+
+    <textarea
+      id="review-comment"
+      class="review-comment-box"
+      placeholder="Optional comment..."
+      maxlength="300"
+    ></textarea>
+
+    <button type="button" class="info-action-btn" id="save-review-btn">Save Review</button>
+  </div>
+</div>
+
+<!-- View reviews modal -->
+<div class="review-modal-overlay" id="reviews-list-modal">
+  <div class="review-modal-card reviews-list-card">
+    <button class="review-modal-close" id="close-reviews-list-modal" type="button">✕</button>
+    <h3 class="review-modal-title">Reviews</h3>
+    <div id="reviews-summary" class="reviews-summary"></div>
+    <div id="reviews-list" class="reviews-list"></div>
+  </div>
+</div>
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+    import {
+      getDatabase,
+      ref,
+      get,
+      set,
+      push,
+      update
+    }  from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
     const firebaseConfig = { databaseURL: "https://savordatabase-default-rtdb.firebaseio.com" };
     const app = initializeApp(firebaseConfig);
@@ -433,8 +663,10 @@
     const map = L.map("map").setView([34.241461, -118.529286], 15);
     const dateRef = new Date().toLocaleString('en-us', { weekday: 'long' });
 
+    
+
     // ── Navigation ──
-    window.backPress  = function () { sessionStorage.removeItem("query"); window.location.href = '/index.html'; };
+    window.backPress  = function () { sessionStorage.removeItem("query"); window.location.href = 'index.html'; };
     window.resPage    = function () { window.location.href = 'checkoutmenu.html'; };
     window.closeInfoCards = function () {
       document.getElementById("restaurant-info-box").style.display = "none";
@@ -467,15 +699,52 @@
     // ── Map tiles ──
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(map);
 
-    let markers       = [];
-    let restaurantData = [];
-    let routingControl = null;
-    let userLocation   = null;
 
-    function formatRatingStars(rating) {
-      const rounded = Math.round(rating);
-      return "★".repeat(rounded) + "☆".repeat(5 - rounded);
-    }
+let markers       = [];
+let restaurantData = [];
+let routingControl = null;
+let userLocation   = null;
+
+let currentRestaurantForReview = null;
+let selectedReviewStars = 0;
+
+function formatRatingStars(rating) {
+  const rounded = Math.round(Number(rating || 0));
+  return "★".repeat(rounded) + "☆".repeat(5 - rounded);
+}
+
+function getAverageRating(r) {
+  if (r?.reviewSummary?.reviewCount > 0) {
+    return Number(r.reviewSummary.averageRating || 0);
+  }
+  return Number(r.rating || 0);
+}
+
+function getReviewCount(r) {
+  return Number(r?.reviewSummary?.reviewCount || 0);
+}
+
+function openModal(id) {
+  document.getElementById(id).classList.add("open");
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove("open");
+}
+
+function paintStarPicker(value) {
+  document.querySelectorAll(".star-btn").forEach(btn => {
+    const starValue = Number(btn.dataset.value);
+    btn.textContent = starValue <= value ? "★" : "☆";
+    btn.classList.toggle("active", starValue <= value);
+  });
+}
+
+    
+
+
+
+
 
     async function fetchAddress(lat, lng) {
       try {
@@ -496,7 +765,14 @@
       const data = res.val();
       if (!data) return;
 
-      restaurantData = Object.entries(data).map(([id, r]) => ({ id, ...r }));
+      restaurantData = Object.entries(data).map(([id, r]) => ({
+      id,
+      ...r,
+      reviewSummary: r.reviewSummary || {
+        averageRating: Number(r.rating || 0),
+        reviewCount: 0
+      }   
+    }));
       populateSidebar(restaurantData);
       addRestaurantsToMap(restaurantData);
       queryFromURL();
@@ -561,7 +837,16 @@
         box.style.display = "block";
         document.getElementById("fb-info-img").src          = r.image;
         document.getElementById("fb-info-name").innerText   = r.id;
-        document.getElementById("fb-info-rating").innerText = `${formatRatingStars(r.rating)} (${r.rating.toFixed(1)})`;
+        
+
+
+        const fbAvgRating = getAverageRating(r);
+        const fbReviewCount = getReviewCount(r);
+        document.getElementById("fb-info-rating").innerText =
+          `${formatRatingStars(fbAvgRating)} (${fbAvgRating.toFixed(1)})${fbReviewCount ? ` • ${fbReviewCount} review${fbReviewCount === 1 ? "" : "s"}` : ""}`;
+        
+        
+        
         document.getElementById("fb-info-hours").innerText  = r.hours?.[dateRef] ?? "Hours not available";
 
         const addrEl = document.getElementById("fb-info-address");
@@ -573,11 +858,15 @@
           getDirections();
         };
       } else {
+
         const box = document.getElementById("restaurant-info-box");
         box.style.display = "block";
         document.getElementById("info-img").src          = r.image;
         document.getElementById("info-name").innerText   = r.id;
-        document.getElementById("info-rating").innerText = `${formatRatingStars(r.rating)} (${r.rating.toFixed(1)})`;
+        const avgRating = getAverageRating(r);
+        const reviewCount = getReviewCount(r);
+        document.getElementById("info-rating").innerText =
+         `${formatRatingStars(avgRating)} (${avgRating.toFixed(1)})${reviewCount ? ` • ${reviewCount} review${reviewCount === 1 ? "" : "s"}` : ""}`;
         document.getElementById("info-hours").innerText  = r.hours?.[dateRef] ?? "Hours not available";
 
         const addrEl = document.getElementById("info-address");
@@ -588,13 +877,31 @@
           sessionStorage.setItem("currRest", r.id);
           resPage();
         };
+
+        document.getElementById("write-review-btn").onclick = () => {
+          currentRestaurantForReview = r;
+          selectedReviewStars = 0;
+          paintStarPicker(0);
+          document.getElementById("review-comment").value = "";
+          document.getElementById("review-modal-rest-name").innerText = r.id;
+          openModal("review-modal");
+        };
+
+        document.getElementById("info-rating-btn").onclick = async () => {
+         await openReviewsList(r.id);
+        
+        };
+
+
+
+
       }
     }
 
     window.handleLogin = async function(){
       const userId = localStorage.getItem("loggedInUser");
       if (!userId){
-        window.location.href = "/login.html";
+        window.location.href = "login.html";
         return;
       };
 
@@ -604,15 +911,15 @@
 
       if (type === "fb") {
         sessionStorage.setItem("ownedRest", userData.rest ?? "");
-        window.location.href = "/fb_acc.html";
+        window.location.href = "fb_acc.html";
       }
       else if (type === "business") {
         sessionStorage.setItem("ownedRest", userData.rest ?? "");
-        window.location.href = "/res_dash.html";
+        window.location.href = "res_dash.html";
       }
       else
       {
-        window.location.href = "/user_acc.html";
+        window.location.href = "user_acc.html";
       }
     }
 
@@ -677,6 +984,158 @@
   }
 }
 
+
+async function recalculateRestaurantReviewSummary(restName) {
+  const reviewsRef = ref(savorDB, `rest/${restName}/reviews`);
+  const snap = await get(reviewsRef);
+
+  let reviews = [];
+  if (snap.exists()) {
+    const raw = snap.val() || {};
+    reviews = Object.values(raw).filter(x => x && Number(x.rating) > 0);
+  }
+
+  const reviewCount = reviews.length;
+  const averageRating = reviewCount
+    ? reviews.reduce((sum, review) => sum + Number(review.rating || 0), 0) / reviewCount
+    : 0;
+
+  await update(ref(savorDB, `rest/${restName}`), {
+    reviewSummary: {
+      averageRating: Number(averageRating.toFixed(1)),
+      reviewCount
+    }
+  });
+
+  const localMatch = restaurantData.find(x => x.id === restName);
+  if (localMatch) {
+    localMatch.reviewSummary = {
+      averageRating: Number(averageRating.toFixed(1)),
+      reviewCount
+    };
+  }
+}
+
+async function saveReview() {
+  if (!currentRestaurantForReview) return;
+
+  if (selectedReviewStars < 1 || selectedReviewStars > 5) {
+    alert("Please choose a star rating.");
+    return;
+  }
+
+  const { userId, accountName } = await getLoggedInDisplayName();
+  if (!userId) {
+    alert("You must be logged in to leave a review.");
+    window.location.href = "login.html";
+    return;
+  }
+
+  const comment = document.getElementById("review-comment").value.trim();
+  const restName = currentRestaurantForReview.id;
+
+  const reviewRef = push(ref(savorDB, `rest/${restName}/reviews`));
+  await set(reviewRef, {
+    userId,
+    accountName,
+    rating: selectedReviewStars,
+    comment,
+    createdAt: Date.now()
+  });
+
+  await recalculateRestaurantReviewSummary(restName);
+
+  const freshSnap = await get(ref(savorDB, `rest/${restName}`));
+  if (freshSnap.exists()) {
+    const freshData = { id: restName, ...freshSnap.val() };
+    const index = restaurantData.findIndex(x => x.id === restName);
+    if (index !== -1) restaurantData[index] = freshData;
+    updateInfoBox(freshData);
+  }
+
+  closeModal("review-modal");
+  alert("Review saved!");
+}
+
+async function openReviewsList(restName) {
+  const reviewsList = document.getElementById("reviews-list");
+  const reviewsSummary = document.getElementById("reviews-summary");
+
+  reviewsList.innerHTML = `<div class="review-empty">Loading reviews...</div>`;
+  reviewsSummary.innerHTML = "";
+
+  openModal("reviews-list-modal");
+
+  try {
+    const restSnap = await get(ref(savorDB, `rest/${restName}`));
+    const r = restSnap.val() || {};
+    const avg = Number(r?.reviewSummary?.averageRating || 0);
+    const count = Number(r?.reviewSummary?.reviewCount || 0);
+
+    reviewsSummary.innerHTML =
+      `${formatRatingStars(avg)} (${avg.toFixed(1)}) • ${count} review${count === 1 ? "" : "s"}`;
+
+    const reviewsSnap = await get(ref(savorDB, `rest/${restName}/reviews`));
+
+    if (!reviewsSnap.exists()) {
+      reviewsList.innerHTML = `<div class="review-empty">No reviews yet.</div>`;
+      return;
+    }
+
+    const reviews = Object.values(reviewsSnap.val() || {})
+      .sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));
+
+    const withComments = reviews.filter(review => (review.comment || "").trim() !== "");
+    const finalReviews = withComments.length ? withComments : reviews;
+
+    if (!finalReviews.length) {
+      reviewsList.innerHTML = `<div class="review-empty">No comments yet.</div>`;
+      return;
+    }
+
+    reviewsList.innerHTML = finalReviews.map(review => `
+      <div class="review-item">
+        <div class="review-item-name">${review.accountName || "User"}</div>
+        <div class="review-item-stars">${formatRatingStars(Number(review.rating || 0))} (${Number(review.rating || 0).toFixed(1)})</div>
+        <div class="review-item-comment">${(review.comment || "").trim() || "No written comment."}</div>
+      </div>
+    `).join("");
+  } catch (err) {
+    console.error("Error loading reviews:", err);
+    reviewsList.innerHTML = `<div class="review-empty">Could not load reviews.</div>`;
+  }
+}
+
+document.getElementById("close-review-modal").addEventListener("click", () => {
+  closeModal("review-modal");
+});
+
+document.getElementById("close-reviews-list-modal").addEventListener("click", () => {
+  closeModal("reviews-list-modal");
+});
+
+document.getElementById("save-review-btn").addEventListener("click", saveReview);
+
+document.querySelectorAll(".star-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    selectedReviewStars = Number(btn.dataset.value);
+    paintStarPicker(selectedReviewStars);
+  });
+});
+
+document.getElementById("review-modal").addEventListener("click", (e) => {
+  if (e.target.id === "review-modal") closeModal("review-modal");
+});
+
+document.getElementById("reviews-list-modal").addEventListener("click", (e) => {
+  if (e.target.id === "reviews-list-modal") closeModal("reviews-list-modal");
+});
+
+
+
+
+
+
     // ── Search ──
     const searchInput = document.getElementById("searchInput");
     const searchBtn   = document.getElementById("searchBtn");
@@ -705,6 +1164,27 @@
 
     searchInput.oninput = e  => filter(e.target.value);
     searchBtn.onclick   = () => filter(searchInput.value);
+
+    async function getLoggedInDisplayName() {
+  const userId = localStorage.getItem("loggedInUser");
+  if (!userId) return { userId: null, accountName: "Guest" };
+
+  try {
+    const snap = await get(ref(savorDB, `user/${userId}`));
+    const userData = snap.val() || {};
+
+    const fullName = [userData.firstName, userData.lastName].filter(Boolean).join(" ").trim();
+    const accountName = fullName || userData.username || userData.email || userId;
+
+    return { userId, accountName };
+  } catch (err) {
+    console.error("Error loading user name:", err);
+    return { userId, accountName: userId };
+  }
+}
+
+
+
   </script>
 </body>
 </html>
