@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Profile Settings - Savor</title>
   <style>
     * { box-sizing: border-box; }
@@ -11,7 +11,7 @@
       margin: 0;
       padding: 0;
       min-height: 100dvh;
-      background: url("/S6.png") no-repeat center center fixed;
+      background: url("S6.png") no-repeat center center fixed;
       background-size: cover;
       font-family: 'Arial Rounded MT Bold', sans-serif;
     }
@@ -271,6 +271,25 @@
     }
     #pending-orders .card:hover,
     #completed-orders .card:hover { transform: translateY(-2px); }
+    
+    @media (max-width: 599px) {
+      .mobile-header {
+        padding-top: calc(env(safe-area-inset-top) + 10px);
+      }
+      .mobile-bottom-nav {
+        padding-bottom: env(safe-area-inset-bottom);
+        height: calc(64px + env(safe-area-inset-bottom));
+      }
+      
+      .mobile-bottom-nav .nav-item {
+          font-size: 9px;
+          padding: 6px 2px;
+        }
+        .mobile-bottom-nav .nav-item .nav-icon {
+          font-size: 17px;
+        }
+        
+    }
   </style>
 </head>
 <body>
@@ -287,7 +306,7 @@
 
     <!-- Desktop sidebar -->
     <aside class="settings-nav" aria-label="Settings sections">
-      <a href="/index.html" class="title-link">
+      <a href="index.html" class="title-link">
         <h1 class="title-pickup">SAVOR</h1>
       </a>
       <nav role="tablist" aria-orientation="vertical" id="sidebar">
@@ -304,7 +323,7 @@
     <main class="settings-content">
 
       <div class="profile-avatar">
-        <img src="/user_icon.png" alt="User Avatar" class="avatar-large"/>
+        <img src="user_icon.png" alt="User Avatar" class="avatar-large"/>
       </div>
 
       <header class="settings-header">

@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
   <title>Restaurant Menu + Checkout</title>
   <style>
     :root{
@@ -454,6 +455,95 @@
     width: 40px;
     height: 30px;
   }
+
+  /* Pickup Section styling */
+.pickup-section {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pickup-info { font-size: 13px; font-weight: 600; }
+#displayTime { color: #0a5a2e; margin-left: 4px; }
+.change-link { color: #0a5a2e; font-size: 12px; cursor: pointer; text-decoration: underline; }
+
+/* Modal Styles */
+.modal-overlay {
+  display: none; position: fixed; z-index: 1000; left: 0; top: 0;
+  width: 100%; height: 100%; background: rgba(0,0,0,0.5);
+  align-items: center; justify-content: center;
+}
+.modal-content {
+  background: white; padding: 24px; border-radius: 18px;
+  width: 90%; max-width: 400px; text-align: center;
+}
+.modal-content h3 { margin-top: 0; }
+.time-option {
+  display: block; width: 100%; padding: 12px; margin: 10px 0;
+  border: 1px solid var(--border); border-radius: 12px; cursor: pointer;
+}
+.time-option:hover { background: #f1f5f9; }
+#customTimeInput { display: none; margin-top: 10px; }
+
+@media (max-width: 599px) {
+        .wrap {
+          padding-top: calc(env(safe-area-inset-top) + 10px);
+          padding-left: 12px;
+          padding-right: 12px;
+        }
+
+        /* Top row: back button + cart pill side by side */
+        .topBar {
+          padding-top: calc(env(safe-area-inset-top) + 10px);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-left: 12px;
+          padding-right: 12px;
+        }
+
+        /* Move cart pill into the top bar row */
+        #cartPill {
+          position: static; /* pull it out of the header flow */
+          margin: 0;
+        }
+
+        /* Stack the header content vertically */
+        header {
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        /* Image full width, reasonable height */
+        #restLogo {
+          height: auto;
+          width: 100%;
+          max-width: 100%;
+          max-height: 200px;
+          border-radius: 16px;
+        }
+
+        /* Description full width */
+        #restTagline {
+          max-width: 100%;
+          font-size: 14px;
+        }
+
+        /* Restaurant name sizing */
+        h1 {
+          font-size: 26px;
+        }
+
+        .restaurant-brand-row {
+          flex-direction: column;
+          gap: 12px;
+        }
+      }
+
   </style>
 </head>
 <body>
@@ -508,6 +598,31 @@
             </div>
           </div>
           <div class="bd">
+            <!-- Pickup Time Selection -->
+            <div class="pickup-section">
+              <div class="pickup-info">
+              Pickup: <span id="displayTime">ASAP</span>
+              </div>
+            <div class="change-link" onclick="openPickupModal()">Change</div>
+          </div>
+
+<!-- The Modal -->
+<div id="pickupModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3>Pickup Today</h3>
+    <p style="font-size: 13px; color: var(--muted);">Select a time for later today.</p>
+
+    <button class="time-option" onclick="setPickup('ASAP')">🚀 ASAP (Ready in 15-20 mins)</button>
+    <button class="time-option" onclick="showTimePicker()">📅 Schedule a time</button>
+    
+    <div id="customTimeInput">
+      <input type="time" id="selectedPickupTime" class="login-input" style="margin-bottom:10px;">
+      <button class="btn primary block" onclick="confirmCustomTime()">Confirm Time</button>
+    </div>
+    
+    <button class="btn ghost block" style="margin-top:10px;" onclick="closePickupModal()">Cancel</button>
+  </div>
+</div>
             <div id="cartArea"></div>
 
             <div class="sep"></div>
@@ -830,6 +945,11 @@ function renderCart() {
       syncUI(); // re-render totals
     });
 
+    // ADD THE PICKUP TIME SELECTION HERE. I WAS THINKING TO ADD A SEPARATE BUBBLE TO POP UP WHERE IT WILL GIVE THE USER 
+    // THE SELECTION OF TIME THAT INCLUDES THE DATE AND TIME, OR SELECTION FOR "ASAP"
+    // 
+    // THIS SHOULD ALSO UPDATE THE *pickupTime*
+
     wrap.appendChild(div);
   });
 
@@ -910,39 +1030,107 @@ function getRandom(max) {
 }
 
 
-function payCheck(){
-  if(!sessionStorage.getItem("currOrder")){
-    const x = getRandom(1000);
-  const items = state.cart;
-  let user = "guest";
-  if (localStorage.getItem("loggedInUser")) {
-    user = localStorage.getItem("loggedInUser");
+function payCheck() {
+  if (state.cart.length === 0) {
+    alert("Cart is empty!");
+    return;
   }
-  const pickupTime = getTimestamp();
+
+  const items = state.cart;
+  const user = localStorage.getItem("loggedInUser") || "guest";
   const rest = sessionStorage.getItem("currRest");
   const totalPrice = parseFloat(document.getElementById("totalAmt").innerText.replace("$", ""));
   const status = "pending";
   const taxRate = TAX_RATE;
+  
+  // CRITICAL: If the user hasn't touched the modal, 
+  // it will still say "ASAP". Let's format it for them now.
+  if (selectedPickupValue === "ASAP") {
+    selectedPickupValue = "ASAP - " + getFormattedDateTime(new Date());
+  }
+  
+  const pickupTime = selectedPickupValue;
 
-  sessionStorage.setItem("currOrder", x);
-  const orderRef = ref(savorDB, `order/${x}`);
-  set(orderRef, {items,pickupTime,rest,totalPrice,user,status,taxRate })
-  .then(() => {
-    location.href = `paymentCheckout.html`;
-  })
-  .catch(err => {
-    console.log("Error creating order",err);
-    alert("Failed to create order.");
-  })
-  }else{
-    const items = state.cart;
-    const pickupTime = getTimestamp();
-    const totalPrice = parseFloat(document.getElementById("totalAmt").innerText.replace("$", ""));
-    const orderRef = ref(savorDB, `order/${sessionStorage.getItem("currOrder")}`);
-    update(orderRef, {items,totalPrice,pickupTime})
-    location.href = 'paymentCheckout.html';
+  if (!sessionStorage.getItem("currOrder")) {
+    const x = getRandom(1000);
+    sessionStorage.setItem("currOrder", x);
+    const orderRef = ref(savorDB, `order/${x}`);
+    
+    set(orderRef, { items, pickupTime, rest, totalPrice, user, status, taxRate })
+      .then(() => { location.href = `paymentCheckout.html`; })
+      .catch(err => { console.error("Error:", err); });
+  } else {
+    const orderId = sessionStorage.getItem("currOrder");
+    const orderRef = ref(savorDB, `order/${orderId}`);
+    
+    update(orderRef, { items, totalPrice, pickupTime })
+      .then(() => { location.href = 'paymentCheckout.html'; });
   }
 }
+
+function getFormattedDateTime(dateObj) {
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  const year = dateObj.getFullYear();
+  
+  let hours = dateObj.getHours();
+  const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12 || 12;
+
+  return `${month}/${day}/${year} @ ${hours}:${minutes} ${ampm}`;
+}
+
+let selectedPickupValue = "ASAP";
+
+// Modal functions
+window.openPickupModal = function() {
+  document.getElementById('pickupModal').style.display = 'flex';
+};
+
+window.closePickupModal = function() {
+  document.getElementById('pickupModal').style.display = 'none';
+  document.getElementById('customTimeInput').style.display = 'none';
+};
+
+window.setPickup = function(val) {
+  if (val === 'ASAP') {
+    // Generate the current date/time string immediately
+    selectedPickupValue = "ASAP - " + getFormattedDateTime(new Date());
+  } else {
+    selectedPickupValue = val;
+  }
+  document.getElementById('displayTime').innerText = selectedPickupValue;
+  closePickupModal();
+};
+
+window.showTimePicker = function() {
+  document.getElementById('customTimeInput').style.display = 'block';
+};
+
+window.confirmCustomTime = function() {
+  const timeVal = document.getElementById('selectedPickupTime').value;
+  if(!timeVal) {
+    alert("Please select a valid time.");
+    return;
+  }
+  
+  const [hours, minutes] = timeVal.split(':');
+  const selectedDate = new Date();
+  selectedDate.setHours(hours, minutes, 0);
+
+  if (selectedDate < new Date()) {
+    alert("Please select a future time for today.");
+    return;
+  }
+
+  // Use our helper to show the full date and time
+  const formattedDateTime = getFormattedDateTime(selectedDate);
+
+  selectedPickupValue = formattedDateTime;
+  document.getElementById('displayTime').innerText = formattedDateTime;
+  closePickupModal();
+};
 
 //===Events===//
 document.getElementById("menuCol").addEventListener("click", (e) => {

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Order View - SAVOR</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -157,6 +157,15 @@
     /* ── Confirm button ── */
     .actions { margin-top: 4px; }
 
+    .cancel-btn {
+      background-color: #b91c1c !important;
+      margin-left: 0;
+    }
+
+    .cancel-btn:hover {
+      background-color: #ef4444 !important;
+    }
+
     /* ── Routing panel ── */
     .leaflet-routing-container {
       background: rgba(255,255,255,0.95) !important;
@@ -174,10 +183,22 @@
 
     /* ── Desktop: wider card, side-by-side buttons ── */
     @media (min-width: 520px) {
+      .actions {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+      }
       .login-box { padding: 32px 40px; }
       .login-submit { width: auto; padding: 14px 44px; font-size: 18px; }
       .actions { display: flex; justify-content: center; }
     }
+
+    @media (max-width: 599px) {
+        .title-bar {
+          padding-top: calc(env(safe-area-inset-top) + 10px);
+        }
+          
+      }
   </style>
 </head>
 <body>
@@ -221,8 +242,10 @@
       <!-- Confirm pickup -->
       <div class="actions">
         <button type="button" class="login-submit" id="placeOrder">✓ Confirm Pickup</button>
+        <button type="button" class="login-submit cancel-btn" id="cancelOrder">✕ Cancel Order</button>
       </div>
-
+      <!-- ADD THE ABILITY TO CANCEL ORDER IF THE USER CHANGES THEIR MIND. I WOULD SAY TO ADD A NEW BUTTON -->
+       <!-- GO TO ORDER DASH TO GIVE THE ABILITY TO DELETE ORDERS-->
     </div>
   </div>
 
@@ -345,9 +368,8 @@
       if (!snapshot.exists()) return;
       const order = snapshot.val();
       if (order.status !== "pending") {
-        const btn = document.getElementById("placeOrder");
-        btn.disabled = true;
-        btn.textContent = "Order Completed";
+        document.getElementById("placeOrder").style.display = "none";
+        document.getElementById("cancelOrder").style.display = "none";
       }
     }
 
@@ -441,6 +463,31 @@
     );
   }
 }
+
+// --- Cancel Order Logic ---
+document.getElementById("cancelOrder").addEventListener("click", async () => {
+  const orderNum = sessionStorage.getItem("currOrder");
+  if (!orderNum) return;
+
+  const confirmCancel = confirm("Are you sure you want to cancel this order?");
+  if (!confirmCancel) return;
+
+  try {
+    const orderRef = ref(savorDB, `order/${orderNum}`);
+    
+    // You can either delete the order entirely using remove(orderRef)
+    // or update the status so it shows as cancelled in the history.
+    await update(orderRef, { status: "Cancelled" });
+    
+    alert("Order has been cancelled.");
+    
+    // Redirect the user back to their account/dashboard
+    window.handleLogin(); 
+  } catch (err) {
+    console.error("Error cancelling order:", err);
+    alert("Failed to cancel order.");
+  }
+});
 
     document.getElementById("direction-btn").addEventListener("click", getDirections);
 
